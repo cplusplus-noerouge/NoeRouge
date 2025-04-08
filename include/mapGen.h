@@ -17,6 +17,7 @@ const char WALL = '#';                  //char to represent walls
 const char FLOOR = '.';                 //char to represent floors
 const char DEBUGPARTITION = '*';        //a wall that is within a partition aka an ok place for rooms to spawn
 const char PLAYER = 'p';                //represents player spawn
+const char DOOR = '@';                  //represents where doors are
 
 //BSP STUFF START=============================================================================================================================
 // Class representing a node in the BSP tree

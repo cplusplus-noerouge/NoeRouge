@@ -252,46 +252,50 @@ void makeBlobRoom( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )
    }
 }
 
-void makeRoomOfShape( char shape, BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )
+void makeRoomOfShape(char shape, BspNode& p, char(&map)[WIDTH][HEIGHT]) //this is prob temporary
 {
-   int randomNumber = std::rand( ) % 3; // Generates 0, 1, or 2
+    int randomNumber = std::rand() % 3;
+    switch (randomNumber)
+    {
+    case 0:
+        makeRectRoom(p, map);
+        break;
+    case 1:
+        makeCircleRoom(p, map);
+        break;
+    case 2:
+        makeBlobRoom(p, map);
+        break;
+    case 3:
+        makeRoomContainer(p, map);
+        break;
+        //remove the default: it was causing errors probably because rooms were overlapping
+    }
 
-   switch ( randomNumber )
-   {
-      case 0:
-         makeRectRoom( p, map );
-         break;
-      case 1:
-         makeCircleRoom( p, map );
-         break;
-      case 2:
-         makeBlobRoom( p, map );
-         break;
+    switch (shape)
+    {
+    case 'r':
+        makeRectRoom(p, map);
+        break;
+    case 'c':
+        makeCircleRoom(p, map);
+        break;
+    case 'b':
+        makeBlobRoom(p, map);
+        break;
+    case 'f':
+        makeRoomContainer(p, map);
+        break;
+        /*
+    currently commenting out as it was causing issues when running with the random one
+    ----------------------------------
+    default:
+        std::cerr << "tried to make room of unrecognized shape: " << shape;
+        break;
+        */
 
-      default:
-         std::cerr << "tried to make room of unrecognized shape: " << shape;
-         break;
-   }
+    }
 
-   switch ( shape )
-   {
-      case 'r':
-         makeRectRoom( p, map );
-         break;
-      case 'c':
-         makeCircleRoom( p, map );
-         break;
-      case 'b':
-         makeBlobRoom( p, map );
-         break;
-      case 'f':
-         makeRoomContainer( p, map );
-         break;
-
-      default:
-         std::cerr << "tried to make room of unrecognized shape: " << shape;
-         break;
-   }
 }
 
 //ROOM STUFF END============================================================================================================================
@@ -321,6 +325,9 @@ Floor::Floor(char roomShape)
         //makeRoomOfShape(roomShape, *leaf, data); //this can make cool rooms-also if u change the shape
     }
 
+    BspNode* rootNodePTR = getMapRootNode();
+    Hallways hallways(rootNodePTR, *this);         //Create hallways
+
     for (int y = 0; y < HEIGHT; y++)
     {
         for (int x = 0; x < WIDTH; x++)
@@ -328,10 +335,11 @@ Floor::Floor(char roomShape)
             if (data[x][y] == WALL || data[x][y] == DEBUGPARTITION)
             {
                 Rectangle rect = { x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE };
-                walls.push_back( rect );
+                walls.push_back(rect);
             }
         }
     }
+
 
     //TODO carve the hallways
     //TODO spawn enemies and items
@@ -392,26 +400,52 @@ int Hallways::calculateDistanceFromCenterOfNodes(BspNode* startNode, BspNode* de
 
 void Hallways::carveHallwaysIntoMap(BspNode* startNode, BspNode* destinationNode)
 {
-    int startNodeXCoordinate = startNode->roomCenterPointXCoordinate;
+
+    int startingNodeXCoordinate = startNode->roomCenterPointXCoordinate;
     int startingNodeYCoordinate = startNode->roomCenterPointYCoordinate;
     int destinationNodeXCoordinate = destinationNode->roomCenterPointXCoordinate;
     int destinationNodeYCoordinate = destinationNode->roomCenterPointYCoordinate;
 
-    int currentX = startNodeXCoordinate;
+    bool isDoorPlaced = false;
+
+    int currentX = startingNodeXCoordinate;
     int currentY = startingNodeYCoordinate;
 
     while (currentX != destinationNodeXCoordinate)
     {
+
         currentX += (destinationNodeXCoordinate > currentX) ? 1 : -1;  //ternary operator determines if hallway is carving to the left or right
-        floorInput->data[currentX][currentY] = FLOOR;
-        floorInput->data[currentX][currentY - 1] = FLOOR;
-        floorInput->data[currentX][currentY + 1] = FLOOR;
+        //adding doors here, note it works but not well and can leave gaps
+        if (isDoorPlaced != true && floorInput->data[currentX][currentY] == DEBUGPARTITION)
+        { // if you remove the "isDoorPlaced != true" it fills in the whole hallway which could be useful
+            floorInput->data[currentX][currentY] = DOOR;
+            floorInput->data[currentX][currentY - 1] = DOOR;
+            floorInput->data[currentX][currentY + 1] = DOOR;
+            isDoorPlaced = true;
+        }
+        else {
+            floorInput->data[currentX][currentY] = FLOOR;
+            floorInput->data[currentX][currentY - 1] = FLOOR;
+            floorInput->data[currentX][currentY + 1] = FLOOR;
+        }
+
     }
     while (currentY != destinationNodeYCoordinate)
     {
+
         currentY += (destinationNodeYCoordinate > currentY) ? 1 : -1;  //ternary operator determines if hallway is carving upward or downward
-        floorInput->data[currentX][currentY] = FLOOR;
-        floorInput->data[currentX - 1][currentY] = FLOOR;
-        floorInput->data[currentX + 1][currentY] = FLOOR;
+        //adding doors here, note it works but not well and can leave gaps
+        if (isDoorPlaced != true && floorInput->data[currentX][currentY] == DEBUGPARTITION)
+        {
+            floorInput->data[currentX][currentY] = DOOR;
+            floorInput->data[currentX - 1][currentY] = DOOR;
+            floorInput->data[currentX + 1][currentY] = DOOR;
+            isDoorPlaced = true;
+        }
+        else {
+            floorInput->data[currentX][currentY] = FLOOR;
+            floorInput->data[currentX - 1][currentY] = FLOOR;
+            floorInput->data[currentX + 1][currentY] = FLOOR;
+        }
     }
 }

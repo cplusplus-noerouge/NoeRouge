@@ -1,5 +1,3 @@
-// noeRouge - Terminal rouge-like ascii dungeon crawler game
-
 // Includes
 #include <iostream>
 #include <vector>
@@ -24,12 +22,11 @@ int main()
 
         //seed the random number generator
     srand((unsigned int)time(0));
+    int randomNumber = rand() % 3;
+    Floor floor(randomNumber);
 
-        //test floor, 'r' for rectangular rooms
-    Floor floor('r');
     std::vector<Rectangle> walls = floor.getWalls();
     Vector2 playerSpawnPosition = floor.getPlayerSpawn();
-
 
         // Create the objectHandler
     class objectHandler objectHandler;
