@@ -1,93 +1,75 @@
+//Notes: - We should probablytry to keep every line under 100 characters
+
+#include "mapGen.h"
 #include <iostream>
 #include <vector>
 #include <list>
 
-const int WIDTH = 70;                   //width/columns/maximum x of each floor in tiles
-const int HEIGHT = 30;                  //height/rows/maximum y of each floor in tiles
-const int MINSIZE = 10;                 //minimum for each partition/BSP leaf's width and height
-
-const char WALL = '#';                  //char to represent walls
-const char FLOOR = '.';                 //char to represent floors
-const char DEBUGPARTITION = '*';        //a wall that is within a partition aka an ok place for rooms to spawn
-
 //BSP STUFF START=============================================================================================================================
 // Class representing a node in the BSP tree
-class BspNode {
-   public:
-   int x, y, width, height;                // position and size of the node
-   BspNode* left;                          // pointer to the left child node
-   BspNode* right;                         // Pointer to the right child node
-   int roomCenterPointXCoordinate;         // x value of the room center point coordinates
-   int roomCenterPointYCoordinate;         // y value of the room center point coordinates
+bool BspNode::split()
+{
+    if (left || right) return false;        // If already split, return false
 
-   BspNode( int x, int y, int width, int height ) :
-      x( x ), y( y ), width( width ), height( height ), left( nullptr ), right( nullptr )
-   { }
+    //Determine whether to split horizontally or vertically
+    bool splitHorizontally = rand() % 2;
+    if (width > height && width / height >= 1.25) splitHorizontally = false;
+    else splitHorizontally = true;
 
-   //Function to split the node into two child nodes
-   bool split( )
-   {
-      if ( left || right ) return false;        // If already split, return false
+    //Alternative logic for determining split direction based on aspect ratio
+    //   if ( width > height && width / height >= 1.25 ) splitHorizontally = false;
+    //   else if ( height > width && height / width >= 1.25 ) splitHorizontally = true;
 
-      //Determine whether to split horizontally or vertically
-      bool splitHorizontally = rand( ) % 2;
-      if ( width > height && width / height >= 1.25 ) splitHorizontally = false;
-      else splitHorizontally = true;
+    //Another alternative logic for determining split direction based solely on dimensions
+    //  if ( width > height ) splitHorizontally = false;
+    //  else if ( height > width ) splitHorizontally = true;
 
-      //Alternative logic for determining split direction based on aspect ratio
-      //   if ( width > height && width / height >= 1.25 ) splitHorizontally = false;
-      //   else if ( height > width && height / width >= 1.25 ) splitHorizontally = true;
+    //Calculate the maximum possible split position
+    int maxSplit = (splitHorizontally ? height : width) - MINSIZE;
+    if (maxSplit <= MINSIZE) return false;             // not enough space to split
 
-      //Another alternative logic for determining split direction based solely on dimensions
-      //  if ( width > height ) splitHorizontally = false;
-      //  else if ( height > width ) splitHorizontally = true;
+    //Randomly choose a split position
+    int split = rand() % (maxSplit - MINSIZE + 1) + MINSIZE;
 
-      //Calculate the maximum possible split position
-      int maxSplit = ( splitHorizontally ? height : width ) - MINSIZE;
-      if ( maxSplit <= MINSIZE ) return false;             // not enough space to split
+    //Create left and right child nodes based on the split position
+    if (splitHorizontally)
+    {
+        left = new BspNode(x, y, width, split);
+        right = new BspNode(x, y + split - 1, width, height - split);
+    }
+    else
+    {
+        left = new BspNode(x, y, split, height);
+        right = new BspNode(x + split - 1, y, width - split, height);
+    }
+    //added split - 1 for make edges around the map
+    return true;                          // Return true indicating successful split
+}
 
-      //Randomly choose a split position
-      int split = rand( ) % ( maxSplit - MINSIZE + 1 ) + MINSIZE;
+std::list<BspNode*> BspNode::getAllLeafNodes()
+{
+    std::list<BspNode*> leafNodes;        //empty list to store the leaf nodes
 
-      //Create left and right child nodes based on the split position
-      if ( splitHorizontally )
-      {
-         left = new BspNode( x, y, width, split );
-         right = new BspNode( x, y + split - 1, width, height - split );
-      }
-      else
-      {
-         left = new BspNode( x, y, split, height );
-         right = new BspNode( x + split - 1, y, width - split, height );
-      }
-      //added split - 1 for make edges around the map
-      return true;                          // Return true indicating successful split
-   }
+    if (this->left == nullptr)
+    {                                     //if this node is a leaf a leaf, add it to the list
+        leafNodes.push_back(this);
+    }
+    else
+    {                                     //if this node isn't a leaf, recursively find leaves
+        leafNodes.merge(left->getAllLeafNodes());
+        leafNodes.merge(right->getAllLeafNodes());
+    }
+    return leafNodes;
+}
 
-   // collect and return all the leaf nodes in the BSP tree, added this method -devon
-   std::list<BspNode*> getAllLeafNodes( )
-   {
-      std::list<BspNode*> leafNodes;        //empty list to store the leaf nodes
+void BspNode::addNodeCenterCoordinates(int xCoord, int yCoord)
+{
+    this->roomCenterPointXCoordinate = xCoord;
+    this->roomCenterPointYCoordinate = yCoord;
+}
 
-      if ( this->left == nullptr )
-      {                                     //if this node is a leaf a leaf, add it to the list
-         leafNodes.push_back( this );
-      }
-      else
-      {                                     //if this node isn't a leaf, recursively find leaves
-         leafNodes.merge( left->getAllLeafNodes( ) );
-         leafNodes.merge( right->getAllLeafNodes( ) );
-      }
-      return leafNodes;
-   }
-   void addNodeCenterCoordinates( int xCoord, int yCoord )
-   {
-      this->roomCenterPointXCoordinate = xCoord;
-      this->roomCenterPointYCoordinate = yCoord;
-   }
-};
 
-BspNode* generateBspTree( ) //renamed this and removed const params -devon
+BspNode* generateBspTree( )
 {
    if ( MINSIZE <= 0 )
    {
@@ -118,7 +100,7 @@ BspNode* generateBspTree( ) //renamed this and removed const params -devon
 }
 
 // Function to print the dungeon split scheme
-void printPartitions( BspNode* node, std::vector<std::vector<char>>& map ) //renamed this -devon
+void printPartitions( BspNode* node, std::vector<std::vector<char>>& map )
 {
    if ( !node ) return;
 
@@ -138,9 +120,11 @@ void printPartitions( BspNode* node, std::vector<std::vector<char>>& map ) //ren
    printPartitions( node->left, map );
    printPartitions( node->right, map );
 }
+
 //BSP STUFF END=============================================================================================================================
 //ROOM STUFF START==========================================================================================================================
-int randRange( int minVal, int maxVal ) //replace this with the std function im just lazy
+
+int randRange( int minVal, int maxVal )
 {
    return rand( ) % ( maxVal + 1 - minVal ) + minVal;
 }
@@ -172,6 +156,7 @@ void makeRectRoom( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )
       }
    }
 }
+
 void makeRoomContainer( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )    //Fill partition with '*'
 {
    int xMax = p.x + p.width;
@@ -189,6 +174,7 @@ void makeRoomContainer( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )    //Fill 
       }
    }
 }
+
 //reference: https://www.redblobgames.com/grids/circle-drawing/
 void makeCircleRoom( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )
 {
@@ -265,7 +251,8 @@ void makeBlobRoom( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )
       }
    }
 }
-void makeRoomOfShape( char shape, BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] ) //this is prob temporary
+
+void makeRoomOfShape( char shape, BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )
 {
    int randomNumber = std::rand( ) % 3; // Generates 0, 1, or 2
 
@@ -306,143 +293,125 @@ void makeRoomOfShape( char shape, BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] ) 
          break;
    }
 }
+
 //ROOM STUFF END============================================================================================================================
 //MAIN STUFF================================================================================================================================
-class Floor {
-   public:
-   char data[ WIDTH ][ HEIGHT ];                                   //TODO make this private with accessor or something like that
-   BspNode* rootNode = generateBspTree( );                          //generate the partitions
-   //additional member variables are probably data structures for items and enemies
 
-   Floor( char roomShape )
-   {
-      std::list<BspNode*> leaves = rootNode->getAllLeafNodes( );           //all the leaf nodes/partitons
-
-      //fill in walls everywhere
-      for ( int y = 0; y < HEIGHT; y++ )
-      {
-         for ( int x = 0; x < WIDTH; x++ )
-         {
-            data[ x ][ y ] = WALL;
-         }
-      }
-
-      //carve the rooms
-      for ( BspNode* leaf : leaves )
-      {
-         makeRoomContainer( *leaf, data );
-         makeRoomOfShape( roomShape, *leaf, data );
-
-         //makeRectRoom(*leaf, data);
-         //makeRoomOfShape(roomShape, *leaf, data); //this can make cool rooms-also if u change the shape
-      }
-
-      //TODO carve the hallways
-      //TODO spawn enemies and items
-      //TODO stairwells between floors
-   }
-   BspNode* getMapRootNode( )
-   {
-      return rootNode;
-   }
-};
-class Hallways
+Floor::Floor(char roomShape)
 {
+    walls = std::vector<Rectangle>();
+    std::list<BspNode*> leaves = rootNode->getAllLeafNodes();           //all the leaf nodes/partitions
 
-   std::list<BspNode*> leafNodes;         //list to hold all leafnodes for the map
-   std::vector<std::vector<int>> roomGraph;
-   Floor* floorInput;                      //
+    //fill in walls everywhere
+    for (int y = 0; y < HEIGHT; y++)
+    {
+        for (int x = 0; x < WIDTH; x++)
+        {
+            data[x][y] = WALL;
+        }
+    }
 
-   public:
-   Hallways( BspNode* node, Floor& floor )
-   {
-      leafNodes = node->getAllLeafNodes( );
-      floorInput = &floor;
-      calculateDistanceBetweenRoomCenters( leafNodes );
-   }
-   //Find rooms whose centers are the closest together
-   void calculateDistanceBetweenRoomCenters( std::list<BspNode*> leafNodes )
-   {
-      BspNode* hallwayCurrentNode = leafNodes.front( );  //select first node in leafNodes list to start
-      leafNodes.remove( hallwayCurrentNode );                            //remove the starting node so we don't compare it to itself
-      BspNode* nextNodeToConnect = hallwayCurrentNode;
-      int smallestDistanceBetweenCenters = WIDTH;
+    //carve the rooms
+    for (BspNode* leaf : leaves)
+    {
+        makeRoomContainer(*leaf, data);
+        makeRoomOfShape(roomShape, *leaf, data);
 
-      while ( !leafNodes.empty( ) )
-      {
-         for ( BspNode* node : leafNodes )
-         {
-            if ( calculateDistanceFromCenterOfNodes( hallwayCurrentNode, node ) < smallestDistanceBetweenCenters )
+        //makeRectRoom(*leaf, data);
+        //makeRoomOfShape(roomShape, *leaf, data); //this can make cool rooms-also if u change the shape
+    }
+
+    for (int y = 0; y < HEIGHT; y++)
+    {
+        for (int x = 0; x < WIDTH; x++)
+        {
+            if (data[x][y] == WALL || data[x][y] == DEBUGPARTITION)
             {
-               nextNodeToConnect = node;
-               smallestDistanceBetweenCenters = calculateDistanceFromCenterOfNodes( hallwayCurrentNode, node );
+                Rectangle rect = { x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE };
+                walls.push_back( rect );
             }
-         }
-         carveHallwaysIntoMap( hallwayCurrentNode, nextNodeToConnect );
-         hallwayCurrentNode = nextNodeToConnect;
-         leafNodes.remove( nextNodeToConnect );
-         nextNodeToConnect = nullptr;
-         smallestDistanceBetweenCenters = WIDTH;
-      }
-   }
-   //Calculate the distance between centers
-   int calculateDistanceFromCenterOfNodes( BspNode* startNode, BspNode* destinationNode )
-   {
-      int distanceBetweenCenters = 0;
-      int differenceBetweenXCoordinates = startNode->roomCenterPointXCoordinate - destinationNode->roomCenterPointXCoordinate;
-      int differenceBetweenYCoordinates = startNode->roomCenterPointYCoordinate - destinationNode->roomCenterPointYCoordinate;
+        }
+    }
 
-      //Pythagorean Theorum,  distanceBetweenRoomCenters = sqrt( a^2 + b^2 )
-      distanceBetweenCenters = sqrt( ( differenceBetweenXCoordinates * differenceBetweenXCoordinates ) +
-                                     ( differenceBetweenYCoordinates * differenceBetweenYCoordinates ) );
-      return distanceBetweenCenters;
-   }
-   //Assign FLOOR char to vector for hallways
-   void carveHallwaysIntoMap( BspNode* startNode, BspNode* destinationNode )
-   {
-      int startNodeXCoordinate = startNode->roomCenterPointXCoordinate;
-      int startingNodeYCoordinate = startNode->roomCenterPointYCoordinate;
-      int destinationNodeXCoordinate = destinationNode->roomCenterPointXCoordinate;
-      int destinationNodeYCoordinate = destinationNode->roomCenterPointYCoordinate;
+    //TODO carve the hallways
+    //TODO spawn enemies and items
+    //TODO stairwells between floors
+}
 
-      int currentX = startNodeXCoordinate;
-      int currentY = startingNodeYCoordinate;
-
-      while ( currentX != destinationNodeXCoordinate )
-      {
-         currentX += ( destinationNodeXCoordinate > currentX ) ? 1 : -1;  //ternary operator determines if hallway is carving to the left or right
-         floorInput->data[ currentX ][ currentY ] = FLOOR;
-         floorInput->data[ currentX ][ currentY - 1 ] = FLOOR;
-         floorInput->data[ currentX ][ currentY + 1 ] = FLOOR;
-      }
-      while ( currentY != destinationNodeYCoordinate )
-      {
-         currentY += ( destinationNodeYCoordinate > currentY ) ? 1 : -1;  //ternary operator determines if hallway is carving upward or downward
-         floorInput->data[ currentX ][ currentY ] = FLOOR;
-         floorInput->data[ currentX - 1 ][ currentY ] = FLOOR;
-         floorInput->data[ currentX + 1 ][ currentY ] = FLOOR;
-      }
-   }
-};
-int main( )
+// returns the first floor location relative to game world
+Vector2 Floor::getPlayerSpawn()
 {
-   srand( ( unsigned int ) time( 0 ) );                    //seed the random number generator
+    for (int y = 0; y < HEIGHT; y++)
+    {
+        for (int x = 0; x < WIDTH; x++)
+        {
+            if (data[x][y] == FLOOR)
+            {
+                return { (float)x * TILE_SIZE, (float)y * TILE_SIZE };
+            }
+        }
+    }
+}
 
-   Floor floor( 'r' );                                //test floor
-   Floor floor( );
+void Hallways::calculateDistanceBetweenRoomCenters(std::list<BspNode*> leafNodes)
+{
+    BspNode* hallwayCurrentNode = leafNodes.front();  //select first node in leafNodes list to start
+    leafNodes.remove(hallwayCurrentNode);                            //remove the starting node so we don't compare it to itself
+    BspNode* nextNodeToConnect = hallwayCurrentNode;
+    int smallestDistanceBetweenCenters = WIDTH;
 
+    while (!leafNodes.empty())
+    {
+        for (BspNode* node : leafNodes)
+        {
+            if (calculateDistanceFromCenterOfNodes(hallwayCurrentNode, node) < smallestDistanceBetweenCenters)
+            {
+                nextNodeToConnect = node;
+                smallestDistanceBetweenCenters = calculateDistanceFromCenterOfNodes(hallwayCurrentNode, node);
+            }
+        }
+        carveHallwaysIntoMap(hallwayCurrentNode, nextNodeToConnect);
+        hallwayCurrentNode = nextNodeToConnect;
+        leafNodes.remove(nextNodeToConnect);
+        nextNodeToConnect = nullptr;
+        smallestDistanceBetweenCenters = WIDTH;
+    }
+}
 
-   BspNode* rootNodePTR = floor.getMapRootNode( );
-   Hallways hallways( rootNodePTR, floor );         //Create hallways
+int Hallways::calculateDistanceFromCenterOfNodes(BspNode* startNode, BspNode* destinationNode)
+{
+    int distanceBetweenCenters = 0;
+    int differenceBetweenXCoordinates = startNode->roomCenterPointXCoordinate - destinationNode->roomCenterPointXCoordinate;
+    int differenceBetweenYCoordinates = startNode->roomCenterPointYCoordinate - destinationNode->roomCenterPointYCoordinate;
 
-   //print the floor
-   for ( int y = 0; y < HEIGHT; y++ )
-   {
-      for ( int x = 0; x < WIDTH; x++ )
-      {
-         std::cout << floor.data[ x ][ y ];
-      }
-      std::cout << "\n";
-   }
-   return 0;
+    //Pythagorean Theorum,  distanceBetweenRoomCenters = sqrt( a^2 + b^2 )
+    distanceBetweenCenters = sqrt((differenceBetweenXCoordinates * differenceBetweenXCoordinates) +
+        (differenceBetweenYCoordinates * differenceBetweenYCoordinates));
+    return distanceBetweenCenters;
+}
+
+void Hallways::carveHallwaysIntoMap(BspNode* startNode, BspNode* destinationNode)
+{
+    int startNodeXCoordinate = startNode->roomCenterPointXCoordinate;
+    int startingNodeYCoordinate = startNode->roomCenterPointYCoordinate;
+    int destinationNodeXCoordinate = destinationNode->roomCenterPointXCoordinate;
+    int destinationNodeYCoordinate = destinationNode->roomCenterPointYCoordinate;
+
+    int currentX = startNodeXCoordinate;
+    int currentY = startingNodeYCoordinate;
+
+    while (currentX != destinationNodeXCoordinate)
+    {
+        currentX += (destinationNodeXCoordinate > currentX) ? 1 : -1;  //ternary operator determines if hallway is carving to the left or right
+        floorInput->data[currentX][currentY] = FLOOR;
+        floorInput->data[currentX][currentY - 1] = FLOOR;
+        floorInput->data[currentX][currentY + 1] = FLOOR;
+    }
+    while (currentY != destinationNodeYCoordinate)
+    {
+        currentY += (destinationNodeYCoordinate > currentY) ? 1 : -1;  //ternary operator determines if hallway is carving upward or downward
+        floorInput->data[currentX][currentY] = FLOOR;
+        floorInput->data[currentX - 1][currentY] = FLOOR;
+        floorInput->data[currentX + 1][currentY] = FLOOR;
+    }
 }

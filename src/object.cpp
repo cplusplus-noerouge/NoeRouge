@@ -10,7 +10,7 @@ void gameObject::setId(int id) {
     this->id = id;
 }
 
-void gameObject::onTick() {
+void gameObject::onTick(const std::vector<Rectangle> collidables) {
     printf("I am a generic object, my id is %d, and I have been ticked\n", this->id);
     return;
 }
@@ -34,9 +34,9 @@ class gameObject *objectHandler::getObject(int id) {
     return this->allObjects[id];
 }
 
-void objectHandler::tickAll() {
+void objectHandler::tickAll(const std::vector<Rectangle> collidables) {
     for (int x = 0; x < this->numberOfObjects; x++) {
-        this->allObjects[x]->onTick();
+        this->allObjects[x]->onTick(collidables);
     }
 }
 

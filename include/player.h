@@ -4,7 +4,9 @@
 #include "object.h"
 #include "character.h"
 
-class player : public Character {
+class player : public Character 
+{
+
 private:
     ;;
 
