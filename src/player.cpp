@@ -23,5 +23,5 @@ void player::updateDirection()
 void player::onRender()
 {
     Rectangle rectangle = bounds();
-    DrawRectangle(rectangle.x, rectangle.y, rectangle.width, rectangle.height, GREEN);
+    DrawRectangle(rectangle.x, rectangle.y, rectangle.width, rectangle.height, MAROON);
 }

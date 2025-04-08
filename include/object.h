@@ -30,7 +30,7 @@ public:
     // Setters
     void setId(int id);
 
-    virtual void onTick();
+    virtual void onTick(const std::vector<Rectangle> collidables);
     // TODO 00
     virtual void onRender();
 };
@@ -50,7 +50,7 @@ public:
         ;;
     }
 
-    void tickAll();
+    void tickAll(const std::vector<Rectangle> collidables);
     void renderAll();
     class gameObject *getObject(int id);
     class gameObject *createObject();
