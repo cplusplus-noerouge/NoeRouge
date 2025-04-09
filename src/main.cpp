@@ -9,6 +9,10 @@
 // Local includes
 #include "object.h"
 #include "globals.h"
+#include "textureLoader.h"
+#include "sprite.h"
+#include "customCamera.h"
+#include "screenHandler.h"
 #include <mapGen.h>
 
 /*
@@ -32,9 +36,14 @@ constexpr int FPS = 60;
 
 constexpr int PLAYER_SPEED = 300;
 
+std::unordered_map<std::string, Texture2D> textureMap = {};
+
 int main() {
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "noeRouge alpha v0.1");
-    SetTargetFPS(FPS);
+        // Setting up graphics
+   class ScreenHandler screenHandler = ScreenHandler( );
+   loadAllTextures( );
+   CustomCamera mainCamera = CustomCamera( Vector2 { 320.0f, 180.0f }, 4.0f );
+   screenHandler.cameras.push_back( &mainCamera );
 
         // TODO 00
     bool isGameRunning = true;
@@ -56,25 +65,27 @@ int main() {
     objectHandler.tickAll();
 
         // driver code - just for testing before real driver code
-    while (!WindowShouldClose())
+    Sprite sprite1 = Sprite( "player", Vector2 { 0, 0 }, 0 );
+    while ( !WindowShouldClose( ) )
     {
-        objectHandler.tickAll();
+       objectHandler.tickAll( );
 
-        BeginDrawing();
+       BeginDrawing( );
 
-        ClearBackground(BLACK);
+       ClearBackground( BLACK );
 
-        objectHandler.renderAll();
+       //objectHandler.renderAll( );
 
-            // for testing purposes only
-        for (Rectangle rect : globals::GetCollisionRectangles())
-        {
-           DrawRectangle( rect.x, rect.y, rect.width, rect.height, DARKBLUE );
-            
-        }
-
-        EndDrawing();
+          // for testing purposes only
+       for ( Rectangle rect : globals::GetCollisionRectangles( ) )
+       {
+          //DrawRectangle( rect.x, rect.y, rect.width, rect.height, DARKBLUE );
+       }
+       mainCamera.addToBuffer( &sprite1 );
+       screenHandler.renderAll( );
     }
+
+    unloadAllTextures( );
 
     // TODO 01
     /*
