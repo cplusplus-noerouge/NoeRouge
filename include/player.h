@@ -4,7 +4,9 @@
 #include "object.h"
 #include "character.h"
 
-class player : public Character {
+class player : public Character 
+{
+
 private:
     ;;
 
@@ -16,11 +18,3 @@ public:
 
     void updateDirection() override;
 };
-
-// Define the player crate function in the object handler
-class player *objectHandler::createPlayer(Vector2 position, Vector2 size, int speed) {
-    class player *player = new class player(this->nextId++, position, size, speed);
-    this->allObjects.push_back(player);
-    this->numberOfObjects++;
-    return player;
-}
