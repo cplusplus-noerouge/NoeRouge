@@ -3,7 +3,7 @@
 
 #pragma once
 
-class Character : public gameObject
+class Character : public GameObject
 {
 private:
 

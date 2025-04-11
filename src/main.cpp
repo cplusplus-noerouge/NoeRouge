@@ -29,7 +29,7 @@ int main()
     Vector2 playerSpawnPosition = floor.getPlayerSpawn();
 
         // Create the objectHandler
-    class objectHandler objectHandler;
+    class ObjectHandler objectHandler;
     class gameObject *testObject;
 
         // Print version info

@@ -11,7 +11,6 @@
 #include <vector>
 
 #include "enemies.h"
-#include "globals.h"
 #include "object.h"
 
 
@@ -30,7 +29,7 @@ void Enemy::updateDirection( )
 
 void Enemy::onRender( )
 {
-   Rectangle rectangle = getBounds( );
+   Rectangle rectangle = bounds( );
    DrawRectangle( rectangle.x, rectangle.y, rectangle.width, rectangle.height, RED );
 }
 
