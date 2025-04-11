@@ -7,20 +7,23 @@
 #include "raylib.h"
 
 // Local includes
+#include "character.h"
+#include "player.h"
 #include "object.h"
 #include "globals.h"
-#include <mapGen.h>
+#include "mapGen.h"
+#
 
 /*
 // TODO list (class voted it to be here)
 // This list is worse than a todo at each thing because you have to just figure
 // out where to work on each item listed here
 //
-// Doing it this way is objectivly worse in every way and has only
+// Doing it this way is objectively worse in every way and has only
 // disadvantages. I will comply but I beg that everyone agrees to 
 // do it the other way instead
 //
-// 00 - Create a "game" class that holds deltatime, the map, the handlers, and
+// 00 - Create a "game" class that holds delta time, the map, the handlers, and
 //      the game loop isRunning flag. This object will be global
 // 01 - Game loop with time code
 */
@@ -61,7 +64,7 @@ int main() {
         objectHandler.tickAll();
 
         BeginDrawing();
-
+       
         ClearBackground(BLACK);
 
         objectHandler.renderAll();
@@ -69,10 +72,8 @@ int main() {
             // for testing purposes only
         for (Rectangle rect : globals::GetCollisionRectangles())
         {
-           DrawRectangle( rect.x, rect.y, rect.width, rect.height, DARKBLUE );
-            
+           DrawRectangle( rect.x, rect.y, rect.width, rect.height, DARKBLUE );   
         }
-
         EndDrawing();
     }
 

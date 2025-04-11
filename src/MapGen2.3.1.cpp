@@ -460,24 +460,4 @@ public:
 
 };
 
-int main()
-{
-    srand((unsigned int)time(0));                    //seed the random number generator
-    int randomNumber = std::rand() % 3;
-    //Floor floor('r');                                //test floor
-    Floor floor(randomNumber);
 
-    BspNode* rootNodePTR = floor.getMapRootNode();
-    Hallways hallways(rootNodePTR, floor);         //Create hallways
-
-    //print the floor
-    for (int y = 0; y < HEIGHT; y++)
-    {
-        for (int x = 0; x < WIDTH; x++)
-        {
-            std::cout << floor.data[x][y];
-        }
-        std::cout << "\n";
-    }
-    return 0;
-}
