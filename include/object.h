@@ -54,7 +54,7 @@ public:
     void renderAll();
     class gameObject *getObject(int id);
     class gameObject *createObject();
-    class player *createPlayer(Vector2 position, Vector2 size, int speed);
+    class Player *createPlayer(Vector2 position, Vector2 size, int speed);
 };
 
 #endif

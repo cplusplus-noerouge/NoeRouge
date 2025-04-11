@@ -22,10 +22,10 @@ Rectangle Character::bounds()
 Character::Character(int _id)
 {
     this->setId(_id);
-    position = { 0 };
-    size = { 1 };
+    position = { 0, 0 };
+    size = { 1, 1 };
     speed = 0;
-    velocity = { 0 };
+    velocity = { 0, 0 };
     direction = { 0 };
 }
 

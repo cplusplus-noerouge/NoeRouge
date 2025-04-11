@@ -36,13 +36,15 @@ constexpr int FPS = 60;
 
 constexpr int PLAYER_SPEED = 300;
 
+ScreenHandler screenHandler = ScreenHandler( );
+CustomCamera mainCamera = CustomCamera( Vector2 { 320.0f, 180.0f }, 4.0f );
+
 std::unordered_map<std::string, Texture2D> textureMap = {};
 
 int main() {
         // Setting up graphics
-   class ScreenHandler screenHandler = ScreenHandler( );
+   
    loadAllTextures( );
-   CustomCamera mainCamera = CustomCamera( Vector2 { 320.0f, 180.0f }, 4.0f );
    screenHandler.cameras.push_back( &mainCamera );
 
         // TODO 00
@@ -60,12 +62,12 @@ int main() {
     std::cout << testObject->getId() << std::endl;
 
         // Create a player so we can see it tick, and see it on screen
-    objectHandler.createPlayer( { GetScreenWidth() / 2.0f, GetScreenHeight() / 2.0f }, {30, 30}, 300);
+    objectHandler.createPlayer( { 0, 0 }, {30, 30}, 300);
 
     objectHandler.tickAll();
 
         // driver code - just for testing before real driver code
-    Sprite sprite1 = Sprite( "player", Vector2 { 0, 0 }, 0 );
+    Sprite sprite1 = Sprite( "player", Vector2 { 0, 0 }, 0, 0, 1, BLUE );
     while ( !WindowShouldClose( ) )
     {
        objectHandler.tickAll( );
@@ -74,7 +76,7 @@ int main() {
 
        ClearBackground( BLACK );
 
-       //objectHandler.renderAll( );
+       objectHandler.renderAll( );
 
           // for testing purposes only
        for ( Rectangle rect : globals::GetCollisionRectangles( ) )

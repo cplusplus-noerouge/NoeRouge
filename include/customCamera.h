@@ -12,8 +12,8 @@
 
 // Ideally these should be global, I just haven't figured out how to get it
 // to accept the varables as part of the constructor otherwise.
-const float defaultCamWidth = 320;    // The default width for all cameras
-const float defaultCamHeight = 180;   // The default height for all cameras
+const float DEFAULT_CAM_HEIGHT = 320;    // The default width for all cameras
+const float DEFAULT_CAM_WIDTH = 180;   // The default height for all cameras
 
 class CustomCamera
 {
@@ -24,9 +24,10 @@ class CustomCamera
 	Vector2 realPosition;   // The position of the top left corner of the camera in the game world
 	Vector2 resolution;   // The width and height of the camera
 	float renderScale;   // How much the renderTexture is scaled up when drawing to the screen
+	
 	Rectangle viewRectangle;   // The rectangle representation of the bounds of the camera's view in the game world
 	public:
-	CustomCamera( Vector2 position = { 0, 0 }, Vector2 resolution = { defaultCamWidth, defaultCamHeight }, float renderScale = 1.0f );
+	CustomCamera( Vector2 position = { 0, 0 }, Vector2 resolution = { DEFAULT_CAM_WIDTH, DEFAULT_CAM_HEIGHT }, float renderScale = 1.0f );
 
 	CustomCamera( Vector2 resolution, float renderScale ) : CustomCamera( { 0, 0 }, resolution, renderScale )
 	{

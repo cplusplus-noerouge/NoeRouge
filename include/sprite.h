@@ -38,6 +38,8 @@ class Sprite : public BaseSprite
 		update( texture, position, layer, rotation, scale, tint, pivotPoint );
 	}
 
+	Sprite( ) : Sprite( "player1", { 0, 0 }, 0 ) { }
+
 	/*-----------------------------------------------
 	* @brief: updates all data members with new values
 	*/
