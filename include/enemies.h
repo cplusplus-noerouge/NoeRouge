@@ -1,48 +1,25 @@
+/*
+* NoeRogue
+* Enemy Class (inherits gameObject class)
+* Kaleb Flowers
+*
+* TO-DO :
+*
+*/
+
+
 #pragma once
 
-#include "raylib.h"
+#include <cstdlib>
+#include "object.h"
 
-class Enemy{
-private:
-    int world_position[2];
-    int local_position[2];
-    // Inventory is a float array of item ids
-    // The decimal value can be used for item durability (if applicable)
-    float *inventoryPtr;
-    int health;
-    int defense;
-    char graphic;
-    // etc...
 
+
+class Enemy: public GameObject
+{
 public:
-    // Constructor
-    Enemy( int x, int y, int hp, int def, char gfx )
-        : health( hp ), defense( def ), graphic( gfx )
-    {
-        world_position[ 0 ] = x;
-        world_position[ 1 ] = y;
-    }
+    Enemy(int id, Vector2 position, Vector2 size, int speed ) : GameObject( id, position, size, speed) { }
 
-    // Movement functions
-    void moveLeft(int distance);
-    void moveRight(int distance);
-    void moveUp(int distance);
-    void moveDown(int distance);
-
-    // Combat and rendering
-    void render( );
-    void takeDamage( int damage );
-
-    // Collision detection
-    bool checkCollision( Vector2 playerPos, float attackRange ) const;
-
-    // Getter for position
-    Vector2 getPosition( ) const
-    {
-        return { static_cast< float >( world_position[ 0 ] ), static_cast< float >( world_position[ 1 ] ) };
-    }
-
-    // Getters for health
-    int getHealth( ) const { return health; }
+    void updateDirection( ) override;
+    void onRender( )override;
 };
-
