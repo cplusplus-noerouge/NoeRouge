@@ -9,7 +9,7 @@
 #include "player.h"
 #include "object.h"
 // <<<<<<< combat-character-copy
-#include "globals.h"
+//#include "globals.h"
 // #include "mapGen.h"
 
 // constexpr int SCREEN_WIDTH = 800;

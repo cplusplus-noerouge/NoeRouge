@@ -4,13 +4,13 @@
 #include <iostream>
 
 
-class player *objectHandler::createPlayer(Vector2 position, Vector2 size, int speed )
-{
-   player* newPlayer = new player( this->nextId++, position, size, speed );
-   this->allObjects.push_back( newPlayer );
-   this->numberOfObjects++;
-   return newPlayer;
-}
+//class player *objectHandler::createPlayer(Vector2 position, Vector2 size, int speed )
+//{
+//   player* newPlayer = new player( this->nextId++, position, size, speed );
+//   this->allObjects.push_back( newPlayer );
+//   this->numberOfObjects++;
+//   return newPlayer;
+//}
 
 void player::updateDirection()
 {
@@ -47,25 +47,25 @@ class player* ObjectHandler::createPlayer( Vector2 position, Vector2 size, int s
    return player;
 }
 
-void player::attack( std::vector<Enemy*>& enemies )
-{
-   if ( IsKeyPressed( KEY_SPACE ) )
-   {  // Attack with SPACE
-      BeginDrawing( );  // Ensure you're inside a drawing context
-
-      for ( Enemy* enemy : enemies )
-      {
-         if ( enemy->checkCollision( position, attackRange ) )
-         {
-            enemy->takeDamage( attackDamage );
-            std::cout << "Hit enemy! Health: " << enemy->getHealth( ) << std::endl;
-
-            // Display hit effect
-            Vector2 enemyPos = enemy->getPosition( );
-            DrawText( "HIT!", enemyPos.x, enemyPos.y - 30, 20, RED );
-         }
-      }
-
-      EndDrawing( );
-   }
-}
+//void player::attack( std::vector<Enemy*>& enemies )
+//{
+//   if ( IsKeyPressed( KEY_SPACE ) )
+//   {  // Attack with SPACE
+//      BeginDrawing( );  // Ensure you're inside a drawing context
+//
+//      for ( Enemy* enemy : enemies )
+//      {
+//         if ( enemy->checkCollision( position, attackRange ) )
+//         {
+//            enemy->takeDamage( attackDamage );
+//            std::cout << "Hit enemy! Health: " << enemy->getHealth( ) << std::endl;
+//
+//            // Display hit effect
+//            Vector2 enemyPos = enemy->getPosition( );
+//            DrawText( "HIT!", enemyPos.x, enemyPos.y - 30, 20, RED );
+//         }
+//      }
+//
+//      EndDrawing( );
+//   }
+//}
