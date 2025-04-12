@@ -1,5 +1,5 @@
-#pragma once
-
+#ifndef H_OBJECT
+#define H_OBJECT
 #include <cstdio>
 #include <vector>
 #include "raylib.h"
@@ -11,16 +11,16 @@
 //
 */
 
-class GameObject {
+class gameObject {
 private:
     int id;
 
 public:
-    GameObject() {}
-    GameObject(int id) {
+    gameObject() {}
+    gameObject(int id) {
         this->id = id;
     }
-    ~GameObject() {
+    ~gameObject() {
         // No memory is currently allocated, do nothing
         ;;
     }
@@ -30,34 +30,31 @@ public:
     // Setters
     void setId(int id);
 
-    virtual void onTick(const std::vector<Rectangle> collidables);
+    virtual void onTick();
     // TODO 00
     virtual void onRender();
 };
 
-class ObjectHandler 
-{
+class objectHandler {
 private:
     int numberOfObjects;
     int nextId;
-    std::vector<class GameObject *> allObjects;
+    std::vector<class gameObject *> allObjects;
 
 public:
-    ObjectHandler() 
-    {
+    objectHandler() {
         this->numberOfObjects = 0;
         this->nextId = 0;
     }
-    ~ObjectHandler() 
-    {
+    ~objectHandler() {
         ;;
     }
 
-    void tickAll(const std::vector<Rectangle> collidables);
+    void tickAll();
     void renderAll();
-
-    class GameObject *getObject(int id);
-    class GameObject *createObject();
+    class gameObject *getObject(int id);
+    class gameObject *createObject();
     class Player *createPlayer(Vector2 position, Vector2 size, int speed);
-    class Enemy* createEnemy( Vector2 position, Vector2 size, int speed );
 };
+
+#endif
