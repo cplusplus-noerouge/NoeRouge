@@ -1,20 +1,25 @@
+/*
+* NoeRogue
+* Enemy Class (inherits gameObject class)
+* Kaleb Flowers
+*
+* TO-DO :
+*
+*/
+
+
+#pragma once
+
 #include <cstdlib>
+#include "character.h"
 
-class classEnemy {
-private:
-    int world_position[2];
-    int local_position[2];
-    // Inventory is a float array of item ids
-    // The decimal value can be used for item durrabilty (if applicible)
-    float *inventoryPtr;
-    int health;
-    int defence;
-    char graphic;
-    // etc...
 
+
+class Enemy: public Character
+{
 public:
-    int moveLeft(int distance);
-    int moveRight(int distance);
-    int moveUp(int distance);
-    int moveDown(int distance);
+    Enemy(int id, Vector2 position, Vector2 size, int speed ) : Character( id, position, size, speed) { }
+
+    void updateDirection( ) override;
+    void onRender( ) override;
 };

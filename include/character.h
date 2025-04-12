@@ -3,7 +3,7 @@
 
 #pragma once
 
-class Character : public gameObject
+class Character : public GameObject
 {
 private:
 
@@ -37,14 +37,12 @@ public:
 
     Character(int _id);
 
-    Character( ) { }
-
     ~Character()
     {
         //destructor
     }
 
-    void onTick() override;
+    void onTick(const std::vector<Rectangle> collidables) override;
 
     void onRender() override;
 };
