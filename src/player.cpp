@@ -1,6 +1,10 @@
 #include "player.h"
+#include "customCamera.h"
+#include "sprite.h"
 
-void player::updateDirection()
+extern CustomCamera mainCamera;
+
+void Player::updateDirection()
 {
     if (IsKeyDown(KEY_A))
     {
@@ -20,17 +24,21 @@ void player::updateDirection()
     }
 }
 
-void player::onRender()
+void Player::onRender()
 {
-    Rectangle rectangle = bounds();
-    DrawRectangle(rectangle.x, rectangle.y, rectangle.width, rectangle.height, MAROON);
-}
+// <<<<<<< graphics
+   mainCamera.addToBuffer( &sprite );
+// =======
+//     Rectangle rectangle = bounds();
+//     DrawRectangle(rectangle.x, rectangle.y, rectangle.width, rectangle.height, MAROON);
+// }
 
-// Define the player create function in the object handler
-class player* ObjectHandler::createPlayer( Vector2 position, Vector2 size, int speed )
-{
-   class player* player = new class player( this->nextId++, position, size, speed );
-   this->allObjects.push_back( player );
-   this->numberOfObjects++;
-   return player;
+// // Define the player create function in the object handler
+// class player* ObjectHandler::createPlayer( Vector2 position, Vector2 size, int speed )
+// {
+//    class player* player = new class player( this->nextId++, position, size, speed );
+//    this->allObjects.push_back( player );
+//    this->numberOfObjects++;
+//    return player;
+// >>>>>>> IntegratedMain-CombatCharacter
 }

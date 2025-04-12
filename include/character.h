@@ -37,6 +37,8 @@ public:
 
     Character(int _id);
 
+    Character( ) { }
+
     ~Character()
     {
         //destructor

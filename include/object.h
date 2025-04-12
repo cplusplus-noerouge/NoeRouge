@@ -55,8 +55,9 @@ public:
 
     void tickAll(const std::vector<Rectangle> collidables);
     void renderAll();
+
     class GameObject *getObject(int id);
     class GameObject *createObject();
-    class player *createPlayer(Vector2 position, Vector2 size, int speed);
+    class Player *createPlayer(Vector2 position, Vector2 size, int speed);
     class Enemy* createEnemy( Vector2 position, Vector2 size, int speed );
 };
