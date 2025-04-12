@@ -1,46 +1,46 @@
 #include "object.h"
 
-// ----- GameObject -----
+// ----- gameObject -----
 
-int GameObject::getId() {
+int gameObject::getId() {
     return this->id;
 }
 
-void GameObject::setId(int id) {
+void gameObject::setId(int id) {
     this->id = id;
 }
 
-void GameObject::onTick(const std::vector<Rectangle> collidables) {
+void gameObject::onTick() {
     printf("I am a generic object, my id is %d, and I have been ticked\n", this->id);
     return;
 }
 
-void GameObject::onRender() {
+void gameObject::onRender() {
     return;
 }
 
 // ----------
 
-// ----- ObjectHandler -----
+// ----- objectHandler -----
 
-class GameObject *ObjectHandler::createObject() {
-    class GameObject *newObject = new GameObject(this->nextId++);
+class gameObject *objectHandler::createObject() {
+    class gameObject *newObject = new gameObject(this->nextId++);
     this->allObjects.push_back(newObject);
     this->numberOfObjects++;
     return newObject;
 }
 
-class GameObject *ObjectHandler::getObject(int id) {
+class gameObject *objectHandler::getObject(int id) {
     return this->allObjects[id];
 }
 
-void ObjectHandler::tickAll(const std::vector<Rectangle> collidables) {
+void objectHandler::tickAll() {
     for (int x = 0; x < this->numberOfObjects; x++) {
-        this->allObjects[x]->onTick(collidables);
+        this->allObjects[x]->onTick();
     }
 }
 
-void ObjectHandler::renderAll()
+void objectHandler::renderAll()
 {
     for (int x = 0; x < this->numberOfObjects; x++) 
     {
