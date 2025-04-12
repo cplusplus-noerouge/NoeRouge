@@ -1,84 +1,17 @@
 /*
-* Worked on by:
-* Adam Aronow, Andrew Thomas
+* Adam Aronow
 */
 
 #include "raylib.h"
 #include "raymath.h"
 #include "vector"
+//#include "textureloader.cpp"
 #include <iostream>
-#include "textureloader.cpp"
 
 const float defaultCamWidth = 320;
 const float defaultCamHeight = 180;
 
-class BaseSprite
-{
-	protected:
-	float layer;
-
-	public:
-	BaseSprite( float layer )
-	{
-		this->layer = layer;
-	}
-
-	BaseSprite( )
-	{
-		this->layer = 0;
-	}
-
-	virtual bool isWithinRect( Rectangle rect )
-	{
-		return true;
-	}
-
-	virtual void render( Vector2 cameraPosition )
-	{
-		
-	}
-
-	virtual void print( )
-	{
-		std::cout << "BaseSprite " << this << ":\n\tlayer = " << layer
-;
-	}
-
-	bool operator < ( BaseSprite sprite )
-	{
-		return layer < sprite.layer;
-	}
-	bool operator <= ( BaseSprite sprite )
-	{
-		return layer <= sprite.layer;
-	}
-	bool operator > ( BaseSprite sprite )
-	{
-		return layer > sprite.layer;
-	}
-	bool operator >= ( BaseSprite sprite )
-	{
-		return layer >= sprite.layer;
-	}
-	bool operator == ( BaseSprite sprite )
-	{
-		return layer == sprite.layer;
-	}
-	bool operator != ( BaseSprite sprite )
-	{
-		return layer != sprite.layer;
-	}
-	float getLayer( )
-	{
-		return layer;
-	}
-	void setLayer( float layer )
-	{
-		this->layer = layer;
-	}
-};
-
-class Sprite : public BaseSprite
+class Sprite
 {
 	protected:
 	Texture2D texture;
@@ -86,21 +19,50 @@ class Sprite : public BaseSprite
 	Rectangle sourceRect;
 	Rectangle destinationRect;
 	Rectangle boundingRect;
+	float layer;
 	float rotation = 0;
 	int scale = 1;
 	Color tint = WHITE;
 	Vector2 pivotPoint;
 
 	public:
-	Sprite( std::string texture, Vector2 position, float layer, float rotation = 0, float scale = 1, Color tint = WHITE, Vector2 pivotPoint = Vector2 { 0, 0 } )
+	Sprite( std::string texture, Vector2 position, float layer, float rotation, float scale, Color tint, Vector2 pivotPoint )
 	{
 		update( texture, position, layer, rotation, scale, tint, pivotPoint );
 	}
 
-	Sprite( Texture2D texture, Vector2 position, float layer, float rotation = 0, float scale = 1, Color tint = WHITE, Vector2 pivotPoint = Vector2 { 0, 0 } )
+	Sprite( Texture2D texture, Vector2 position, float layer, float rotation, float scale, Color tint, Vector2 pivotPoint )
 	{
 		update( texture, position, layer, rotation, scale, tint, pivotPoint );
 	}
+
+	         // Constructors with fewer parameters
+	Sprite( Texture2D texture, Vector2 position, float layer, float rotation, float scale, Color tint )
+		: Sprite( texture, position, layer, rotation, scale, tint, Vector2 { 0, 0 } )
+	{;}
+	Sprite( Texture2D texture, Vector2 position, float layer, float rotation, float scale )
+		: Sprite( texture, position, layer, rotation, scale, WHITE, Vector2 { 0, 0 } )
+	{;}
+	Sprite( Texture2D texture, Vector2 position, float layer, float rotation )
+		: Sprite( texture, position, layer, rotation, 1, WHITE, Vector2 { 0, 0 } )
+	{;}
+	Sprite( Texture2D texture, Vector2 position, float layer )
+		: Sprite( texture, position, layer, 0, 1, WHITE, Vector2 { 0, 0 } )
+	{;}
+	Sprite( std::string texture, Vector2 position, float layer, float rotation, float scale, Color tint )
+		: Sprite( texture, position, layer, rotation, scale, tint, Vector2 { 0, 0 } )
+	{;}
+	Sprite( std::string texture, Vector2 position, float layer, float rotation, float scale )
+		: Sprite( texture, position, layer, rotation, scale, WHITE, Vector2 { 0, 0 } )
+	{;}
+	Sprite( std::string texture, Vector2 position, float layer, float rotation )
+		: Sprite( texture, position, layer, rotation, 1, WHITE, Vector2 { 0, 0 } )
+	{;}
+	Sprite( std::string texture, Vector2 position, float layer )
+		: Sprite( texture, position, layer, 0, 1, WHITE, Vector2 { 0, 0 } )
+	{;}
+	Sprite( )
+	{;}
 
 	/*-----------------------------------------------
 	* @brief: updates all data members with new values
@@ -118,7 +80,7 @@ class Sprite : public BaseSprite
 	}
 	void update( std::string texture, Vector2 position, float layer, float rotation, float scale, Color tint, Vector2 pivotPoint )
 	{
-		this->texture = textureMap[ texture ];
+		//this->texture = textureMap[texture];
 		this->position = position;
 		this->layer = layer;
 		this->rotation = rotation;
@@ -131,6 +93,7 @@ class Sprite : public BaseSprite
 	{
 		this->position = position;
 		this->layer = layer;
+		this->rotation = rotation;
 		updateRectangles( );
 	}
 
@@ -154,11 +117,6 @@ class Sprite : public BaseSprite
 		}
 	}
 
-	bool isWithinRect( Rectangle rect )
-	{
-		return CheckCollisionRecs( rect, this->boundingRect );
-	}
-
 	void render( Vector2 cameraPosition )
 	{
 		Rectangle realDestination = { destinationRect.x - cameraPosition.x, destinationRect.y - cameraPosition.y,
@@ -172,6 +130,31 @@ class Sprite : public BaseSprite
 		std::cout << "Sprite " << this << ":\n\tposition = {" << position.x << ", " << position.y << "}\n\tlayer = " << layer
 			<< "\n\trotation = " << rotation << "\n\tscale = " << scale << "\n\ttint = {" << (int)tint.r << ", "
 			<< ( int ) tint.g << ", " << ( int ) tint.b << "}\n\tpivotPoint = {" << pivotPoint.x << ", " << pivotPoint.y << "}\n";
+	}
+
+	bool operator < ( Sprite sprite )
+	{
+		return layer < sprite.layer;
+	}
+	bool operator <= ( Sprite sprite )
+	{
+		return layer <= sprite.layer;
+	}
+	bool operator > ( Sprite sprite )
+	{
+		return layer > sprite.layer;
+	}
+	bool operator >= ( Sprite sprite )
+	{
+		return layer >= sprite.layer;
+	}
+	bool operator == ( Sprite sprite )
+	{
+		return layer == sprite.layer;
+	}
+	bool operator != ( Sprite sprite )
+	{
+		return layer != sprite.layer;
 	}
 
 	Texture2D getTexture( )
@@ -195,6 +178,14 @@ class Sprite : public BaseSprite
 	Rectangle getBoundingRect( )
 	{
 		return boundingRect;
+	}
+	float getLayer( )
+	{
+		return layer;
+	}
+	void setLayer( float layer )
+	{
+		this->layer = layer;
 	}
 	float getRotation( )
 	{
@@ -236,7 +227,7 @@ class Sprite : public BaseSprite
 class CustomCamera
 {
 	private:
-	std::vector<BaseSprite*> buffer;
+	std::vector<Sprite*> buffer;
 	RenderTexture2D renderTexture;
 	Vector2 centeredPosition;
 	Vector2 realPosition;
@@ -244,7 +235,7 @@ class CustomCamera
 	float renderScale;               // How much the renderTexture is scaled up when drawing to the screen
 	Rectangle viewRectangle;
 	public:
-	CustomCamera( Vector2 position = { 0, 0 }, Vector2 resolution = { defaultCamWidth, defaultCamHeight }, float renderScale = 1.0f )
+	CustomCamera( Vector2 position, Vector2 resolution, float renderScale )
 	{
 		buffer = { };
 		renderTexture = LoadRenderTexture( (int) resolution.x, ( int ) resolution.y );
@@ -253,11 +244,12 @@ class CustomCamera
 		this->renderScale = renderScale;
 		viewRectangle = { position.x - resolution.x / 2, position.y - resolution.y / 2, resolution.x, resolution.y };
 	}
-
 	CustomCamera( Vector2 resolution, float renderScale ) : CustomCamera( Vector2 { 0, 0 }, resolution, renderScale )
 	{;}
+	CustomCamera( ) : CustomCamera( Vector2 { defaultCamWidth, defaultCamHeight }, 1.0f )
+	{;}
 
-	void addToBuffer( BaseSprite* sprite )
+	void addToBuffer( Sprite* sprite )
 	{
 		buffer.push_back( sprite );
 	}
@@ -284,33 +276,19 @@ class CustomCamera
 		   // Iteration has to occur backwards because indices are shifted back when deleting elements
 		for ( int i = buffer.size( ) - 1; i >= 0; i-- )
 		{
-			if ( !buffer.at( i )->isWithinRect( viewRectangle ) )
+			if ( !CheckCollisionRecs( viewRectangle, buffer.at( i )->getBoundingRect() ) )
 			{
 				buffer.erase( buffer.begin() + i );
 			}
 		}
 
 		   // Sorting buffer by layer (lowest to highest)
-		   //Andrew Thomas (this part)
-		for ( int i = 0; i < buffer.size( ); i++ )
-		{
-			int minIndex = i;                          //variable to track lowest layer value
-			for ( int j = i + 1; j < buffer.size( ); j++ )
-			{
-				if ( *buffer[ j ] < *buffer[ minIndex ] )
-				{
-					minIndex = j;
-				}
-			}
-			BaseSprite* temp = buffer[ i ];
-			buffer[ i ] = buffer[ minIndex ];
-			buffer[ minIndex ] = temp;
-		}
+		// TODO: Implement layer sorting
       
 		   // Rendering everything in the buffer to a texture
 		BeginTextureMode( renderTexture );
 		ClearBackground( BLACK );
-		for ( BaseSprite*sprite : buffer )
+		for ( Sprite *sprite : buffer )
 		{
 			sprite->render( realPosition );
 		}
@@ -320,9 +298,11 @@ class CustomCamera
 
 	void renderToScreen( )
 	{
-		DrawTexturePro( renderTexture.texture, { 0, 0, resolution.x, -resolution.y },
-								{0, 0, resolution.x * renderScale, resolution.y * renderScale },
-								{0, 0}, 0, WHITE );
+		{
+			DrawTexturePro( renderTexture.texture, { 0, 0, resolution.x, -resolution.y },
+								 {0, 0, resolution.x * renderScale, resolution.y * renderScale },
+								 {0, 0}, 0, WHITE );
+		}
 	}
 };
 

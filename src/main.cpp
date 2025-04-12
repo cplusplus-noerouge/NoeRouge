@@ -5,11 +5,21 @@
 #include <raylib.h>
 
 // Local includes
+#include "character.h"
+#include "player.h"
 #include "object.h"
+// <<<<<<< combat-character-copy
+#include "globals.h"
+// #include "mapGen.h"
+
+// constexpr int SCREEN_WIDTH = 800;
+// constexpr int SCREEN_HEIGHT = 450;
+// =======
 #include "mapGen.h"
 
 constexpr int SCREEN_WIDTH = 1280; //increased resolution & window size
 constexpr int SCREEN_HEIGHT = 720;
+// >>>>>>> main-copy
 
 constexpr int FPS = 60;
 
@@ -43,16 +53,19 @@ int main()
         objectHandler.tickAll(walls);
 
         BeginDrawing();
-
+       
         ClearBackground(BLACK);
 
         objectHandler.renderAll();
 
         for (Rectangle wall : walls)
         {
+// <<<<<<< combat-character-copy
+//            DrawRectangle( rect.x, rect.y, rect.width, rect.height, DARKBLUE );   
+// =======
             DrawRectangle(wall.x, wall.y, wall.width, wall.height, DARKBLUE);
+// >>>>>>> main-copy
         }
-
         EndDrawing();
     }
 
