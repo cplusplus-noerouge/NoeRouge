@@ -2,14 +2,15 @@
 * Adam Aronow
 */
 
-#include "textureLoader.h"
+#pragma once
+
+#include <iostream>
+#include <unordered_map>
+#include "raylib.h"
 
 extern std::unordered_map<std::string, Texture2D> textureMap;
 
-/*-----------------------------------------------------------------------------------------
-* @brief: loads every texture and assigns it to the textureMap with a corresponding string
-*/
-void loadAllTextures( )
+static void loadAllTextures( )
 {
 	textureMap[ "player" ] = LoadTexture( ( char* ) "../../../assets/graphics/placeholders/Placeholder player down (1).png" );
 	textureMap[ "enemy" ] = LoadTexture( ( char* ) "../../../assets/graphics/placeholders/Placeholder enemy (1).png" );
@@ -18,10 +19,7 @@ void loadAllTextures( )
 	textureMap[ "floor" ] = LoadTexture( ( char* ) "../../../assets/graphics/placeholders/Placeholder floor tile.png" );
 }
 
-/*---------------------------------------------
-* @brief: unloads every texture in textureMap
-*/
-void unloadAllTextures( )
+static void unloadAllTextures( )
 {
 	for ( auto i = textureMap.begin( ); i != textureMap.end( ); i++ )
 	{
