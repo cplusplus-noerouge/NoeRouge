@@ -5,9 +5,11 @@
 #include "character.h"
 #include "sprite.h"
 
+
 class Player : public Character {
    private:
    Sprite sprite;
+
 
    public:
    Player( )
@@ -41,3 +43,4 @@ class Player*objectHandler::createPlayer(Vector2 position, Vector2 size, int spe
     this->numberOfObjects++;
     return player;
 }
+

@@ -2,7 +2,6 @@
 #include <raymath.h>
 #include <vector>
 #include "Character.h"
-#include "globals.h"      //all that globals contains right now is GetCollisionRectangles(), which is just a test function
 
 Character::Character(int _id, Vector2 _position, Vector2 _size, int _speed)
 {
@@ -29,7 +28,7 @@ Character::Character(int _id)
     direction = { 0 };
 }
 
-void Character::onTick()
+void Character::onTick(const std::vector<Rectangle> collidables)
 {
     direction = { 0, 0 };
 
@@ -41,7 +40,7 @@ void Character::onTick()
 
         //collisions must be done before velocity is added to position so that the character does not go past a wall before collisions are checked, but that is
         //only necessary for very high movement speed
-    updateCollisions(globals::GetCollisionRectangles());
+    updateCollisions(collidables);
 
     position = Vector2Add(position, velocity);
 }
