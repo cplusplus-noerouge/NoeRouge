@@ -4,16 +4,21 @@
 #include "raylib.h"
 
 
-class gameObject {
+class GameObject {
 private:
     int id;
 
 public:
-    gameObject() : id(0) {} // Default constructor
-    gameObject(int id) {
+// <<<<<<< combat-character-copy
+//     gameObject() : id(0) {} // Default constructor
+//     gameObject(int id) {
+// =======
+    GameObject() {}
+    GameObject(int id) {
+// >>>>>>> main-copy
         this->id = id;
     }
-    ~gameObject() {
+    ~GameObject() {
         // No memory is currently allocated, do nothing
         ;;
     }
@@ -23,11 +28,17 @@ public:
     // Setters
     void setId(int id);
 
-    virtual void onTick();
+// <<<<<<< combat-character-copy
+//     virtual void onTick();
+// =======
+    virtual void onTick(const std::vector<Rectangle> collidables);
+    // TODO 00
+// >>>>>>> main-copy
     virtual void onRender();
 };
 
-class objectHandler {
+class ObjectHandler 
+{
 private:
    
 
@@ -35,18 +46,32 @@ public:
 
     int numberOfObjects;
     int nextId;
-    std::vector<class gameObject *> allObjects;
-    objectHandler() {
+// <<<<<<< combat-character-copy
+//     std::vector<class gameObject *> allObjects;
+//     objectHandler() {
+// =======
+    std::vector<class GameObject *> allObjects;
+
+// public:
+    ObjectHandler() 
+    {
+// >>>>>>> main-copy
         this->numberOfObjects = 0;
         this->nextId = 0;
     }
-    ~objectHandler() {
+    ~ObjectHandler() 
+    {
         ;;
     }
 
-    void tickAll();
+    void tickAll(const std::vector<Rectangle> collidables);
     void renderAll();
-    class gameObject *getObject(int id);
-    class gameObject *createObject();
+    class GameObject *getObject(int id);
+    class GameObject *createObject();
     class player *createPlayer(Vector2 position, Vector2 size, int speed);
+// <<<<<<< combat-character-copy
+// };
+// =======
+    class Enemy* createEnemy( Vector2 position, Vector2 size, int speed );
 };
+// >>>>>>> main-copy
