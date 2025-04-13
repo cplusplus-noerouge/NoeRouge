@@ -1,43 +1,62 @@
-/*
-* NoeRogue
-* Enemy Class (inherits gameObject class)
-* Kaleb Flowers
-*
-* TO-DO :
-* 
-*/
-#include <raylib.h>
-#include <raymath.h>
-#include <vector>
-
 #include "enemies.h"
+#include "raylib.h"
+#include <iostream>
+#include <cmath>
 #include "object.h"
 
 
-void Enemy::updateDirection( )
+void Enemy::moveLeft( int distance )
 {
-   // line of sight to the player(Most important)
-
-
-   // Attacking the player with a rectangle or circle after line of sight
-
-
-   // (To do) random movements before the player is sighted
-  
-   
+   world_position[ 0 ] -= distance;
 }
 
-void Enemy::onRender( )
+void Enemy::moveRight( int distance )
 {
-   Rectangle rectangle = bounds( );
-   DrawRectangle( rectangle.x, rectangle.y, rectangle.width, rectangle.height, RED );
+   world_position[ 0 ] += distance;
 }
 
-// Define the player crate function in the object handler
-class Enemy* ObjectHandler::createEnemy( Vector2 position, Vector2 size, int speed )
+void Enemy::moveUp( int distance )
 {
-   class Enemy* enemy = new class Enemy( this->nextId++, position, size, speed );
-   this->allObjects.push_back( enemy );
-   this->numberOfObjects++;
-   return enemy;
+   world_position[ 1 ] -= distance;
 }
+
+void Enemy::moveDown( int distance )
+{
+   world_position[ 1 ] += distance;
+}
+
+void Enemy::render( )
+{
+   DrawRectangle( world_position[ 0 ], world_position[ 1 ], 50, 50, RED );
+   DrawText( TextFormat( "HP: %d", health ), world_position[ 0 ], world_position[ 1 ] - 20, 12, WHITE );
+}
+
+void Enemy::takeDamage( int damage )
+{
+
+   int effectiveDamage = damage - defense;
+   if ( effectiveDamage > 0 )
+   {
+      health -= effectiveDamage;
+   }
+   if ( health <= 0 )
+   {
+      std::cout << "Enemy defeated!" << std::endl;
+   }
+   Rectangle rectangle = bounds( ); // >>>>>>> main-copy
+   DrawRectangle( rectangle.x, rectangle.y, rectangle.width, rectangle.height, RED ); // >>>>>>> main-copy
+}
+
+bool Enemy::checkCollision( Vector2 playerPos, float attackRange ) const
+{
+   float dx = playerPos.x - world_position[ 0 ];
+   float dy = playerPos.y - world_position[ 1 ];
+   float distance = sqrt( dx * dx + dy * dy );
+
+   return distance < attackRange;
+}
+
+//Vector2 Enemy::getPosition( ) const
+//{
+//   return { static_cast< float >( world_position[ 0 ] ), static_cast< float >( world_position[ 1 ] ) };
+//}
