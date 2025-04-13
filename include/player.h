@@ -5,7 +5,9 @@
 #include "character.h"
 #include "enemies.h"
 
-class player : public Character {
+class player : public Character 
+{
+
 private:
    Rectangle bounds_;
    Color color_;
@@ -31,7 +33,7 @@ public:
   /* player* createPlayer( objectHandler& handler, Vector2 position, Vector2 size, int speed );
    void attack(std::vector<Enemy*>& enemies);*/
 };
-
+// <<<<<<< combat-character-copy
 //// Define the player crate function in the object handler
 //class player *objectHandler::createPlayer(Vector2 position, Vector2 size, int speed) {
 //    class player *player = new class player(this->nextId++, position, size, speed);
@@ -39,3 +41,4 @@ public:
 //    this->numberOfObjects++;
 //    return player;
 //}
+// =======

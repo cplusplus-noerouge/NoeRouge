@@ -2,6 +2,7 @@
 #include "raylib.h"
 #include <iostream>
 #include <cmath>
+#include "object.h"
 
 
 void Enemy::moveLeft( int distance )
@@ -32,6 +33,7 @@ void Enemy::render( )
 
 void Enemy::takeDamage( int damage )
 {
+
    int effectiveDamage = damage - defense;
    if ( effectiveDamage > 0 )
    {
@@ -41,6 +43,8 @@ void Enemy::takeDamage( int damage )
    {
       std::cout << "Enemy defeated!" << std::endl;
    }
+   Rectangle rectangle = bounds( ); // >>>>>>> main-copy
+   DrawRectangle( rectangle.x, rectangle.y, rectangle.width, rectangle.height, RED ); // >>>>>>> main-copy
 }
 
 bool Enemy::checkCollision( Vector2 playerPos, float attackRange ) const

@@ -11,15 +11,15 @@
 #pragma once
 
 #include <cstdlib>
-#include "object.h"
+#include "character.h"
 
 
 
-class Enemy: public GameObject
+class Enemy: public Character
 {
 public:
-    Enemy(int id, Vector2 position, Vector2 size, int speed ) : GameObject( id, position, size, speed) { }
+    Enemy(int id, Vector2 position, Vector2 size, int speed ) : Character( id, position, size, speed) { }
 
     void updateDirection( ) override;
-    void onRender( )override;
+    void onRender( ) override;
 };
