@@ -5,44 +5,44 @@
 
 class Character : public GameObject
 {
-private:
+   private:
 
-    Vector2 size;
-    int speed;
+   Vector2 size;
+   int speed;
 
-        //Checks if this character is colliding with the left side of another rectangle, same for all colliding functions.
-    bool collidingLeft(Rectangle other);
+   protected:
 
-    bool collidingRight(Rectangle other);
+   Vector2 position;
+   Vector2 direction;
+   Vector2 velocity;
 
-    bool collidingTop(Rectangle other);
+   public:
 
-    bool collidingBottom(Rectangle other);
+   Character( int _id, Vector2 _position, Vector2 _size, int _speed );
 
-    void updateCollisions(const std::vector<Rectangle> colliders);
+   Character( int _id );
 
-protected:
+   ~Character( )
+   {
+      //destructor
+   }
 
-    Vector2 position;
-    Vector2 direction;
-    Vector2 velocity;
+   void onTick( const std::vector<Rectangle> collidables ) override;
 
-    Rectangle bounds();
+   void onRender( ) override;
 
-    virtual void updateDirection() {};
+   virtual void updateDirection( );
 
-public:
+   Rectangle bounds( );
 
-    Character(int _id, Vector2 _position, Vector2 _size, int _speed);
+   //Checks if this character is colliding with the left side of another rectangle, same for all colliding functions.
+   bool collidingLeft( Rectangle other );
 
-    Character(int _id);
+   bool collidingRight( Rectangle other );
 
-    ~Character()
-    {
-        //destructor
-    }
+   bool collidingTop( Rectangle other );
 
-    void onTick(const std::vector<Rectangle> collidables) override;
+   bool collidingBottom( Rectangle other );
 
-    void onRender() override;
+   void updateCollisions( const std::vector<Rectangle> colliders );
 };

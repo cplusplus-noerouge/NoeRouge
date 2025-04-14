@@ -18,6 +18,26 @@ Rectangle Character::bounds()
 	return { position.x, position.y, size.x, size.y };
 }
 
+void Character::updateDirection( )
+{ 
+   if ( IsKeyDown( KEY_A ) )
+   {
+      direction.x = -1;
+   }
+   else if ( IsKeyDown( KEY_D ) )
+   {
+      direction.x = 1;
+   }
+   if ( IsKeyDown( KEY_S ) )
+   {
+      direction.y = 1;
+   }
+   else if ( IsKeyDown( KEY_W ) )
+   {
+      direction.y = -1;
+   }
+}
+
 Character::Character(int _id)
 {
     this->setId(_id);
