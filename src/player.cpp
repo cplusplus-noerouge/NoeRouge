@@ -1,6 +1,18 @@
 #include "player.h"
+#include "object.h"
+#include "enemies.h"
+#include <iostream>
 
-void player::updateDirection()
+
+//class Player *objectHandler::createPlayer(Vector2 position, Vector2 size, int speed )
+//{
+//   Player* newPlayer = new Player( this->nextId++, position, size, speed );
+//   this->allObjects.push_back( newPlayer );
+//   this->numberOfObjects++;
+//   return newPlayer;
+//}
+
+void Player::updateDirection()
 {
     if (IsKeyDown(KEY_A))
     {
@@ -20,17 +32,40 @@ void player::updateDirection()
     }
 }
 
-void player::onRender()
+void Player::onRender()
 {
     Rectangle rectangle = bounds();
     DrawRectangle(rectangle.x, rectangle.y, rectangle.width, rectangle.height, MAROON);
 }
 
-// Define the player create function in the object handler
-class player* ObjectHandler::createPlayer( Vector2 position, Vector2 size, int speed )
+// Define the Player create function in the object handler
+class Player* ObjectHandler::createPlayer( Vector2 position, Vector2 size, int speed )
 {
-   class player* player = new class player( this->nextId++, position, size, speed );
-   this->allObjects.push_back( player );
+   class Player* Player = new class Player( this->nextId++, position, size, speed );
+   this->allObjects.push_back( Player );
    this->numberOfObjects++;
-   return player;
+   return Player;
 }
+
+//void Player::attack( std::vector<Enemy*>& enemies )
+//{
+//   if ( IsKeyPressed( KEY_SPACE ) )
+//   {  // Attack with SPACE
+//      BeginDrawing( );  // Ensure you're inside a drawing context
+//
+//      for ( Enemy* enemy : enemies )
+//      {
+//         if ( enemy->checkCollision( position, attackRange ) )
+//         {
+//            enemy->takeDamage( attackDamage );
+//            std::cout << "Hit enemy! Health: " << enemy->getHealth( ) << std::endl;
+//
+//            // Display hit effect
+//            Vector2 enemyPos = enemy->getPosition( );
+//            DrawText( "HIT!", enemyPos.x, enemyPos.y - 30, 20, RED );
+//         }
+//      }
+//
+//      EndDrawing( );
+//   }
+//}

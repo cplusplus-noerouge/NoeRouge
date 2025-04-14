@@ -5,6 +5,8 @@
 #include <raylib.h>
 
 // Local includes
+#include "character.h"
+#include "player.h"
 #include "object.h"
 #include "mapGen.h"
 
@@ -43,16 +45,17 @@ int main()
         objectHandler.tickAll(walls);
 
         BeginDrawing();
-
+       
         ClearBackground(BLACK);
 
         objectHandler.renderAll();
 
         for (Rectangle wall : walls)
         {
-            DrawRectangle(wall.x, wall.y, wall.width, wall.height, DARKBLUE);
-        }
 
+            DrawRectangle(wall.x, wall.y, wall.width, wall.height, DARKBLUE);
+
+        }
         EndDrawing();
     }
 
