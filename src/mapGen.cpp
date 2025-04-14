@@ -219,6 +219,7 @@ void makeCircleRoom( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )
    }
 }
 
+/*  this is unused bc it looks like a limestone cave not a spaceship
 void makeBlobRoom( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )
 {
    int xMax = p.x + p.width;
@@ -251,51 +252,23 @@ void makeBlobRoom( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )
       }
    }
 }
+*/
 
-void makeRoomOfShape(char shape, BspNode& p, char(&map)[WIDTH][HEIGHT]) //this is prob temporary
+void makeRandRoomShape(BspNode& p, char(&map)[WIDTH][HEIGHT])
 {
-    int randomNumber = std::rand() % 3;
-    switch (randomNumber)
-    {
-    case 0:
-        makeRectRoom(p, map);
-        break;
-    case 1:
-        makeCircleRoom(p, map);
-        break;
-    case 2:
-        makeBlobRoom(p, map);
-        break;
-    case 3:
-        makeRoomContainer(p, map);
-        break;
-        //remove the default: it was causing errors probably because rooms were overlapping
-    }
-
-    switch (shape)
-    {
-    case 'r':
-        makeRectRoom(p, map);
-        break;
-    case 'c':
-        makeCircleRoom(p, map);
-        break;
-    case 'b':
-        makeBlobRoom(p, map);
-        break;
-    case 'f':
-        makeRoomContainer(p, map);
-        break;
-        /*
-    currently commenting out as it was causing issues when running with the random one
-    ----------------------------------
-    default:
-        std::cerr << "tried to make room of unrecognized shape: " << shape;
-        break;
-        */
-
-    }
-
+   for ( int i = 0; i < 2; i++ )
+   {
+      int randomNumber = std::rand( ) % 2;
+      switch ( randomNumber )
+      {
+         case 0:
+            makeRectRoom( p, map );
+            break;
+         case 1:
+            makeCircleRoom( p, map );
+            break;
+      }
+   }
 }
 
 //ROOM STUFF END============================================================================================================================
@@ -319,7 +292,7 @@ Floor::Floor(char roomShape)
     for (BspNode* leaf : leaves)
     {
         makeRoomContainer(*leaf, data);
-        makeRoomOfShape(roomShape, *leaf, data);
+        makeRandRoomShape(*leaf, data);
 
         //makeRectRoom(*leaf, data);
         //makeRoomOfShape(roomShape, *leaf, data); //this can make cool rooms-also if u change the shape
@@ -340,8 +313,6 @@ Floor::Floor(char roomShape)
         }
     }
 
-
-    //TODO carve the hallways
     //TODO spawn enemies and items
     //TODO stairwells between floors
 }

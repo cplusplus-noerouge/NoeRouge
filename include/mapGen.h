@@ -105,7 +105,7 @@ private:
 
     std::list<BspNode*> leafNodes;         //list to hold all leafnodes for the map
     std::vector<std::vector<int>> roomGraph;
-    Floor* floorInput;                      //
+    Floor* floorInput;                     
 
 public:
 
