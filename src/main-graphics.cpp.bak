@@ -8,7 +8,6 @@
 
 // Local includes
 #include "object.h"
-#include "globals.h"
 #include "textureLoader.h"
 #include "sprite.h"
 #include "customCamera.h"

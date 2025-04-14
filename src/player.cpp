@@ -1,6 +1,8 @@
 #include "player.h"
 #include "object.h"
 #include "enemies.h"
+#include "customCamera.h"
+#include "sprite.h"
 #include <iostream>
 
 
@@ -32,8 +34,11 @@ void Player::updateDirection()
     }
 }
 
+extern CustomCamera mainCamera;
+
 void Player::onRender()
 {
+   mainCamera.addToBuffer( &sprite );
     Rectangle rectangle = bounds();
     DrawRectangle(rectangle.x, rectangle.y, rectangle.width, rectangle.height, MAROON);
 }
