@@ -5,7 +5,7 @@
 #include "character.h"
 #include "enemies.h"
 
-class player : public Character 
+class Player : public Character 
 {
 
 private:
@@ -19,9 +19,9 @@ private:
    int attackDamage;      // Damage per hit
 
 public:
-    player(int id): Character(id), attackRange( 50.0f ), attackDamage( 20 ) 
+    Player(int id): Character(id), attackRange( 50.0f ), attackDamage( 20 ) 
     { }
-    player(int id, Vector2 _position, Vector2 _size, int _speed) 
+    Player(int id, Vector2 _position, Vector2 _size, int _speed) 
        : Character(id, _position, _size, _speed), attackRange(50.0f), attackDamage(20) 
     { }
     
@@ -30,15 +30,15 @@ public:
     void updateDirection() override;
     
 
-  /* player* createPlayer( objectHandler& handler, Vector2 position, Vector2 size, int speed );
+  /* Player* createPlayer( objectHandler& handler, Vector2 position, Vector2 size, int speed );
    void attack(std::vector<Enemy*>& enemies);*/
 };
 // <<<<<<< combat-character-copy
-//// Define the player crate function in the object handler
-//class player *objectHandler::createPlayer(Vector2 position, Vector2 size, int speed) {
-//    class player *player = new class player(this->nextId++, position, size, speed);
-//    this->allObjects.push_back(player);
+//// Define the Player crate function in the object handler
+//class Player *objectHandler::createPlayer(Vector2 position, Vector2 size, int speed) {
+//    class Player *Player = new class Player(this->nextId++, position, size, speed);
+//    this->allObjects.push_back(Player);
 //    this->numberOfObjects++;
-//    return player;
+//    return Player;
 //}
 // =======
