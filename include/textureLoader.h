@@ -7,7 +7,7 @@
 #include <iostream>
 #include "raylib.h"
 
-extern std::unordered_map<std::string, Texture2D> textureMap;
+// extern std::unordered_map<std::string, Texture2D> textureMap;
 
 /*-----------------------------------------------------------------------------------------
 * @brief: loads every texture and assigns it to the textureMap with a corresponding string
