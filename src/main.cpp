@@ -2,13 +2,17 @@
 #include <iostream>
 #include <vector>
 #include <cstdlib>
-#include <raylib.h>
+#include "raylib.h"
 
 // Local includes
 #include "character.h"
 #include "player.h"
 #include "object.h"
 #include "mapGen.h"
+#include "textureLoader.h"
+#include "sprite.h"
+#include "customCamera.h"
+#include "screenHandler.h"
 
 constexpr int SCREEN_WIDTH = 1280; //increased resolution & window size
 constexpr int SCREEN_HEIGHT = 720;
