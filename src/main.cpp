@@ -14,12 +14,9 @@
 #include "customCamera.h"
 #include "screenHandler.h"
 
-constexpr int SCREEN_WIDTH = 1280; //increased resolution & window size
-constexpr int SCREEN_HEIGHT = 720;
-
 constexpr int FPS = 60;
-
 constexpr int PLAYER_SPEED = 300;
+const int NUM_OF_FLOORS = 4;
 
 ScreenHandler screenHandler = ScreenHandler( );
 // IMPORTANT! These are different versions of the camera with different zoom levels, uncomment the one you want.
@@ -35,41 +32,48 @@ int main( )
    loadAllTextures( );
    screenHandler.cameras.push_back( &mainCamera );
 
-        //seed the random number generator
-    srand((unsigned int)time(0));
-    int randomNumber = rand() % 3;
-    Floor floor(randomNumber);
-
-    std::vector<Rectangle> walls = floor.getWalls();
-    Vector2 playerSpawnPosition = floor.getPlayerSpawn();
-    std::vector<Sprite> wallSprites = {};
-    for ( Rectangle wall : walls )
-    {
-       wallSprites.push_back( Sprite( "wall", { wall.x, wall.y }, wall.y ) );
+    //make the floors
+    Floor* floors[NUM_OF_FLOORS];
+    for (int i = 0; i < NUM_OF_FLOORS; i++) {
+        floors[i] = new Floor;
     }
+    int floorOn = 0;                 //the floor the player is on. when the player moves floors this changes
 
-        // Create the objectHandler
-    class ObjectHandler objectHandler;
-    class gameObject *testObject;
+    // Create a player so we can see it tick, and see it on screen
+    Vector2 playerSpawnPosition = floors[floorOn]->getPlayerSpawn();
+    floors[floorOn]->getObjHandler()->createPlayer(playerSpawnPosition, {TILE_SIZE, TILE_SIZE}, 300);
 
-        // Print version info
-    std::cout << "noeRouge alpha v0.1\n";
+    //TODO these really should not be recalculated every frame, fix this
+    std::vector<Sprite> wallSprites = {};
 
-        // Create a player so we can see it tick, and see it on screen
-    objectHandler.createPlayer( playerSpawnPosition, {TILE_SIZE, TILE_SIZE}, 300);
-
-    while ( !WindowShouldClose( ) )
+    while (!WindowShouldClose())
     {
-       objectHandler.tickAll( walls );
+        //TEMPORARY testing changing floors. needs to only be possible when player is on the ladder down
+        if (IsKeyPressed(KEY_SPACE) && floorOn < NUM_OF_FLOORS-1)
+        {
+            //the player object needs to also change floors. idk best way to do this.
+            //could be like: void ObjectHandler::transferObj(int objId, ObjectHandler* newHandler)
+            //but thats a problem with the Id system
+            //or the player could exist simultaneously in all object handlers if other objects don't need to move
+            //or just have one object handler for the whole game and do floors some other way
+            floorOn += 1;
+        }
 
-       objectHandler.renderAll( );
+        wallSprites.clear(); //weird and inefficient. fix this
+        for (Rectangle wall : floors[floorOn]->getWalls())
+        {
+            wallSprites.push_back(Sprite("wall", { wall.x, wall.y }, wall.y));
+        }
 
-       for ( int i = 0; i < wallSprites.size( ); i++ )
-       {
-          mainCamera.addToBuffer( &wallSprites[ i ] );
-       }
+        floors[floorOn]->getObjHandler()->tickAll(floors[floorOn]->getWalls());
+        floors[floorOn]->getObjHandler()->renderAll();
 
-       screenHandler.renderAll( );
+        for ( int i = 0; i < wallSprites.size( ); i++ )
+        {
+           mainCamera.addToBuffer( &wallSprites[ i ] );
+        }
+
+        screenHandler.renderAll( );
     }
 
     return 0;

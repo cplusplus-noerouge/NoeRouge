@@ -1,11 +1,13 @@
-//Notes: - We should probablytry to keep every line under 100 characters
-
+/*
+NoeRouge map generation
+Devon, Irene, Evan, Ben S, others?
+*/
 #include "mapGen.h"
 #include <iostream>
 #include <vector>
 #include <list>
 
-//BSP STUFF START=============================================================================================================================
+//PARITIONS =============================================================================================================================
 // Class representing a node in the BSP tree
 bool BspNode::split()
 {
@@ -121,9 +123,7 @@ void printPartitions( BspNode* node, std::vector<std::vector<char>>& map )
    printPartitions( node->right, map );
 }
 
-//BSP STUFF END=============================================================================================================================
-//ROOM STUFF START==========================================================================================================================
-
+//ROOMS==========================================================================================================================
 int randRange( int minVal, int maxVal )
 {
    return rand( ) % ( maxVal + 1 - minVal ) + minVal;
@@ -271,10 +271,8 @@ void makeRandRoomShape(BspNode& p, char(&map)[WIDTH][HEIGHT])
    }
 }
 
-//ROOM STUFF END============================================================================================================================
-//MAIN STUFF================================================================================================================================
-
-Floor::Floor(char roomShape)
+//FLOOR================================================================================================================================
+Floor::Floor()
 {
     walls = std::vector<Rectangle>();
     std::list<BspNode*> leaves = rootNode->getAllLeafNodes();           //all the leaf nodes/partitions
@@ -293,9 +291,6 @@ Floor::Floor(char roomShape)
     {
         makeRoomContainer(*leaf, data);
         makeRandRoomShape(*leaf, data);
-
-        //makeRectRoom(*leaf, data);
-        //makeRoomOfShape(roomShape, *leaf, data); //this can make cool rooms-also if u change the shape
     }
 
     BspNode* rootNodePTR = getMapRootNode();
@@ -313,13 +308,36 @@ Floor::Floor(char roomShape)
         }
     }
 
-    //TODO spawn enemies and items
-    //TODO stairwells between floors
+    objHandler = new ObjectHandler;             //make the object handler
+
+    //create ladders between floors. could be changed to guarantee they are a certain distance apart or something
+    BspNode* ladderUpNode = leaves.front();
+    ladderUpX = ladderUpNode->roomCenterPointXCoordinate;
+    ladderUpY = ladderUpNode->roomCenterPointYCoordinate;
+    data[ladderUpX][ladderUpY] = LADDER_UP;
+
+    BspNode* ladderDownNode = leaves.back();
+    ladderDownX = ladderDownNode->roomCenterPointXCoordinate;
+    ladderDownY = ladderDownNode->roomCenterPointYCoordinate;
+    data[ladderDownX][ladderDownY] = LADDER_DOWN;
+
+    //prints the floor in the console. this is temporary so we can see the stuff that doesn't have graphics yet like doors and ladders
+    for (int y = 0; y < HEIGHT; y++)
+    {
+        for (int x = 0; x < WIDTH; x++)
+        {
+            std::cout << data[x][y];
+        }
+        std::cout << "\n";
+    }
 }
 
-// returns the first floor location relative to game world
+// returns the ladder up location as a vector2
 Vector2 Floor::getPlayerSpawn()
 {
+    return { (float)ladderUpX * TILE_SIZE, (float)ladderDownX * TILE_SIZE };
+    //returns the first floor location relative to game world
+    /*
     for (int y = 0; y < HEIGHT; y++)
     {
         for (int x = 0; x < WIDTH; x++)
@@ -330,8 +348,10 @@ Vector2 Floor::getPlayerSpawn()
             }
         }
     }
+    */
 }
 
+//HALLWAYS==========================================================================================================================
 void Hallways::calculateDistanceBetweenRoomCenters(std::list<BspNode*> leafNodes)
 {
     BspNode* hallwayCurrentNode = leafNodes.front();  //select first node in leafNodes list to start
