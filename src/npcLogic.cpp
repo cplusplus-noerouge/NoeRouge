@@ -1,26 +1,17 @@
-#include "npcLogic.h"
+#include "character.h"
 
-void npcLogic::moveToPlayer( )
+
+bool Character::lineOfSight( Vector2 Target )
 {
-
+	return false;
 }
 
-void npcLogic::returnToSpawn( )
+void Character::moveToTarget( Vector2 target, float distanceMaintained )
 {
-
-}
-
-void npcLogic::moveToTarget( )
-{
-
-}
-
-void npcLogic::maintainDistance( )
-{
-
-}
-
-void npcLogic::lineOfSight( )
-{
-
+	
+	if ( Character::lineOfSight( target ) && getTargetDistance() > distanceMaintained)
+	{
+		updateDirection( target );
+	}
+		
 }
