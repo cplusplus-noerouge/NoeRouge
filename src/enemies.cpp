@@ -5,24 +5,24 @@
 #include "object.h"
 
 
-void Enemy::moveLeft( int distance )
+void Enemy::updateDirection( )
 {
-   world_position[ 0 ] -= distance;
-}
-
-void Enemy::moveRight( int distance )
-{
-   world_position[ 0 ] += distance;
-}
-
-void Enemy::moveUp( int distance )
-{
-   world_position[ 1 ] -= distance;
-}
-
-void Enemy::moveDown( int distance )
-{
-   world_position[ 1 ] += distance;
+   if ( IsKeyDown( KEY_A ) )
+   {
+      direction.x = -1;
+   }
+   else if ( IsKeyDown( KEY_D ) )
+   {
+      direction.x = 1;
+   }
+   if ( IsKeyDown( KEY_S ) )
+   {
+      direction.y = 1;
+   }
+   else if ( IsKeyDown( KEY_W ) )
+   {
+      direction.y = -1;
+   }
 }
 
 void Enemy::render( )
