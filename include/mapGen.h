@@ -64,10 +64,8 @@ void makeRoomContainer(BspNode& p, char(&map)[WIDTH][HEIGHT]);
 
 void makeCircleRoom(BspNode& p, char(&map)[WIDTH][HEIGHT]);
 
-void makeBlobRoom(BspNode& p, char(&map)[WIDTH][HEIGHT]);
-
 //this is prob temporary
-void makeRoomOfShape(char shape, BspNode& p, char(&map)[WIDTH][HEIGHT]);
+void makeRandRoomShape( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] );
 
 //ROOM STUFF END============================================================================================================================
 //MAIN STUFF================================================================================================================================
