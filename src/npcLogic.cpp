@@ -1,8 +1,8 @@
 #include "character.h"
 #include "object.h"
+#include "mapGen.h"
 #include "raymath.h"
 
-int TILE_SIZE = 24; // Should probably move this to object.h from main, or use a globals file again?
 int HALF_SIZE = TILE_SIZE / 2;
 
 
