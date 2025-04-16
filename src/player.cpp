@@ -38,9 +38,9 @@ extern CustomCamera mainCamera;
 
 void Player::onRender()
 {
+   mainCamera.setPosition( position ); // Updating the camera position should be moved to its own class or function later on
+   sprite.update( position, position.y );
    mainCamera.addToBuffer( &sprite );
-    Rectangle rectangle = bounds();
-    DrawRectangle(rectangle.x, rectangle.y, rectangle.width, rectangle.height, MAROON);
 }
 
 // Define the Player create function in the object handler

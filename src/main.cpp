@@ -21,10 +21,19 @@ constexpr int FPS = 60;
 
 constexpr int PLAYER_SPEED = 300;
 
-int main() 
+ScreenHandler screenHandler = ScreenHandler( );
+// IMPORTANT! These are different versions of the camera with different zoom levels, uncomment the one you want.
+//CustomCamera mainCamera = CustomCamera( Vector2 { 320.0f, 180.0f }, 4.0f );
+//CustomCamera mainCamera = CustomCamera( Vector2 { 640.0f, 360.0f }, 2.0f );
+CustomCamera mainCamera = CustomCamera( Vector2 { 1280, 720.0f }, 1.0f );
+
+std::unordered_map<std::string, Texture2D> textureMap = {};
+
+int main( )
 {
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "noeRouge alpha v0.1");
-    SetTargetFPS(FPS);
+   // Setting up graphics
+   loadAllTextures( );
+   screenHandler.cameras.push_back( &mainCamera );
 
         //seed the random number generator
     srand((unsigned int)time(0));
@@ -33,6 +42,11 @@ int main()
 
     std::vector<Rectangle> walls = floor.getWalls();
     Vector2 playerSpawnPosition = floor.getPlayerSpawn();
+    std::vector<Sprite> wallSprites = {};
+    for ( Rectangle wall : walls )
+    {
+       wallSprites.push_back( Sprite( "wall", { wall.x, wall.y }, wall.y ) );
+    }
 
         // Create the objectHandler
     class ObjectHandler objectHandler;
@@ -44,23 +58,18 @@ int main()
         // Create a player so we can see it tick, and see it on screen
     objectHandler.createPlayer( playerSpawnPosition, {TILE_SIZE, TILE_SIZE}, 300);
 
-    while (!WindowShouldClose())
+    while ( !WindowShouldClose( ) )
     {
-        objectHandler.tickAll(walls);
+       objectHandler.tickAll( walls );
 
-        BeginDrawing();
-       
-        ClearBackground(BLACK);
+       objectHandler.renderAll( );
 
-        objectHandler.renderAll();
+       for ( int i = 0; i < wallSprites.size( ); i++ )
+       {
+          mainCamera.addToBuffer( &wallSprites[ i ] );
+       }
 
-        for (Rectangle wall : walls)
-        {
-
-            DrawRectangle(wall.x, wall.y, wall.width, wall.height, DARKBLUE);
-
-        }
-        EndDrawing();
+       screenHandler.renderAll( );
     }
 
     return 0;
