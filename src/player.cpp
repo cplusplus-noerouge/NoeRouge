@@ -1,6 +1,8 @@
 #include "player.h"
 #include "object.h"
 #include "enemies.h"
+#include "customCamera.h"
+#include "sprite.h"
 #include <iostream>
 
 
@@ -32,10 +34,13 @@ void Player::updateDirection()
     }
 }
 
+extern CustomCamera mainCamera;
+
 void Player::onRender()
 {
-    Rectangle rectangle = bounds();
-    DrawRectangle(rectangle.x, rectangle.y, rectangle.width, rectangle.height, MAROON);
+   mainCamera.setPosition( position ); // Updating the camera position should be moved to its own class or function later on
+   sprite.update( position, position.y );
+   mainCamera.addToBuffer( &sprite );
 }
 
 // Define the Player create function in the object handler

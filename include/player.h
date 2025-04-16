@@ -4,6 +4,7 @@
 #include "object.h"
 #include "character.h"
 #include "enemies.h"
+#include "sprite.h"
 
 class Player : public Character 
 {
@@ -17,13 +18,18 @@ private:
    float blockTimer_;
    float attackRange;    // Attack radius
    int attackDamage;      // Damage per hit
+   Sprite sprite;
 
 public:
     Player(int id): Character(id), attackRange( 50.0f ), attackDamage( 20 ) 
-    { }
+    { 
+       sprite = Sprite( "player", position, position.y );
+    }
     Player(int id, Vector2 _position, Vector2 _size, int _speed) 
        : Character(id, _position, _size, _speed), attackRange(50.0f), attackDamage(20) 
-    { }
+    { 
+       sprite = Sprite( "player", position, position.y );
+    }
     
     void onRender( ) override;
     void attack( std::vector<Enemy*>& enemies );
