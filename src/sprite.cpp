@@ -7,8 +7,6 @@
 
 #include "sprite.h"
 
-extern std::unordered_map<std::string, Texture2D> textureMap;
-
 /*-----------------------------------------------
 * @brief: updates all data members with new values
 */
