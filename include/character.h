@@ -15,8 +15,10 @@ class Character : public GameObject
    Vector2 position;
    Vector2 direction;
    Vector2 velocity;
-   Vector2 target;
-
+   
+   // Position of target. For enemies this will usually be the player, the player's last known location, or their spawn point.
+   Vector2 target; 
+   
    public:
 
    Character( int _id, Vector2 _position, Vector2 _size, Vector2 target, int _speed );
@@ -53,11 +55,12 @@ class Character : public GameObject
 
    Vector2 getPosition( );
 
-   void moveToTarget( Vector2 target, float distanceMaintained );
+   void moveToTarget( Vector2 target, float distanceMaintained, std::vector<Rectangle> colliders );
 
-   bool lineOfSight( Vector2 target );
+   Ray relationToTarget( );
+
+   bool updateLOS( const std::vector<Rectangle> colliders );
 
    float getTargetDistance( );
 
-   //void maintainDistance( Vector2 target, float distance )
 };
