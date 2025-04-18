@@ -14,7 +14,7 @@
 #include "object.h"
 #include "character.h"
 #include "player.h"
-#include "enemies.h"
+#include "enemy.h"
 #include <raymath.h>
 
 // Constructor for Enemy class
@@ -112,8 +112,8 @@ bool Enemy::checkCollision( Vector2 playerPos, float attackRange ) const
    return distance < attackRange;
 }
 
-// Returns the enemy's current position as a Vector2
-Vector2 Enemy::getPosition( ) const
-{
-   return { static_cast< float >( world_position[ 0 ] ), static_cast< float >( world_position[ 1 ] ) };
-}
+//// Returns the enemy's current position as a Vector2
+//Vector2 Enemy::getPosition( ) const
+//{
+//   return { static_cast< float >( world_position[ 0 ] ), static_cast< float >( world_position[ 1 ] ) };
+//}

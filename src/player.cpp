@@ -1,6 +1,6 @@
 #include "player.h"
 #include "object.h"
-#include "enemies.h"
+#include "enemy.h"
 #include <iostream>
 
 // Updates the player's movement direction based on key input
