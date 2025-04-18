@@ -1,6 +1,7 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <vector>
+#include <cmath>
 #include "Character.h"
 
 Character::Character(int _id, Vector2 _position, Vector2 _size, int _speed)
@@ -33,6 +34,26 @@ void Character::updateDirection( )
       direction.y = 1;
    }
    else if ( IsKeyDown( KEY_W ) )
+   {
+      direction.y = -1;
+   }
+}
+
+void Character::updateDirection( Vector2 target )
+{
+   if ( target.x > position.x )
+   {
+      direction.x = -1;
+   }
+   else if ( target.x < position.x )
+   {
+      direction.x = 1;
+   }
+   if ( target.y < position.y)
+   {
+      direction.y = 1;
+   }
+   else if ( target.y < position.y )
    {
       direction.y = -1;
    }
@@ -133,4 +154,16 @@ void Character::updateCollisions(const std::vector<Rectangle> colliders)
             position.y = otherRect.y + otherRect.height;
         }
     }
+}
+
+Vector2 Character::getPosition( )
+{
+   return position;
+}
+
+float Character::getTargetDistance( )
+{
+   float dx = position.x - target.x;
+   float dy = position.y - target.y;
+   return sqrt( dx * dx + dy * dy );
 }
