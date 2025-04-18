@@ -1,3 +1,7 @@
+/*
+NoeRouge main file
+Devon, everyone else who worked on this file put ur names here too so Vicki can grade
+*/
 // Includes
 #include <iostream>
 #include <vector>
@@ -81,7 +85,7 @@ int main( )
     return 0;
 }
 
-//loads the wall sprites for the new floor
+//loads the wall sprites for the new floor. prob will be added to -devon
 void changeFloor(std::vector<Sprite>& wallSprites, Floor* floors[NUM_OF_FLOORS], int floorOn)
 {
     wallSprites.clear();

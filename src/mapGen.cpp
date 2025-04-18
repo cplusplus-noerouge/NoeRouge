@@ -1,6 +1,6 @@
 /*
 NoeRouge map generation
-Devon, Irene, Evan, Ben S, others?
+Devon, Irene, Evan, Ben S, possible others?
 */
 #include "mapGen.h"
 #include <iostream>
@@ -48,6 +48,7 @@ bool BspNode::split()
     return true;                          // Return true indicating successful split
 }
 
+// collect and return all the leaf nodes in the BSP tree -devon
 std::list<BspNode*> BspNode::getAllLeafNodes()
 {
     std::list<BspNode*> leafNodes;        //empty list to store the leaf nodes
@@ -124,11 +125,19 @@ void printPartitions( BspNode* node, std::vector<std::vector<char>>& map )
 }
 
 //ROOMS==========================================================================================================================
+//i don't want to take credit for this stupid function. unfortunately it's obvious who wrote it
 int randRange( int minVal, int maxVal )
 {
    return rand( ) % ( maxVal + 1 - minVal ) + minVal;
 }
 
+/*--------------------------------------------------------------------------------------------
+* makeRectRoom() and makeCircleRoom() carve out floor tiles inside the partition in a shape
+* - devon
+* param BspNode& p: the partition to put the room
+* param char&map[][]: pass by ref to the array of map data
+* return: the data in char&map[][] is altered
+--------------------------------------------------------------------------------------------*/
 void makeRectRoom( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )
 {
    int xMax = p.x + p.width;
@@ -152,24 +161,6 @@ void makeRectRoom( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )
          if ( x >= xLow && x <= xHigh && y >= yLow && y <= yHigh )
          {
             map[ x ][ y ] = FLOOR;
-         }
-      }
-   }
-}
-
-void makeRoomContainer( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )    //Fill partition with '*'
-{
-   int xMax = p.x + p.width;
-   int yMax = p.y + p.height;
-
-   //put room in the map
-   for ( int y = 0; y < HEIGHT; y++ )
-   {
-      for ( int x = 0; x < WIDTH; x++ )
-      {
-         if ( x > p.x && x < xMax && y > p.y && y < yMax )
-         {
-            map[ x ][ y ] = DEBUGPARTITION;
          }
       }
    }
@@ -219,7 +210,27 @@ void makeCircleRoom( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )
    }
 }
 
-/*  this is unused bc it looks like a limestone cave not a spaceship
+//a function that was just for testing and should be deleted but first it needs to be removed from the doors code -devon
+//Fill partition with DEBUGPARTITION
+void makeRoomContainer(BspNode& p, char(&map)[WIDTH][HEIGHT])
+{
+    int xMax = p.x + p.width;
+    int yMax = p.y + p.height;
+
+    //put room in the map
+    for (int y = 0; y < HEIGHT; y++)
+    {
+        for (int x = 0; x < WIDTH; x++)
+        {
+            if (x > p.x && x < xMax && y > p.y && y < yMax)
+            {
+                map[x][y] = DEBUGPARTITION;
+            }
+        }
+    }
+}
+
+/*  this is unused bc it looks like a limestone cave not a spaceship -devon
 void makeBlobRoom( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )
 {
    int xMax = p.x + p.width;
@@ -254,8 +265,16 @@ void makeBlobRoom( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )
 }
 */
 
+/*--------------------------------------------------------------------------------------------
+* makeRandRoomShape() calls two room making functions that overlap into one room
+* - devon, ben
+* param BspNode& p: the partition to put the room
+* param char&map[][]: pass by ref to the array of map data
+* return: the data in char&map[][] is altered by the called functions
+--------------------------------------------------------------------------------------------*/
 void makeRandRoomShape(BspNode& p, char(&map)[WIDTH][HEIGHT])
 {
+   //anyone feel free to remove the for loop if 2 overlapping room shapes isn't working
    for ( int i = 0; i < 2; i++ )
    {
       int randomNumber = std::rand( ) % 2;
@@ -272,6 +291,10 @@ void makeRandRoomShape(BspNode& p, char(&map)[WIDTH][HEIGHT])
 }
 
 //FLOOR================================================================================================================================
+/*--------------------------------------------------------------------------------------------
+* Floor() constructor. all the generation for the floor happens here
+* - devon
+--------------------------------------------------------------------------------------------*/
 Floor::Floor()
 {
     walls = std::vector<Rectangle>();
@@ -289,13 +312,13 @@ Floor::Floor()
     //carve the rooms
     for (BspNode* leaf : leaves)
     {
-        makeRoomContainer(*leaf, data);
+        //makeRoomContainer(*leaf, data);
         makeRandRoomShape(*leaf, data);
     }
 
-    BspNode* rootNodePTR = getMapRootNode();
-    Hallways hallways(rootNodePTR, *this);         //Create hallways
+    Hallways hallways(rootNode, *this);         //Create hallways
 
+    //make the walls into rectangles
     for (int y = 0; y < HEIGHT; y++)
     {
         for (int x = 0; x < WIDTH; x++)
@@ -321,7 +344,7 @@ Floor::Floor()
     ladderDownY = ladderDownNode->roomCenterPointYCoordinate;
     data[ladderDownX][ladderDownY] = LADDER_DOWN;
 
-    //prints the floor in the console. this is temporary so we can see the stuff that doesn't have graphics yet like doors and ladders
+    //prints the floor in the console. this is for debugging so we can see the stuff that doesn't have graphics yet like doors and ladders
     for (int y = 0; y < HEIGHT; y++)
     {
         for (int x = 0; x < WIDTH; x++)
