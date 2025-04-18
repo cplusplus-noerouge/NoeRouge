@@ -40,6 +40,7 @@ int main()
         // Create a player so we can see it tick, and see it on screen
     objectHandler.createPlayer( playerSpawnPosition, {TILE_SIZE, TILE_SIZE}, 300);
 
+
     while (!WindowShouldClose())
     {
         objectHandler.tickAll(walls);
@@ -52,8 +53,7 @@ int main()
 
         for (Rectangle wall : walls)
         {
-
-            DrawRectangle(wall.x, wall.y, wall.width, wall.height, DARKBLUE);
+            DrawRectangle(wall.x, wall.y, wall.width, wall.height, DARKGRAY);
 
         }
         EndDrawing();

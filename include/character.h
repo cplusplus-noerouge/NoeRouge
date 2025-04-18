@@ -8,7 +8,9 @@ class Character : public GameObject
    private:
 
    Vector2 size;
-   int speed;
+  
+   int speed = 15;
+
 
    protected:
 
