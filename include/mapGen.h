@@ -52,7 +52,7 @@ public:
 BspNode* generateBspTree(); //renamed this and removed const params -devon
 
 // Function to print the dungeon split scheme
-void printPartitions(BspNode* node, std::vector<std::vector<char>>& map); //renamed this -devon
+void printPartitions(BspNode* node, std::vector<std::vector<char>>& map);
 
 //ROOMS==========================================================================================================================
 int randRange(int minVal, int maxVal);
@@ -65,7 +65,7 @@ void makeCircleRoom(BspNode& p, char(&map)[WIDTH][HEIGHT]);
 
 void makeRandRoomShape(BspNode& p, char(&map)[WIDTH][HEIGHT]);
 
-//MAIN STUFF================================================================================================================================
+//FLOOR================================================================================================================================
 class Floor 
 {
 private:
@@ -103,6 +103,7 @@ public:
     Vector2 getPlayerSpawn();
 };
 
+//HALLWAYS================================================================================================================================
 class Hallways
 {
 private:

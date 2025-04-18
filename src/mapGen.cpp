@@ -312,7 +312,7 @@ Floor::Floor()
     //carve the rooms
     for (BspNode* leaf : leaves)
     {
-        //makeRoomContainer(*leaf, data);
+        makeRoomContainer(*leaf, data);
         makeRandRoomShape(*leaf, data);
     }
 
@@ -355,12 +355,18 @@ Floor::Floor()
     }
 }
 
-// returns the ladder up location as a vector2
+//temporarily returns the first floor location relative to game world. should return ladder up location tho
 Vector2 Floor::getPlayerSpawn()
 {
-    return { (float)ladderUpX * TILE_SIZE, (float)ladderDownX * TILE_SIZE };
-    //returns the first floor location relative to game world
-    /*
+    //returns the ladder up location as a vector2 - sometimes spawns off the map for some reason even though the ladder is fine
+    //std::cout << "Player spawn location";
+    //std::cout << "\nMapX: " << ladderUpX;
+    //std::cout << "\nMapY: " << ladderUpY;
+    //std::cout << "\nPixelX: " << (float)ladderUpX * TILE_SIZE;
+    //std::cout << "\nPixelY: " << (float)ladderDownX * TILE_SIZE << "\n";
+    //return { (float)ladderUpX * TILE_SIZE, (float)ladderDownX * TILE_SIZE };
+
+    //returns the first floor location relative to game world - this works fine
     for (int y = 0; y < HEIGHT; y++)
     {
         for (int x = 0; x < WIDTH; x++)
@@ -371,7 +377,7 @@ Vector2 Floor::getPlayerSpawn()
             }
         }
     }
-    */
+    std::cout << std::endl;
 }
 
 //HALLWAYS==========================================================================================================================

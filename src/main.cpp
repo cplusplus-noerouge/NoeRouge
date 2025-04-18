@@ -57,7 +57,7 @@ int main( )
 
     while (!WindowShouldClose())
     {
-        //TEMPORARY testing changing floors. needs to only be possible when player is on the ladder down
+        //TEMPORARY testing changing floors
         if (IsKeyPressed(KEY_SPACE) && floorOn < NUM_OF_FLOORS-1)
         {
             /*
@@ -66,9 +66,12 @@ int main( )
             but thats a problem with the Id system
             or the player could exist simultaneously in all object handlers if other objects don't need to move
             or just have one object handler for the whole game and do floors some other way
+
+            also changing floors needs to only be possible when player is on a ladder, up or down
             */
-            changeFloor(wallSprites,floors,floorOn);
             floorOn += 1;
+            changeFloor(wallSprites,floors,floorOn);
+            std::cout << "\n moved from floor " << floorOn -1 << " to " << floorOn;
         }
 
         floors[floorOn]->getObjHandler()->tickAll(floors[floorOn]->getWalls());
