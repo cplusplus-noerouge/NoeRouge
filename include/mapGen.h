@@ -6,6 +6,7 @@
 #include <list>
 #include <vector>
 #include <random>
+#include "object.h"
 
 const int WIDTH = 70;                   //width/columns/maximum x of each floor in tiles
 const int HEIGHT = 30;                  //height/rows/maximum y of each floor in tiles
@@ -15,11 +16,13 @@ const int TILE_SIZE = 16;               //The x & y size of each tile in the gam
 
 const char WALL = '#';                  //char to represent walls
 const char FLOOR = '.';                 //char to represent floors
-const char DEBUGPARTITION = '*';        //a wall that is within a partition aka an ok place for rooms to spawn
+const char LADDER_UP = '<';             //ladder to the above floor
+const char LADDER_DOWN = '>';           //ladder to the below floor
+const char DEBUGPARTITION = '*';        //a wall that is within a partition aka an ok place for rooms to spawn.
 const char PLAYER = 'p';                //represents player spawn
 const char DOOR = '@';                  //represents where doors are
 
-//BSP STUFF START=============================================================================================================================
+//PARTITIONS=============================================================================================================================
 // Class representing a node in the BSP tree
 
 class BspNode 
@@ -49,40 +52,38 @@ public:
 BspNode* generateBspTree(); //renamed this and removed const params -devon
 
 // Function to print the dungeon split scheme
-void printPartitions(BspNode* node, std::vector<std::vector<char>>& map); //renamed this -devon
+void printPartitions(BspNode* node, std::vector<std::vector<char>>& map);
 
-//BSP STUFF END=============================================================================================================================
-//ROOM STUFF START==========================================================================================================================
-
-//replace this with the std function im just lazy
+//ROOMS==========================================================================================================================
 int randRange(int minVal, int maxVal);
 
 void makeRectRoom(BspNode& p, char(&map)[WIDTH][HEIGHT]);
 
-//Fill partition with '*'
-void makeRoomContainer(BspNode& p, char(&map)[WIDTH][HEIGHT]);
+void makeRoomContainer(BspNode& p, char(&map)[WIDTH][HEIGHT]);      //Fill partition with '*'
 
 void makeCircleRoom(BspNode& p, char(&map)[WIDTH][HEIGHT]);
 
-//this is prob temporary
-void makeRandRoomShape( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] );
+void makeRandRoomShape(BspNode& p, char(&map)[WIDTH][HEIGHT]);
 
-//ROOM STUFF END============================================================================================================================
-//MAIN STUFF================================================================================================================================
-
+//FLOOR================================================================================================================================
 class Floor 
 {
 private:
 
     std::vector<Rectangle> walls;
+    int ladderUpX;
+    int ladderUpY;
+    int ladderDownX;
+    int ladderDownY;
+
+    ObjectHandler* objHandler; //contains all the objects on the floor
 
 public:
 
     char data[WIDTH][HEIGHT];                                   //TODO make this private with accessor or something like that
-    BspNode* rootNode = generateBspTree();                          //generate the partitions
-    //additional member variables are probably data structures for items and enemies
+    BspNode* rootNode = generateBspTree();                      //generate the partitions
 
-    Floor(char roomShape);
+    Floor();
 
     BspNode* getMapRootNode()
     {
@@ -94,9 +95,15 @@ public:
         return walls;
     }
 
+    ObjectHandler* getObjHandler()
+    {
+        return objHandler;
+    }
+
     Vector2 getPlayerSpawn();
 };
 
+//HALLWAYS================================================================================================================================
 class Hallways
 {
 private:
