@@ -1,13 +1,3 @@
-/*
-* NoeRogue
-* Enemy Class (inherits gameObject class)
-* Kaleb Flowers
-*
-* TO-DO :
-*
-*/
-
-
 #pragma once
 
 #include <cstdlib>
@@ -25,8 +15,4 @@ public:
     void render( );
     void takeDamage( int damage );
     bool checkCollision( Vector2 playerPos, float attackRange ) const;
-
-
-    //void updateDirection( ) override;
-    //void onRender( ) override;
 };

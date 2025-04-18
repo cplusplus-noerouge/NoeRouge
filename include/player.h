@@ -3,7 +3,6 @@
 #include "raylib.h"
 #include "object.h"
 #include "character.h"
-#include "enemies.h"
 #include "sprite.h"
 
 class Player : public Character 
@@ -32,7 +31,7 @@ public:
     }
     
     void onRender( ) override;
-    void attack( std::vector<Enemy*>& enemies );
+    //void attack( std::vector<Enemy*>& enemies );
     void updateDirection() override;
     
 
