@@ -26,43 +26,45 @@ CustomCamera mainCamera = CustomCamera( Vector2 { 1280, 720.0f }, 1.0f );
 
 std::unordered_map<std::string, Texture2D> textureMap = {};
 
+void changeFloor(std::vector<Sprite>& wallSprites, Floor* floors[NUM_OF_FLOORS], int floorOn);  //loads the wall sprites for the new floor
+
 int main( )
 {
-   // Setting up graphics
-   loadAllTextures( );
-   screenHandler.cameras.push_back( &mainCamera );
+    // Setting up graphics
+    loadAllTextures( );
+    screenHandler.cameras.push_back( &mainCamera );
 
-    //make the floors
+    // Make the floors
     Floor* floors[NUM_OF_FLOORS];
     for (int i = 0; i < NUM_OF_FLOORS; i++) {
         floors[i] = new Floor;
     }
-    int floorOn = 0;                 //the floor the player is on. when the player moves floors this changes
+    int floorOn = 0;                                         //the floor the player is on
 
     // Create a player so we can see it tick, and see it on screen
     Vector2 playerSpawnPosition = floors[floorOn]->getPlayerSpawn();
     floors[floorOn]->getObjHandler()->createPlayer(playerSpawnPosition, {TILE_SIZE, TILE_SIZE}, 300);
 
-    //TODO these really should not be recalculated every frame, fix this
-    std::vector<Sprite> wallSprites = {};
+    std::vector<Sprite> wallSprites = {};                    //is changed when player changes floors
+    for (Rectangle wall : floors[floorOn]->getWalls())       //put the wall sprites for the starting floor
+    {
+        wallSprites.push_back(Sprite("wall", { wall.x, wall.y }, wall.y));
+    }
 
     while (!WindowShouldClose())
     {
         //TEMPORARY testing changing floors. needs to only be possible when player is on the ladder down
         if (IsKeyPressed(KEY_SPACE) && floorOn < NUM_OF_FLOORS-1)
         {
-            //the player object needs to also change floors. idk best way to do this.
-            //could be like: void ObjectHandler::transferObj(int objId, ObjectHandler* newHandler)
-            //but thats a problem with the Id system
-            //or the player could exist simultaneously in all object handlers if other objects don't need to move
-            //or just have one object handler for the whole game and do floors some other way
+            /*
+            the player object needs to also change floors. idk best way to do this.
+            could be like: void ObjectHandler::transferObj(int objId, ObjectHandler* newHandler)
+            but thats a problem with the Id system
+            or the player could exist simultaneously in all object handlers if other objects don't need to move
+            or just have one object handler for the whole game and do floors some other way
+            */
+            changeFloor(wallSprites,floors,floorOn);
             floorOn += 1;
-        }
-
-        wallSprites.clear(); //weird and inefficient. fix this
-        for (Rectangle wall : floors[floorOn]->getWalls())
-        {
-            wallSprites.push_back(Sprite("wall", { wall.x, wall.y }, wall.y));
         }
 
         floors[floorOn]->getObjHandler()->tickAll(floors[floorOn]->getWalls());
@@ -77,4 +79,14 @@ int main( )
     }
 
     return 0;
+}
+
+//loads the wall sprites for the new floor
+void changeFloor(std::vector<Sprite>& wallSprites, Floor* floors[NUM_OF_FLOORS], int floorOn)
+{
+    wallSprites.clear();
+    for (Rectangle wall : floors[floorOn]->getWalls())
+    {
+        wallSprites.push_back(Sprite("wall", { wall.x, wall.y }, wall.y));
+    }
 }
