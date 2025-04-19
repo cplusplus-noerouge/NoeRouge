@@ -2,6 +2,7 @@
 
 #include <cstdio>
 #include <vector>
+#include <map>
 #include "raylib.h"
 
 
@@ -10,8 +11,6 @@ private:
     int id;
 
 public:
-
-    // gameObject() : id(0) {} // Default constructor <<<<<<< combat-character-copy
 
     GameObject() {}
     GameObject(int id) {
@@ -28,8 +27,6 @@ public:
     // Setters
     void setId(int id);
 
-
-    // virtual void onTick(); <<<<<<< combat-character-copy
     virtual void onTick(const std::vector<Rectangle> collidables);
     // TODO 00
 
@@ -44,17 +41,14 @@ private:
 public:
 
     int numberOfObjects;
-    int nextId;
+    static int nextId; //this is shared between all object handlers (each floor has one)
 
-    // std::vector<class gameObject *> allObjects; <<<<<<< combat-character-copy
-    // objectHandler() { <<<<<<< combat-character-copy
-    std::vector<class GameObject *> allObjects;
+    std::map<int, GameObject* > allObjects;
 
 public:
     ObjectHandler() 
     {
         this->numberOfObjects = 0;
-        this->nextId = 0;
     }
     ~ObjectHandler() 
     {
@@ -63,9 +57,9 @@ public:
 
     void tickAll(const std::vector<Rectangle> collidables);
     void renderAll();
+    void transferObject(int objId, ObjectHandler& newHandler);
     class GameObject *getObject(int id);
     class GameObject *createObject();
     class Player *createPlayer(Vector2 position, Vector2 size, int speed);
-// }; <<<<<<< combat-character-copy
     class Enemy* createEnemy( Vector2 position, Vector2 size, int speed );
 };

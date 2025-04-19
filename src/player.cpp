@@ -45,8 +45,8 @@ void Player::onRender()
 // Define the Player create function in the object handler
 class Player* ObjectHandler::createPlayer( Vector2 position, Vector2 size, int speed )
 {
-   class Player* Player = new class Player( this->nextId++, position, size, speed );
-   this->allObjects.push_back( Player );
+   class Player* Player = new class Player( 0, position, size, speed ); //id for player is always 0
+   allObjects[Player->getId()] = Player; //add <id, object*> to the map
    this->numberOfObjects++;
    return Player;
 }
