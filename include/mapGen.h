@@ -102,6 +102,7 @@ public:
 
     Vector2 getLadderUpLocation();
     Vector2 getLadderDownLocation();
+    Vector2 getLadderDownLocation();
 };
 
 //HALLWAYS================================================================================================================================
