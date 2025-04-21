@@ -100,7 +100,8 @@ public:
         return objHandler;
     }
 
-    Vector2 getPlayerSpawn();
+    Vector2 getLadderUpLocation();
+    Vector2 getLadderDownLocation();
 };
 
 //HALLWAYS================================================================================================================================
