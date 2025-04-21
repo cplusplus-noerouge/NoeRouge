@@ -55,11 +55,13 @@ int main( )
         wallSprites.push_back(Sprite("wall", { wall.x, wall.y }, wall.y));
     }
 
+
     while (!WindowShouldClose())
     {
         //TEMPORARY testing changing floors
         if (IsKeyPressed(KEY_SPACE) && floorOn < NUM_OF_FLOORS-1)
         {
+
             /*
             the player object needs to also change floors. idk best way to do this.
             could be like: void ObjectHandler::transferObj(int objId, ObjectHandler* newHandler)
