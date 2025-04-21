@@ -57,6 +57,7 @@ class Character : public GameObject
    void updateCollisions( const std::vector<Rectangle> colliders );
 
    Vector2 getPosition( );
+   void setPosition(Vector2 newPos);
 
    void moveToTarget( Vector2 target, float distanceMaintained, std::vector<Rectangle> colliders );
 

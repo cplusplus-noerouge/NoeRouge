@@ -1,11 +1,13 @@
-//Notes: - We should probablytry to keep every line under 100 characters
-
+/*
+NoeRouge map generation
+Devon, Irene, Evan, Ben S, possible others?
+*/
 #include "mapGen.h"
 #include <iostream>
 #include <vector>
 #include <list>
 
-//BSP STUFF START=============================================================================================================================
+//PARITIONS =============================================================================================================================
 // Class representing a node in the BSP tree
 bool BspNode::split()
 {
@@ -46,6 +48,7 @@ bool BspNode::split()
     return true;                          // Return true indicating successful split
 }
 
+// collect and return all the leaf nodes in the BSP tree -devon
 std::list<BspNode*> BspNode::getAllLeafNodes()
 {
     std::list<BspNode*> leafNodes;        //empty list to store the leaf nodes
@@ -121,14 +124,20 @@ void printPartitions( BspNode* node, std::vector<std::vector<char>>& map )
    printPartitions( node->right, map );
 }
 
-//BSP STUFF END=============================================================================================================================
-//ROOM STUFF START==========================================================================================================================
-
+//ROOMS==========================================================================================================================
+//i don't want to take credit for this stupid function. unfortunately it's obvious who wrote it
 int randRange( int minVal, int maxVal )
 {
    return rand( ) % ( maxVal + 1 - minVal ) + minVal;
 }
 
+/*--------------------------------------------------------------------------------------------
+* makeRectRoom() and makeCircleRoom() carve out floor tiles inside the partition in a shape
+* - devon
+* param BspNode& p: the partition to put the room
+* param char&map[][]: pass by ref to the array of map data
+* return: the data in char&map[][] is altered
+--------------------------------------------------------------------------------------------*/
 void makeRectRoom( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )
 {
    int xMax = p.x + p.width;
@@ -152,24 +161,6 @@ void makeRectRoom( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )
          if ( x >= xLow && x <= xHigh && y >= yLow && y <= yHigh )
          {
             map[ x ][ y ] = FLOOR;
-         }
-      }
-   }
-}
-
-void makeRoomContainer( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )    //Fill partition with '*'
-{
-   int xMax = p.x + p.width;
-   int yMax = p.y + p.height;
-
-   //put room in the map
-   for ( int y = 0; y < HEIGHT; y++ )
-   {
-      for ( int x = 0; x < WIDTH; x++ )
-      {
-         if ( x > p.x && x < xMax && y > p.y && y < yMax )
-         {
-            map[ x ][ y ] = DEBUGPARTITION;
          }
       }
    }
@@ -219,6 +210,27 @@ void makeCircleRoom( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )
    }
 }
 
+//a function that was just for testing and should be deleted but first it needs to be removed from the doors code -devon
+//Fill partition with DEBUGPARTITION
+void makeRoomContainer(BspNode& p, char(&map)[WIDTH][HEIGHT])
+{
+    int xMax = p.x + p.width;
+    int yMax = p.y + p.height;
+
+    //put room in the map
+    for (int y = 0; y < HEIGHT; y++)
+    {
+        for (int x = 0; x < WIDTH; x++)
+        {
+            if (x > p.x && x < xMax && y > p.y && y < yMax)
+            {
+                map[x][y] = DEBUGPARTITION;
+            }
+        }
+    }
+}
+
+/*  this is unused bc it looks like a limestone cave not a spaceship -devon
 void makeBlobRoom( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )
 {
    int xMax = p.x + p.width;
@@ -251,57 +263,39 @@ void makeBlobRoom( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )
       }
    }
 }
+*/
 
-void makeRoomOfShape(char shape, BspNode& p, char(&map)[WIDTH][HEIGHT]) //this is prob temporary
+/*--------------------------------------------------------------------------------------------
+* makeRandRoomShape() calls two room making functions that overlap into one room
+* - devon, ben
+* param BspNode& p: the partition to put the room
+* param char&map[][]: pass by ref to the array of map data
+* return: the data in char&map[][] is altered by the called functions
+--------------------------------------------------------------------------------------------*/
+void makeRandRoomShape(BspNode& p, char(&map)[WIDTH][HEIGHT])
 {
-    int randomNumber = std::rand() % 3;
-    switch (randomNumber)
-    {
-    case 0:
-        makeRectRoom(p, map);
-        break;
-    case 1:
-        makeCircleRoom(p, map);
-        break;
-    case 2:
-        makeBlobRoom(p, map);
-        break;
-    case 3:
-        makeRoomContainer(p, map);
-        break;
-        //remove the default: it was causing errors probably because rooms were overlapping
-    }
-
-    switch (shape)
-    {
-    case 'r':
-        makeRectRoom(p, map);
-        break;
-    case 'c':
-        makeCircleRoom(p, map);
-        break;
-    case 'b':
-        makeBlobRoom(p, map);
-        break;
-    case 'f':
-        makeRoomContainer(p, map);
-        break;
-        /*
-    currently commenting out as it was causing issues when running with the random one
-    ----------------------------------
-    default:
-        std::cerr << "tried to make room of unrecognized shape: " << shape;
-        break;
-        */
-
-    }
-
+   //anyone feel free to remove the for loop if 2 overlapping room shapes isn't working
+   for ( int i = 0; i < 2; i++ )
+   {
+      int randomNumber = std::rand( ) % 2;
+      switch ( randomNumber )
+      {
+         case 0:
+            makeRectRoom( p, map );
+            break;
+         case 1:
+            makeCircleRoom( p, map );
+            break;
+      }
+   }
 }
 
-//ROOM STUFF END============================================================================================================================
-//MAIN STUFF================================================================================================================================
-
-Floor::Floor(char roomShape)
+//FLOOR================================================================================================================================
+/*--------------------------------------------------------------------------------------------
+* Floor() constructor. all the generation for the floor happens here
+* - devon
+--------------------------------------------------------------------------------------------*/
+Floor::Floor()
 {
     walls = std::vector<Rectangle>();
     std::list<BspNode*> leaves = rootNode->getAllLeafNodes();           //all the leaf nodes/partitions
@@ -319,15 +313,12 @@ Floor::Floor(char roomShape)
     for (BspNode* leaf : leaves)
     {
         makeRoomContainer(*leaf, data);
-        makeRoomOfShape(roomShape, *leaf, data);
-
-        //makeRectRoom(*leaf, data);
-        //makeRoomOfShape(roomShape, *leaf, data); //this can make cool rooms-also if u change the shape
+        makeRandRoomShape(*leaf, data);
     }
 
-    BspNode* rootNodePTR = getMapRootNode();
-    Hallways hallways(rootNodePTR, *this);         //Create hallways
+    Hallways hallways(rootNode, *this);         //Create hallways
 
+    //make the walls into rectangles
     for (int y = 0; y < HEIGHT; y++)
     {
         for (int x = 0; x < WIDTH; x++)
@@ -340,15 +331,42 @@ Floor::Floor(char roomShape)
         }
     }
 
+    objHandler = new ObjectHandler;             //make the object handler
 
-    //TODO carve the hallways
-    //TODO spawn enemies and items
-    //TODO stairwells between floors
+    //create ladders between floors. could be changed to guarantee they are a certain distance apart or something
+    BspNode* ladderUpNode = leaves.front();
+    ladderUpX = ladderUpNode->roomCenterPointXCoordinate;
+    ladderUpY = ladderUpNode->roomCenterPointYCoordinate;
+    data[ladderUpX][ladderUpY] = LADDER_UP;
+
+    BspNode* ladderDownNode = leaves.back();
+    ladderDownX = ladderDownNode->roomCenterPointXCoordinate;
+    ladderDownY = ladderDownNode->roomCenterPointYCoordinate;
+    data[ladderDownX][ladderDownY] = LADDER_DOWN;
+
+    //prints the floor in the console. this is for debugging so we can see the stuff that doesn't have graphics yet like doors and ladders
+    for (int y = 0; y < HEIGHT; y++)
+    {
+        for (int x = 0; x < WIDTH; x++)
+        {
+            std::cout << data[x][y];
+        }
+        std::cout << "\n";
+    }
 }
 
-// returns the first floor location relative to game world
+//temporarily returns the first floor location relative to game world. should return ladder up location tho
 Vector2 Floor::getPlayerSpawn()
 {
+    //returns the ladder up location as a vector2 - sometimes spawns off the map for some reason even though the ladder is fine
+    //std::cout << "Player spawn location";
+    //std::cout << "\nMapX: " << ladderUpX;
+    //std::cout << "\nMapY: " << ladderUpY;
+    //std::cout << "\nPixelX: " << (float)ladderUpX * TILE_SIZE;
+    //std::cout << "\nPixelY: " << (float)ladderDownX * TILE_SIZE << "\n";
+    //return { (float)ladderUpX * TILE_SIZE, (float)ladderDownX * TILE_SIZE };
+
+    //returns the first floor location relative to game world - this works fine
     for (int y = 0; y < HEIGHT; y++)
     {
         for (int x = 0; x < WIDTH; x++)
@@ -359,8 +377,10 @@ Vector2 Floor::getPlayerSpawn()
             }
         }
     }
+    std::cout << std::endl;
 }
 
+//HALLWAYS==========================================================================================================================
 void Hallways::calculateDistanceBetweenRoomCenters(std::list<BspNode*> leafNodes)
 {
     BspNode* hallwayCurrentNode = leafNodes.front();  //select first node in leafNodes list to start

@@ -1,6 +1,8 @@
 #include "player.h"
 #include "object.h"
 #include "enemy.h"
+#include "customCamera.h"
+#include "sprite.h"
 #include <iostream>
 
 // Updates the player's movement direction based on key input
@@ -29,22 +31,23 @@ void Player::updateDirection( )
    }
 }
 
-// Renders the player character on the screen
-void Player::onRender( )
+
+extern CustomCamera mainCamera;
+
+void Player::onRender()
 {
-   // Get the player’s bounding box and draw a maroon rectangle
-   Rectangle rectangle = bounds( );
-   DrawRectangle( rectangle.x, rectangle.y, rectangle.width, rectangle.height, MAROON );
+   mainCamera.setPosition( position ); // Updating the camera position should be moved to its own class or function later on
+   sprite.update( position, position.y );
+   mainCamera.addToBuffer( &sprite );
 }
 
-// Creates a Player object and adds it to the object handler’s object list
+// Creates a Player object and adds it to the object handlerï¿½s object list
 class Player* ObjectHandler::createPlayer( Vector2 position, Vector2 size, int speed )
 {
-   // Create a new Player with a unique ID, position, size, and speed
-   class Player* Player = new class Player( this->nextId++, position, size, speed );
 
-   // Add the player to the list of all game objects
-   this->allObjects.push_back( Player );
+   class Player* Player = new class Player( 0, position, size, speed ); //id for player is always 0
+   allObjects[Player->getId()] = Player; //add <id, object*> to the map
+
    this->numberOfObjects++;
 
    return Player;

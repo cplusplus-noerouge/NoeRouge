@@ -1,63 +1,118 @@
+/*
+NoeRouge main file
+Devon, everyone else who worked on this file put ur names here too so Vicki can grade
+*/
 // Includes
 #include <iostream>
 #include <vector>
 #include <cstdlib>
-#include <raylib.h>
+#include "raylib.h"
 
 // Local includes
 #include "character.h"
 #include "player.h"
 #include "object.h"
 #include "mapGen.h"
-
-constexpr int SCREEN_WIDTH = 1280; //increased resolution & window size
-constexpr int SCREEN_HEIGHT = 720;
+#include "textureLoader.h"
+#include "sprite.h"
+#include "customCamera.h"
+#include "screenHandler.h"
 
 constexpr int FPS = 60;
-
 constexpr int PLAYER_SPEED = 300;
+const int NUM_OF_FLOORS = 4; //the number of floors in the game
 
-int main() 
+ScreenHandler screenHandler = ScreenHandler( );
+// IMPORTANT! These are different versions of the camera with different zoom levels, uncomment the one you want.
+//CustomCamera mainCamera = CustomCamera( Vector2 { 320.0f, 180.0f }, 4.0f );
+//CustomCamera mainCamera = CustomCamera( Vector2 { 640.0f, 360.0f }, 2.0f );
+CustomCamera mainCamera = CustomCamera( Vector2 { 1280, 720.0f }, 1.0f );
+
+std::unordered_map<std::string, Texture2D> textureMap = {};
+
+void changeFloor(std::vector<Sprite>& wallSprites, Floor* floors[NUM_OF_FLOORS], int& floorOn, int changeVal);  //changes the floor that the player is on
+
+int main( )
 {
-    InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "noeRouge alpha v0.1");
-    SetTargetFPS(FPS);
+    // Setting up graphics
+    loadAllTextures( );
+    screenHandler.cameras.push_back( &mainCamera );
 
-        //seed the random number generator
-    srand((unsigned int)time(0));
-    int randomNumber = rand() % 3;
-    Floor floor(randomNumber);
+    // Make the floors
+    Floor* floors[NUM_OF_FLOORS];
+    for (int i = 0; i < NUM_OF_FLOORS; i++) {
+        floors[i] = new Floor;
+    }
+    int floorOn = 0;                                         //the floor the player is on
 
-    std::vector<Rectangle> walls = floor.getWalls();
-    Vector2 playerSpawnPosition = floor.getPlayerSpawn();
+    // Create a player so we can see it tick, and see it on screen
+    Vector2 playerSpawnPosition = floors[floorOn]->getPlayerSpawn();
+    floors[floorOn]->getObjHandler()->createPlayer(playerSpawnPosition, { TILE_SIZE, TILE_SIZE }, 300);
 
-        // Create the objectHandler
-    class ObjectHandler objectHandler;
-    class gameObject *testObject;
-
-        // Print version info
-    std::cout << "noeRouge alpha v0.1\n";
-
-        // Create a player so we can see it tick, and see it on screen
-    objectHandler.createPlayer( playerSpawnPosition, {TILE_SIZE, TILE_SIZE}, 300);
+    std::vector<Sprite> wallSprites = {};                    //is changed when player changes floors
+    for (Rectangle wall : floors[floorOn]->getWalls())       //put the wall sprites for the starting floor
+    {
+        wallSprites.push_back(Sprite("wall", { wall.x, wall.y }, wall.y));
+    }
 
 
     while (!WindowShouldClose())
     {
-        objectHandler.tickAll(walls);
-
-        BeginDrawing();
-       
-        ClearBackground(BLACK);
-
-        objectHandler.renderAll();
-
-        for (Rectangle wall : walls)
+        //TEMPORARY testing changing floors
+        if (IsKeyPressed(KEY_SPACE) && floorOn < NUM_OF_FLOORS-1)
         {
-            DrawRectangle(wall.x, wall.y, wall.width, wall.height, DARKGRAY);
 
+            /*
+            the player object needs to also change floors. idk best way to do this.
+            could be like: void ObjectHandler::transferObj(int objId, ObjectHandler* newHandler)
+            but thats a problem with the Id system
+            or the player could exist simultaneously in all object handlers if other objects don't need to move
+            or just have one object handler for the whole game and do floors some other way
+
+            also changing floors needs to only be possible when player is on a ladder, up or down
+            */
+            //floorOn += 1;
+            changeFloor(wallSprites,floors,floorOn, 1);
+            std::cout << "\n moved from floor " << floorOn -1 << " to " << floorOn;
         }
-        EndDrawing();
+
+        floors[floorOn]->getObjHandler()->tickAll(floors[floorOn]->getWalls());
+        floors[floorOn]->getObjHandler()->renderAll();
+
+        for ( int i = 0; i < wallSprites.size( ); i++ )
+        {
+           mainCamera.addToBuffer( &wallSprites[ i ] );
+        }
+
+        screenHandler.renderAll( );
     }
 
     return 0;
+}
+
+/*------------------------------------------------------------------------------------------------------------------
+* changeFloor() changes the players current floor
+* - devon
+* param vector<Sprite>& wallSprites: sprites of the walls. edited by this function
+* param Floor* floors[NUM_OF_FLOORS]: array of all the floors in the game
+* param int& floorOn: the index of the floor the player is currently on. edited by this function
+* param int changeVal: the amount by which the floor index is changed. exe -1 is down a floor, and 1 is up a floor
+* return: the data in wallSprites and floorOn is altered
+------------------------------------------------------------------------------------------------------------------*/
+void changeFloor(std::vector<Sprite>& wallSprites, Floor* floors[NUM_OF_FLOORS], int& floorOn, int changeVal)
+{
+    //transfer player to new object handler
+    ObjectHandler* oldHandler = floors[floorOn]->getObjHandler();
+    floorOn+= changeVal;
+    ObjectHandler* newHandler = floors[floorOn]->getObjHandler();
+    oldHandler->transferObject(0, *newHandler); //player id is always 0
+
+    //TODO set player location to the new floors ladderUp
+
+    //make new wall sprites
+    wallSprites.clear();
+    for (Rectangle wall : floors[floorOn]->getWalls())
+    {
+        wallSprites.push_back(Sprite("wall", { wall.x, wall.y }, wall.y));
+    }
 }
