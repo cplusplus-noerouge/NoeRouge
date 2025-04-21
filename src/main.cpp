@@ -38,7 +38,6 @@ int main( )
     loadAllTextures( );
     screenHandler.cameras.push_back( &mainCamera );
 
-    // Make the floors
     Floor* floors[NUM_OF_FLOORS];
     for (int i = 0; i < NUM_OF_FLOORS; i++) {
         floors[i] = new Floor;
