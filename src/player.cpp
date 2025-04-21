@@ -3,6 +3,7 @@
 #include "customCamera.h"
 #include "sprite.h"
 #include <iostream>
+#include "enemy.h"
 
 
 //class Player *objectHandler::createPlayer(Vector2 position, Vector2 size, int speed )
@@ -51,25 +52,25 @@ class Player* ObjectHandler::createPlayer( Vector2 position, Vector2 size, int s
    return Player;
 }
 
-//void Player::attack( std::vector<Enemy*>& enemies )
-//{
-//   if ( IsKeyPressed( KEY_SPACE ) )
-//   {  // Attack with SPACE
-//      BeginDrawing( );  // Ensure you're inside a drawing context
-//
-//      for ( Enemy* enemy : enemies )
-//      {
-//         if ( enemy->checkCollision( position, attackRange ) )
-//         {
-//            enemy->takeDamage( attackDamage );
-//            std::cout << "Hit enemy! Health: " << enemy->getHealth( ) << std::endl;
-//
-//            // Display hit effect
-//            Vector2 enemyPos = enemy->getPosition( );
-//            DrawText( "HIT!", enemyPos.x, enemyPos.y - 30, 20, RED );
-//         }
-//      }
-//
-//      EndDrawing( );
-//   }
-//}
+void Player::attack( std::vector<Enemy*>& enemies )
+{
+   if ( IsKeyPressed( KEY_SPACE ) )
+   {  // Attack with SPACE
+      BeginDrawing( );  // Ensure you're inside a drawing context
+
+      for ( Enemy* enemy : enemies )
+      {
+         if ( enemy->checkCollision( position, attackRange ) )
+         {
+            enemy->takeDamage( attackDamage );
+            std::cout << "Hit enemy! Health: " << enemy->getHealth( ) << std::endl;
+
+            // Display hit effect
+            Vector2 enemyPos = enemy->getPosition( );
+            DrawText( "HIT!", enemyPos.x, enemyPos.y - 30, 20, RED );
+         }
+      }
+
+      EndDrawing( );
+   }
+}
