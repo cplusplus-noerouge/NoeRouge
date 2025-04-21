@@ -334,33 +334,17 @@ Floor::Floor()
     objHandler = new ObjectHandler;             //make the object handler
 
     //create ladders between floors. could be changed to guarantee they are a certain distance apart or something
-    //added it so the ladders have to be created a certain distance away from the start point (top left corner)
+
     BspNode* ladderUpNode = leaves.front();
     ladderUpX = ladderUpNode->roomCenterPointXCoordinate;
     ladderUpY = ladderUpNode->roomCenterPointYCoordinate;
-    /*
-          while ( ladderUpY < 10 && ladderUpX < 20 )
-    {
-       leaves.front( )++;
-    }
-    */
 
     data[ladderUpX][ladderUpY] = LADDER_UP;
 
     BspNode* ladderDownNode = leaves.back();
     ladderDownX = ladderDownNode->roomCenterPointXCoordinate;
     ladderDownY = ladderDownNode->roomCenterPointYCoordinate;
-/*
-    if ( ladderDownY > 29 || ladderDownX > 69 )
-    {
-       ladderDownY = 4;
-       ladderDownX = 10;
-    }
-    while ( ladderDownY < 10 && ladderDownX < 20 )
-    {
-       leaves.front( )++;
-    }
-*/
+
     data[ladderDownX][ladderDownY] = LADDER_DOWN;
 
     //prints the floor in the console. this is for debugging so we can see the stuff that doesn't have graphics yet like doors and ladders
@@ -383,7 +367,7 @@ Vector2 Floor::getPlayerSpawn()
     //std::cout << "\nMapY: " << ladderUpY;
     //std::cout << "\nPixelX: " << (float)ladderUpX * TILE_SIZE;
     //std::cout << "\nPixelY: " << (float)ladderDownX * TILE_SIZE << "\n";
-    //return { (float)ladderUpX * TILE_SIZE, (float)ladderDownX * TILE_SIZE };
+    return { (float)ladderUpX * TILE_SIZE, (float)ladderDownX * TILE_SIZE };
 
     //returns the first floor location relative to game world - this works fine
     for (int y = 0; y < HEIGHT; y++)
