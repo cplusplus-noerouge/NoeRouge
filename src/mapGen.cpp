@@ -334,14 +334,17 @@ Floor::Floor()
     objHandler = new ObjectHandler;             //make the object handler
 
     //create ladders between floors. could be changed to guarantee they are a certain distance apart or something
+
     BspNode* ladderUpNode = leaves.front();
     ladderUpX = ladderUpNode->roomCenterPointXCoordinate;
     ladderUpY = ladderUpNode->roomCenterPointYCoordinate;
+
     data[ladderUpX][ladderUpY] = LADDER_UP;
 
     BspNode* ladderDownNode = leaves.back();
     ladderDownX = ladderDownNode->roomCenterPointXCoordinate;
     ladderDownY = ladderDownNode->roomCenterPointYCoordinate;
+
     data[ladderDownX][ladderDownY] = LADDER_DOWN;
 
     //prints the floor in the console. this is for debugging so we can see the stuff that doesn't have graphics yet like doors and ladders
@@ -355,29 +358,19 @@ Floor::Floor()
     }
 }
 
-//temporarily returns the first floor location relative to game world. should return ladder up location tho
-Vector2 Floor::getPlayerSpawn()
+/*
+returns the ladder up and ladder down location as a vector2
+returns the location as pixels
+parameters - none
+*/
+Vector2 Floor::getLadderUpLocation()
 {
-    //returns the ladder up location as a vector2 - sometimes spawns off the map for some reason even though the ladder is fine
-    //std::cout << "Player spawn location";
-    //std::cout << "\nMapX: " << ladderUpX;
-    //std::cout << "\nMapY: " << ladderUpY;
-    //std::cout << "\nPixelX: " << (float)ladderUpX * TILE_SIZE;
-    //std::cout << "\nPixelY: " << (float)ladderDownX * TILE_SIZE << "\n";
-    //return { (float)ladderUpX * TILE_SIZE, (float)ladderDownX * TILE_SIZE };
+    return { (float)ladderUpX * TILE_SIZE, (float)ladderUpY * TILE_SIZE };
+}
 
-    //returns the first floor location relative to game world - this works fine
-    for (int y = 0; y < HEIGHT; y++)
-    {
-        for (int x = 0; x < WIDTH; x++)
-        {
-            if (data[x][y] == FLOOR)
-            {
-                return { (float)x * TILE_SIZE, (float)y * TILE_SIZE };
-            }
-        }
-    }
-    std::cout << std::endl;
+Vector2 Floor::getLadderDownLocation( )
+{
+   return { ( float ) ladderDownX * TILE_SIZE, ( float ) ladderDownY * TILE_SIZE };
 }
 
 //HALLWAYS==========================================================================================================================

@@ -38,7 +38,6 @@ int main( )
     loadAllTextures( );
     screenHandler.cameras.push_back( &mainCamera );
 
-    // Make the floors
     Floor* floors[NUM_OF_FLOORS];
     for (int i = 0; i < NUM_OF_FLOORS; i++) {
         floors[i] = new Floor;
@@ -46,7 +45,7 @@ int main( )
     int floorOn = 0;                                         //the floor the player is on
 
     // Create a player so we can see it tick, and see it on screen
-    Vector2 playerSpawnPosition = floors[floorOn]->getPlayerSpawn();
+    Vector2 playerSpawnPosition = floors[floorOn]->getLadderUpLocation();
     floors[floorOn]->getObjHandler()->createPlayer(playerSpawnPosition, { TILE_SIZE, TILE_SIZE }, 300);
 
     std::vector<Sprite> wallSprites = {};                    //is changed when player changes floors
