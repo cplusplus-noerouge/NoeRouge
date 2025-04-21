@@ -36,6 +36,10 @@ public:
     void attack( std::vector<Enemy*>& enemies );
     void takeDamage( int damage, bool& playerDefeated );  //Decrements player health based off enemy damage and checks for player death.
                    
+    void updateDirection() override;
+    
+
+  
 };
 // <<<<<<< combat-character-copy
 //// Define the Player crate function in the object handler

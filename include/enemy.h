@@ -20,6 +20,8 @@ struct Stats
    int health;        // Health points of the enemy
    int attackDamage;  // Amount of damage enemy can deal per attack
    int attackRange;   // Distance at which the enemy can hit the player
+   int defense;       // Defense value to reduce incoming damage
+   int speed;         //character speed
 };
 
 // Enemy class that inherits from Character

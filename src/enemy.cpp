@@ -19,14 +19,13 @@
 
 // Constructor for Enemy class
 // Initializes the enemy's ID, stats, and position in the world
-//Enemy::Enemy( int id, int x, int y, Stats stats )
-//   : Character( id, { static_cast< float >( x ), static_cast< float >( y ) }, { 50.0f, 50.0f }, stats.speed ), // Call Character constructor
-//   id( id ), stats( stats )
-//{
-//   world_position[ 0 ] = x;
-//   world_position[ 1 ] = y;
-//}
-//commented out since this was causing the program not to run
+Enemy::Enemy( int id, int x, int y, Stats stats )
+   : Character( id, { static_cast< float >( x ), static_cast< float >( y ) }, { 50.0f, 50.0f }, stats.speed ), // Call Character constructor
+   id( id ), stats( stats )
+{
+   world_position[ 0 ] = x;
+   world_position[ 1 ] = y;
+}
 
 
 // Called every frame to update the enemy's logic and behavior
@@ -82,7 +81,14 @@ void Enemy::render( )
 // Applies damage to the enemy, factoring in defense
 void Enemy::takeDamage( int damage )
 {
-      stats.health -= damage;
+   // Reduce incoming damage by enemy's defense
+   int effectiveDamage = damage - stats.defense;
+
+   // Only apply damage if it's greater than zero
+   if ( effectiveDamage > 0 )
+   {
+      stats.health -= effectiveDamage;
+   }
 
    // Check for death
    if ( stats.health <= 0 )
