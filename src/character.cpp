@@ -161,6 +161,12 @@ Vector2 Character::getPosition( )
    return position;
 }
 
+void Character::setPosition(Vector2 newPos)
+{
+    position.x = newPos.x;
+    position.y = newPos.y;
+}
+
 float Character::getTargetDistance( )
 {
    float dx = position.x - target.x;
