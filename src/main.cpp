@@ -45,11 +45,11 @@ int main( )
     int floorOn = 0;                                         //the floor the player is on
 
     // Create a player so we can see it tick, and see it on screen
-    Vector2 playerSpawnPosition = floors[floorOn]->getLadderUpLocation();
+    Vector2 playerSpawnPosition = floors[floorOn]->getLadderDownLocation();
     floors[floorOn]->getObjHandler()->createPlayer(playerSpawnPosition, { TILE_SIZE, TILE_SIZE }, 300);
 
-    std::vector<Sprite> wallSprites = {};                    //is changed when player changes floors
-    for (Rectangle wall : floors[floorOn]->getWalls())       //put the wall sprites for the starting floor
+    std::vector<Sprite> wallSprites = {};                    //is changed when player changes floors. prob should be in Floor or something
+    for (Rectangle wall : floors[floorOn]->getWalls())       //make the wall sprites for the starting floor
     {
         wallSprites.push_back(Sprite("wall", { wall.x, wall.y }, wall.y));
     }
@@ -57,20 +57,14 @@ int main( )
     while (!WindowShouldClose())
     {
         //TEMPORARY testing changing floors
-        if (IsKeyPressed(KEY_SPACE) && floorOn < NUM_OF_FLOORS-1)
+        //TODO changing floors needs to only be possible when player is on a ladder, up or down
+        if (IsKeyPressed(KEY_RIGHT_BRACKET)) //up
         {
-            /*
-            the player object needs to also change floors. idk best way to do this.
-            could be like: void ObjectHandler::transferObj(int objId, ObjectHandler* newHandler)
-            but thats a problem with the Id system
-            or the player could exist simultaneously in all object handlers if other objects don't need to move
-            or just have one object handler for the whole game and do floors some other way
-
-            also changing floors needs to only be possible when player is on a ladder, up or down
-            */
-            //floorOn += 1;
             changeFloor(wallSprites,floors,floorOn, 1);
-            std::cout << "\n moved from floor " << floorOn -1 << " to " << floorOn;
+        }
+        if (IsKeyPressed(KEY_LEFT_BRACKET)) //down
+        {
+            changeFloor(wallSprites, floors, floorOn, -1);
         }
 
         floors[floorOn]->getObjHandler()->tickAll(floors[floorOn]->getWalls());
@@ -88,7 +82,7 @@ int main( )
 }
 
 /*------------------------------------------------------------------------------------------------------------------
-* changeFloor() changes the players current floor
+* changeFloor() changes the players current floor.
 * - devon
 * param vector<Sprite>& wallSprites: sprites of the walls. edited by this function
 * param Floor* floors[NUM_OF_FLOORS]: array of all the floors in the game
@@ -98,13 +92,32 @@ int main( )
 ------------------------------------------------------------------------------------------------------------------*/
 void changeFloor(std::vector<Sprite>& wallSprites, Floor* floors[NUM_OF_FLOORS], int& floorOn, int changeVal)
 {
+    //check that the new floor exists
+    if (floorOn + changeVal < 0 || floorOn + changeVal >= NUM_OF_FLOORS)
+    {
+        std::cout << "\nTried to change floors from " << floorOn << " to " << floorOn + changeVal
+                  << " but didn't because floor " << floorOn + changeVal << " doesn't exist.";
+        return;
+    }
+
     //transfer player to new object handler
     ObjectHandler* oldHandler = floors[floorOn]->getObjHandler();
     floorOn+= changeVal;
     ObjectHandler* newHandler = floors[floorOn]->getObjHandler();
     oldHandler->transferObject(0, *newHandler); //player id is always 0
 
-    //TODO set player location to the new floors ladderUp
+    //set player location to the new floors ladder
+    Player* player = dynamic_cast<Player*>(newHandler->getObject(0));
+    if (changeVal < 0) //going down, move player position to ladderup
+    {
+        Vector2 ladderPosition = floors[floorOn]->getLadderUpLocation();
+        player->setPosition(ladderPosition);
+    }
+    if (changeVal > 0) //going up, move player position to ladderdown
+    {
+        Vector2 ladderPosition = floors[floorOn]->getLadderDownLocation();
+        player->setPosition(ladderPosition);
+    }
 
     //make new wall sprites
     wallSprites.clear();
@@ -112,4 +125,5 @@ void changeFloor(std::vector<Sprite>& wallSprites, Floor* floors[NUM_OF_FLOORS],
     {
         wallSprites.push_back(Sprite("wall", { wall.x, wall.y }, wall.y));
     }
+    std::cout << "\n Moved from floor " << floorOn - changeVal << " to " << floorOn;
 }
