@@ -13,9 +13,9 @@
 #include <vector>
 #include "object.h"
 #include "character.h"
-#include "player.h"
 #include "enemy.h"
 #include <raymath.h>
+using namespace std;
 
 // Constructor for Enemy class
 // Initializes the enemy's ID, stats, and position in the world
@@ -27,7 +27,15 @@ Enemy::Enemy( int id, int x, int y, Stats stats )
    world_position[ 1 ] = y;
 }
 
+Enemy* ObjectHandler::createEnemy( Vector2 position, Vector2 size, int speed )
+{
+   Stats enemyStats = { 100, 10, 50, 5}; // Example stats for the enemy
+   Enemy* newEnemy = new Enemy( nextId++, position.x, position.y, enemyStats );
+   allObjects[ newEnemy->getId( ) ] = newEnemy; // Add <id, object*> to the map
+   this->numberOfObjects++;
+   return newEnemy;
 
+}
 // Called every frame to update the enemy's logic and behavior
 void Enemy::onTick( const std::vector<Rectangle> collidables )
 {
@@ -81,24 +89,14 @@ void Enemy::render( )
 // Applies damage to the enemy, factoring in defense
 void Enemy::takeDamage( int damage )
 {
-   // Reduce incoming damage by enemy's defense
-   int effectiveDamage = damage - stats.defense;
-
-   // Only apply damage if it's greater than zero
-   if ( effectiveDamage > 0 )
-   {
-      stats.health -= effectiveDamage;
-   }
-
    // Check for death
    if ( stats.health <= 0 )
    {
-      std::cout << "Enemy defeated!" << std::endl;
+      stats.health = 0; // Ensure health doesn't go below zero
+      std::cout << "Enemy is dead!" << std::endl;
+      return; // Exit if the enemy is already dead
    }
-
-   // Draws the enemy's bounds in red (debug or visual feedback)
-   Rectangle rectangle = bounds( );
-   DrawRectangle( rectangle.x, rectangle.y, rectangle.width, rectangle.height, RED );
+   cout << "Enemy took " << damage << " damage!" << endl;
 }
 
 // Checks if the player is within the enemy's attack range

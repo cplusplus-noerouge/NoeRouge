@@ -11,6 +11,8 @@
 #include <iostream>
 #include "enemy.h"
 
+using namespace std;
+
 
 //class Player *objectHandler::createPlayer(Vector2 position, Vector2 size, int speed )
 //{
@@ -61,8 +63,10 @@ class Player* ObjectHandler::createPlayer( Vector2 position, Vector2 size, int s
 void Player::attack( std::vector<Enemy*>& enemies )
 {
    if ( IsKeyPressed( KEY_SPACE ) )
+
    {  // Attack with SPACE
       BeginDrawing( );  // Ensure you're inside a drawing context
+
 
       for ( Enemy* enemy : enemies )
       {
@@ -76,7 +80,7 @@ void Player::attack( std::vector<Enemy*>& enemies )
             DrawText( "HIT!", enemyPos.x, enemyPos.y - 30, 20, RED );
          }
       }
-
+      cout << "ATTACKING" << endl;
       EndDrawing( );
    }
 }

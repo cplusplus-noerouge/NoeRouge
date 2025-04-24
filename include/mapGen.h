@@ -103,6 +103,8 @@ public:
 
     Vector2 getLadderUpLocation();
     Vector2 getLadderDownLocation();
+    Vector2 getPlayerSpawn();
+    Vector2 getEnemySpawn( );
 };
 
 //HALLWAYS================================================================================================================================

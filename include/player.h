@@ -5,11 +5,10 @@
 */
 
 #pragma once
-#include <cstdio>
 #include "raylib.h"
-#include "object.h"
 #include "character.h"
 #include "sprite.h"
+#include "enemy.h"
 
 class Player : public Character 
 {
@@ -37,9 +36,6 @@ public:
     void takeDamage( int damage, bool& playerDefeated );  //Decrements player health based off enemy damage and checks for player death.
                    
     void updateDirection() override;
-    
-
-  
 };
 // <<<<<<< combat-character-copy
 //// Define the Player crate function in the object handler
