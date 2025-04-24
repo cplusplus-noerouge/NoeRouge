@@ -1,9 +1,8 @@
 #pragma once
-#include <cstdio>
 #include "raylib.h"
-#include "object.h"
 #include "character.h"
 #include "sprite.h"
+#include "enemy.h"
 
 class Player : public Character 
 {
@@ -27,9 +26,6 @@ public:
     void onRender( ) override;
     void attack( std::vector<Enemy*>& enemies );
     void updateDirection() override;
-    
-
-  
 };
 // <<<<<<< combat-character-copy
 //// Define the Player crate function in the object handler

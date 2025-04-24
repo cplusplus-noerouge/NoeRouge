@@ -379,6 +379,22 @@ Vector2 Floor::getPlayerSpawn()
     }
     std::cout << std::endl;
 }
+Vector2 Floor::getEnemySpawn( )
+{
+  
+   for ( int y = 0; y < HEIGHT; y++ )
+   {
+      for ( int x = 0; x < WIDTH; x++ )
+      {
+         if ( data[ x ][ y ] == FLOOR )
+
+         {
+            return { ( float ) x * TILE_SIZE, ( float ) y * TILE_SIZE };
+         }
+      }
+   }
+   std::cout << std::endl;
+}
 
 //HALLWAYS==========================================================================================================================
 void Hallways::calculateDistanceBetweenRoomCenters(std::list<BspNode*> leafNodes)

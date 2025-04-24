@@ -10,8 +10,6 @@
 */
 
 #pragma once
-
-#include <cstdlib>
 #include "character.h"
 
 // Struct to hold various stat-related properties of an enemy
@@ -20,7 +18,6 @@ struct Stats
    int health;        // Health points of the enemy
    int attackDamage;  // Amount of damage enemy can deal per attack
    int attackRange;   // Distance at which the enemy can hit the player
-   int defense;       // Defense value to reduce incoming damage
    int speed;         //character speed
 };
 
@@ -44,6 +41,7 @@ class Enemy : public Character
    void moveRight( int distance );  // Move right by given distance
    void moveUp( int distance );     // Move up by given distance
    void moveDown( int distance );   // Move down by given distance
+
 
    // Unused alternate constructor and attack method (possibly for future use)
    // Enemy(int id, Vector2 position, Vector2 size, int speed ) : Character( id, position, size, speed) { }
