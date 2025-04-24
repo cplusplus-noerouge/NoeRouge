@@ -10,26 +10,25 @@ class Player : public Character
 
 private:
    float attackRange;    // Attack radius
-   int attackDamage;      // Damage per hit
+   int attackDamage;     // Damage per hit
+   int health;           // Player health
    Sprite sprite;
 
 public:
-    Player(int id): Character(id), attackRange( 50.0f ), attackDamage( 20 ) 
+    Player(int id): Character(id), attackRange( 50.0f ), attackDamage( 1 ), health( 10 )
     { 
        sprite = Sprite( "player", position, position.y );
     }
     Player(int id, Vector2 _position, Vector2 _size, int _speed) 
-       : Character(id, _position, _size, _speed), attackRange(50.0f), attackDamage(20) 
+       : Character(id, _position, _size, _speed), attackRange(50.0f), attackDamage( 1 ), health( 10 )
     { 
        sprite = Sprite( "player", position, position.y );
     }
     
+    void updateDirection( ) override;
     void onRender( ) override;
     void attack( std::vector<Enemy*>& enemies );
-    void updateDirection() override;
-    
-
-  
+    void takeDamage( int damage );
 };
 // <<<<<<< combat-character-copy
 //// Define the Player crate function in the object handler

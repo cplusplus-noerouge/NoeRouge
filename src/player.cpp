@@ -74,3 +74,13 @@ void Player::attack( std::vector<Enemy*>& enemies )
       EndDrawing( );
    }
 }
+
+void Player::takeDamage( int damage )
+{
+   health -= damage;
+   if ( health <= 0 )
+   {
+      std::cout << "Player defeated!" << std::endl;
+   }
+   std::cout << "Player taken damage!";
+}
