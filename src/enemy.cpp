@@ -89,6 +89,13 @@ void Enemy::render( )
 // Applies damage to the enemy, factoring in defense
 void Enemy::takeDamage( int damage )
 {
+   // Reduce health by damage amount, ensuring it doesn't go below zero
+   stats.health -= damage;
+   if ( stats.health < 0 )
+   {
+      stats.health = 0; // Ensure health doesn't go below zero
+   }
+   
    // Check for death
    if ( stats.health <= 0 )
    {
