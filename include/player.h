@@ -28,7 +28,7 @@ public:
     void updateDirection( ) override;
     void onRender( ) override;
     void attack( std::vector<Enemy*>& enemies );
-    void takeDamage( int damage );
+    void takeDamage( int damage );                    //Decrements player health based off enemy damage and checks for 0.
 };
 // <<<<<<< combat-character-copy
 //// Define the Player crate function in the object handler
