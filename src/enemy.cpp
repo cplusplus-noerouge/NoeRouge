@@ -27,10 +27,10 @@ Enemy::Enemy( int id, int x, int y, Stats stats )
    world_position[ 1 ] = y;
 }
 
-Enemy* ObjectHandler::createEnemy( Vector2 position, Vector2 size, int speed )
+Enemy* ObjectHandler::createEnemy( Vector2 world_position, Vector2 size, int speed )
 {
-   Stats enemyStats = { 100, 10, 50, 5}; // Example stats for the enemy
-   Enemy* newEnemy = new Enemy( nextId++, position.x, position.y, enemyStats );
+   Stats enemyStats = { 3, 1, 25, 5}; // stats: hp, damage, range, speed
+   Enemy* newEnemy = new Enemy( nextId++, world_position.x, world_position.y, enemyStats );
    allObjects[ newEnemy->getId( ) ] = newEnemy; // Add <id, object*> to the map
    this->numberOfObjects++;
    return newEnemy;
