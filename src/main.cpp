@@ -45,7 +45,7 @@ int main( )
     }
     int floorOn = 0;
     std::vector<Enemy*> enemies;      //the floor the player is on
-    floors[ floorOn ]->getObjHandler( )->createEnemy( );
+   // floors[floorOn]->getObjHandler()->createEnemy( enemies );
 
 
     // Create a player so we can see it tick, and see it on screen
@@ -54,7 +54,7 @@ int main( )
 
     // Add enemies to the vector after creating them
     Enemy* enemy = floors[ floorOn ]->getObjHandler( )->createEnemy( enemySpawnPosition,
-                                                                    { TILE_SIZE, TILE_SIZE }, 300 );
+                                                                    { TILE_SIZE}, 300 );
     enemies.push_back( enemy );
 
     floors[ floorOn ]->getObjHandler()->createPlayer(playerSpawnPosition, 
