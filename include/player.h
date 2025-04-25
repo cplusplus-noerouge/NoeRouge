@@ -1,3 +1,9 @@
+/*
+* noeRouge
+* Player class
+* Ben A, Kaleb, Reese, Ethan
+*/
+
 #pragma once
 #include <cstdio>
 #include "raylib.h"
@@ -28,7 +34,8 @@ public:
     void updateDirection( ) override;
     void onRender( ) override;
     void attack( std::vector<Enemy*>& enemies );
-    void takeDamage( int damage );                    //Decrements player health based off enemy damage and checks for 0.
+    void takeDamage( int damage, bool& playerDefeated );  //Decrements player health based off enemy damage and checks for player death.
+                   
 };
 // <<<<<<< combat-character-copy
 //// Define the Player crate function in the object handler
