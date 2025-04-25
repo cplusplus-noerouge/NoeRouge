@@ -75,6 +75,14 @@ void Player::attack( std::vector<Enemy*>& enemies )
    }
 }
 
+/*-----------------------------------------------------------------------------------------------------------------------------
+* takeDamage( )
+* Ethan Sheffield
+* @brief : Decrements player health based off enemy damage and checks for 0.
+* @param int damage : amount of incoming damage to decrement from health
+* @return : none
+* -----------------------------------------------------------------------------------------------------------------------------
+*/
 void Player::takeDamage( int damage )
 {
    health -= damage;
