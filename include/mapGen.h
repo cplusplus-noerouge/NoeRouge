@@ -1,5 +1,6 @@
 //Notes: - We should probably try to keep every line under 100 characters
 
+
 #pragma once
 
 #include <raylib.h>

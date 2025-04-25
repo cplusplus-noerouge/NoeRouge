@@ -1,6 +1,6 @@
 /*
 NoeRouge main file
-Devon, everyone else who worked on this file put ur names here too so Vicki can grade
+Devon,Reese everyone else who worked on this file put ur names here too so Vicki can grade
 */
 // Includes
 #include <iostream>
@@ -45,10 +45,13 @@ int main( )
     }
     int floorOn = 0;
     std::vector<Enemy*> enemies;      //the floor the player is on
+    floors[ floorOn ]->getObjHandler( )->createEnemy( );
+
 
     // Create a player so we can see it tick, and see it on screen
     Vector2 playerSpawnPosition = floors[floorOn]->getPlayerSpawn( );
     Vector2 enemySpawnPosition = floors[ floorOn ]->getEnemySpawn( );
+
     // Add enemies to the vector after creating them
     Enemy* enemy = floors[ floorOn ]->getObjHandler( )->createEnemy( enemySpawnPosition,
                                                                     { TILE_SIZE, TILE_SIZE }, 300 );
@@ -93,9 +96,9 @@ int main( )
            mainCamera.addToBuffer( &wallSprites[ i ] );
         } 
         
-        if ( IsKeyPressed( KEY_SPACE ) )
+        if ( IsKeyPressed( KEY_SPACE ) )  // player attacks when space is pressed
         {
-           // Add this line to declare the player object before using it in the main function  
+           // created a pointer to the player object in the current floor's object handler
            Player* player = static_cast< Player* >( floors[ floorOn ]->getObjHandler( )->getObject( 0 ) );
   
            player->attack( enemies ); // Attack with a range of 50 and damage of 10

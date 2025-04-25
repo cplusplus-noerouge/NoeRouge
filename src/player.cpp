@@ -62,16 +62,21 @@ void Player::attack( std::vector<Enemy*>& enemies )
       BeginDrawing( );  // Ensure you're inside a drawing context
 
 
+
       for ( Enemy* enemy : enemies )
       {
          if ( enemy->checkCollision( position, attackRange ) )
          {
             enemy->takeDamage( attackDamage );
             std::cout << "Hit enemy! Health: " << enemy->getHealth( ) << std::endl;
+            
+            // Calculate the position to display the hit effect
+            Vector2 enemyPosition = enemy->getPosition( );
+
 
             // Display hit effect
-            Vector2 enemyPos = enemy->getPosition( );
-            DrawText( "HIT!", enemyPos.x, enemyPos.y - 30, 20, RED );
+            Vector2 world_position = enemy->getPosition( );
+            DrawText( "HIT!", position.x, position.y,15,RED );
          }
       }
       cout << "ATTACKING" << endl;

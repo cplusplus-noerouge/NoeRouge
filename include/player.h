@@ -13,12 +13,12 @@ private:
    Sprite sprite;
 
 public:
-    Player(int id): Character(id), attackRange( 50.0f ), attackDamage( 20 ) 
+    Player(int id): Character(id), attackRange( 20.0f ), attackDamage( 1 ) 
     { 
        sprite = Sprite( "player", position, position.y );
     }
     Player(int id, Vector2 _position, Vector2 _size, int _speed) 
-       : Character(id, _position, _size, _speed), attackRange(50.0f), attackDamage(20) 
+       : Character(id, _position, _size, _speed), attackRange(20.0f), attackDamage(1) 
     { 
        sprite = Sprite( "player", position, position.y );
     }

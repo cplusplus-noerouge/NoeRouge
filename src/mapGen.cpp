@@ -1,6 +1,6 @@
 /*
 NoeRouge map generation
-Devon, Irene, Evan, Ben S, possible others?
+Devon, Irene, Evan, Ben S, possible others, 
 */
 #include "mapGen.h"
 #include <iostream>
