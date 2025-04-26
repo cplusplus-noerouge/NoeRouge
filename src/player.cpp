@@ -1,8 +1,15 @@
+/*
+* noeRouge
+* Player class
+* Ben A, Kaleb, Reese, Ethan
+*/
+
 #include "player.h"
 #include "object.h"
 #include "customCamera.h"
 #include "sprite.h"
 #include <iostream>
+#include "enemy.h"
 
 
 //class Player *objectHandler::createPlayer(Vector2 position, Vector2 size, int speed )
@@ -51,25 +58,45 @@ class Player* ObjectHandler::createPlayer( Vector2 position, Vector2 size, int s
    return Player;
 }
 
-//void Player::attack( std::vector<Enemy*>& enemies )
-//{
-//   if ( IsKeyPressed( KEY_SPACE ) )
-//   {  // Attack with SPACE
-//      BeginDrawing( );  // Ensure you're inside a drawing context
-//
-//      for ( Enemy* enemy : enemies )
-//      {
-//         if ( enemy->checkCollision( position, attackRange ) )
-//         {
-//            enemy->takeDamage( attackDamage );
-//            std::cout << "Hit enemy! Health: " << enemy->getHealth( ) << std::endl;
-//
-//            // Display hit effect
-//            Vector2 enemyPos = enemy->getPosition( );
-//            DrawText( "HIT!", enemyPos.x, enemyPos.y - 30, 20, RED );
-//         }
-//      }
-//
-//      EndDrawing( );
-//   }
-//}
+void Player::attack( std::vector<Enemy*>& enemies )
+{
+   if ( IsKeyPressed( KEY_SPACE ) )
+   {  // Attack with SPACE
+      BeginDrawing( );  // Ensure you're inside a drawing context
+
+      for ( Enemy* enemy : enemies )
+      {
+         if ( enemy->checkCollision( position, attackRange ) )
+         {
+            enemy->takeDamage( attackDamage );
+            std::cout << "Hit enemy! Health: " << enemy->getHealth( ) << std::endl;
+
+            // Display hit effect
+            Vector2 enemyPos = enemy->getPosition( );
+            DrawText( "HIT!", enemyPos.x, enemyPos.y - 30, 20, RED );
+         }
+      }
+
+      EndDrawing( );
+   }
+}
+
+/*-----------------------------------------------------------------------------------------------------------------------------
+* takeDamage( )
+* Ethan Sheffield
+* @brief : Decrements player health based off enemy damage and checks for player death.
+* @param int damage : amount of incoming damage to decrement from health
+* @param bool &playerDefeated : reference to a bool value, if player has been defeated or not.
+* @return : none
+* -----------------------------------------------------------------------------------------------------------------------------
+*/
+void Player::takeDamage( int damage, bool &playerDefeated )
+{
+   health -= damage;
+   std::cout << "Player taken damage!";
+   if ( health <= 0 )
+   {
+      std::cout << "Player defeated!" << std::endl;
+      playerDefeated = true;
+   }
+}
