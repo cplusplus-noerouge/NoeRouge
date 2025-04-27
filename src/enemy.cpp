@@ -80,10 +80,10 @@ void Enemy::moveDown( int distance )
 void Enemy::render( )
 {
    // Draw the enemy as a red rectangle
-   DrawRectangle( world_position[ 0 ], world_position[ 1 ], 50, 50, RED );
+   DrawRectangle( world_position[ 0 ], world_position[ 1 ], 50, 50, YELLOW );
 
    // Draw the enemy's health above the rectangle
-   DrawText( TextFormat( "HP: %d", stats.health ), world_position[ 0 ], world_position[ 1 ] - 20, 12, WHITE );
+   DrawText( TextFormat( "HP: %d", stats.health ), world_position[ 0 ], world_position[ 2 ] - 20, 12, WHITE );
 }
 
 // Applies damage to the enemy, factoring in defense
@@ -95,7 +95,17 @@ void Enemy::takeDamage( int damage )
    {
       stats.health = 0; // Ensure health doesn't go below zero
    }
+   // respawn the enemy if it is dead 
+   if ( stats.health == 0 )
+   {
+      // Reset health to initial value (could be defined in Stats struct)
+      stats.health = 3; // Assuming initial health is 3
    
+      world_position[ 0 ] = 100; // Reset position to some default value
+      world_position[ 1 ] = 100; // Reset position to some default value
+      std::cout << "Enemy respawned!" << std::endl;
+      return; // Exit if the enemy is respawned
+   }
    // Check for death
    if ( stats.health <= 0 )
    {
@@ -103,7 +113,9 @@ void Enemy::takeDamage( int damage )
       std::cout << "Enemy is dead!" << std::endl;
       return; // Exit if the enemy is already dead
    }
+   // Print damage taken and remaining health
    cout << "Enemy took " << damage << " damage!" << endl;
+   cout << "Enemy health is now: " << stats.health << endl;  
 }
 
 // Checks if the player is within the enemy's attack range
