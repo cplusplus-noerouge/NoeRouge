@@ -382,9 +382,9 @@ Vector2 Floor::getPlayerSpawn()
 Vector2 Floor::getEnemySpawn( )
 {
   
-   for ( int y = 0; y < HEIGHT; y++ )
+   for ( int y = 1; y < HEIGHT; y++ )
    {
-      for ( int x = 0; x < WIDTH; x++ )
+      for ( int x = 1; x < WIDTH; x++ )
       {
          if ( data[ x ][ y ] == FLOOR )
 

@@ -25,8 +25,8 @@ const int NUM_OF_FLOORS = 4; //the number of floors in the game
 ScreenHandler screenHandler = ScreenHandler( );
 // IMPORTANT! These are different versions of the camera with different zoom levels, uncomment the one you want.
 //CustomCamera mainCamera = CustomCamera( Vector2 { 320.0f, 180.0f }, 4.0f );
-CustomCamera mainCamera = CustomCamera( Vector2 { 640.0f, 360.0f }, 2.0f );
-//CustomCamera mainCamera = CustomCamera( Vector2 { 1280, 720.0f }, 1.0f );
+//CustomCamera mainCamera = CustomCamera( Vector2 { 640.0f, 360.0f }, 2.0f );
+CustomCamera mainCamera = CustomCamera( Vector2 { 1280, 720.0f }, 1.0f );
 
 std::unordered_map<std::string, Texture2D> textureMap = {};
 
@@ -44,25 +44,29 @@ int main( )
         floors[i] = new Floor;
     }
     int floorOn = 0;
-    std::vector<Enemy*> enemies;      //the floor the player is on
-   // floors[floorOn]->getObjHandler()->createEnemy( enemies );
-
-
+   
     // Create a player so we can see it tick, and see it on screen
     Vector2 playerSpawnPosition = floors[floorOn]->getPlayerSpawn( );
     Vector2 enemySpawnPosition = floors[ floorOn ]->getEnemySpawn( );
 
+    //// Set the player spawn position to the ladder up on the first floor
+    //Vector2 playerSpawnPosition = { 100, 100 }; // Example spawn position, change as needed
+    //  // Set the enemy spawn position to the ladder down on the first floor
+    //Vector2 enemySpawnPosition = { 120, 115 }; // Example spawn position, change as needed
+   
+      // Create the player object in the object handler of the current floor
+    floors[ floorOn ]->getObjHandler( )->createPlayer( playerSpawnPosition, { TILE_SIZE, TILE_SIZE }, PLAYER_SPEED );
+
     // Add enemies to the vector after creating them
+    //change this "floorOn" to change the layer enemy spawns on 
     Enemy* enemy = floors[ floorOn ]->getObjHandler( )->createEnemy( enemySpawnPosition,
-                                                                    { TILE_SIZE}, 300 );
-    enemies.push_back( enemy );
+                                                                    { TILE_SIZE, TILE_SIZE}, 300 );  
 
-    floors[ floorOn ]->getObjHandler()->createPlayer(playerSpawnPosition, 
-                                                      { TILE_SIZE, TILE_SIZE }, 300 );
-
-    // Declare a vector to hold enemy pointers
-    
+    // Add the following declaration at the top of the file, near other global variables.  
+    std::vector<Enemy*> enemies; // Declare the enemies vector to store enemy pointers.
     std::vector<Sprite> wallSprites = {};                    //is changed when player changes floors
+    // Declare a vector to hold enemy pointers
+    enemies.push_back( enemy );
     for (Rectangle wall : floors[floorOn]->getWalls())       //put the wall sprites for the starting floor
     {
         wallSprites.push_back(Sprite("wall", { wall.x, wall.y }, wall.y));

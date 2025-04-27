@@ -41,7 +41,7 @@ extern CustomCamera mainCamera;
 void Player::onRender()
 {
    mainCamera.setPosition( position ); // Updating the camera position should be moved to its own class or function later on
-   sprite.update( position, position.y );
+   sprite.update( position,position.x);
    mainCamera.addToBuffer( &sprite );
 }
 
@@ -61,8 +61,6 @@ void Player::attack( std::vector<Enemy*>& enemies )
    {  // Attack with SPACE
       BeginDrawing( );  // Ensure you're inside a drawing context
 
-
-
       for ( Enemy* enemy : enemies )
       {
          if ( enemy->checkCollision( position, attackRange ) )
@@ -70,13 +68,13 @@ void Player::attack( std::vector<Enemy*>& enemies )
             enemy->takeDamage( attackDamage );
             std::cout << "Hit enemy! Health: " << enemy->getHealth( ) << std::endl;
             
-            // Calculate the position to display the hit effect
-            Vector2 enemyPosition = enemy->getPosition( );
-
-
+            //// Calculate the position to display the hit effect
+            //Vector2 enemyPosition = enemy->getPosition( );
+            //Vector2 position = { enemyPosition.x - 20, enemyPosition.y - 20 }; // Adjust as needed for centering text
+            // Set the font size and color for the hit effect
             // Display hit effect
             Vector2 world_position = enemy->getPosition( );
-            DrawText( "HIT!", position.x, position.y,15,RED );
+            DrawText( "HIT!", world_position.x, world_position.y,45,RAYWHITE);
          }
       }
       cout << "ATTACKING" << endl;
