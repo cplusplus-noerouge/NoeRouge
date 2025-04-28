@@ -1,69 +1,59 @@
+/*----------------------------------------------------------------------------------------------------------------------------------------
+* noeRouge
+* Character class
+* Ben A, Kaleb, Reese, Ethan
+* The Character class is a parent class for any player or enemy character that is rendered on screen and moves.
+----------------------------------------------------------------------------------------------------------------------------------------*/
+
+#pragma once
 #include "object.h"
 #include "raylib.h"
 
-#pragma once
-
 class Character : public GameObject
 {
-   private:
+	private:
 
-   Vector2 size;
-   
+	Vector2 size;                        //Character's rectangle size
 
-   protected:
+	protected:
 
-   Vector2 position;
-   Vector2 direction;
-   Vector2 velocity;
-   
-   // Position of target. For enemies this will usually be the player, the player's last known location, or their spawn point.
-   Vector2 target; 
-   
-   public:
-   int speed; // Speed of the character in pixels per second
-   
+	Vector2 position;                    //Character's map position
+	Vector2 direction;                   //Character's direction
+	Vector2 velocity;                    //Character's velocity
+	Vector2 target;                      //Position of target.
 
-   Character( int _id, Vector2 _position, Vector2 _size, Vector2 target, int _speed );
+	public:
 
-   Character( int _id, Vector2 _position, Vector2 _size, int _speed );
+	int speed;                                                                            //Speed of the character in pixels per second.
 
-   Character( int _id );
+	//Character( int _id, Vector2 _position, Vector2 _size, Vector2 target, int _speed );   //Parameterized Class constructor, including target.
+	Character( int _id, Vector2 _position, Vector2 _size, int _speed );                   //Parameterized Class constructor.
+	Character( int _id );                                                                 //Class constructor based on object ID. 
 
-   ~Character( )
-   {
-      //destructor
-   }
+	void onTick( const std::vector<Rectangle> collidables ) override;                     //Updates the state of the character during a single frame.
+	void onRender( ) override;                                                            //Renders the character on screen.
 
-   void onTick( const std::vector<Rectangle> collidables ) override;
+	virtual void updateDirection( );                                                      //Sets the movement direction of the character based on control input.
+	void updateDirection( Vector2 target );                                               //Sets the movement direction of the character based on a target position.
 
-   void onRender( ) override;
+	Rectangle bounds( );
 
-   virtual void updateDirection( );
+	bool collidingLeft( Rectangle other );                                                //Checks for collisions to the left.
+	bool collidingRight( Rectangle other );                                               //Checks for collisions to the right.
+	bool collidingTop( Rectangle other );                                                 //Checks for collisions to the top.
+	bool collidingBottom( Rectangle other );                                              //Checks for collisions to the bottom.
+	void updateCollisions( const std::vector<Rectangle> colliders );                      //Detects and resolves collisions between the character and a list of colliders.
 
-   void updateDirection( Vector2 target );
+	Vector2 getPosition( );                                                               //Getter for the character's position.
+	void setPosition( Vector2 newPos );                                                   //Setter for the character's position.
 
-   Rectangle bounds( );
+	void moveToTarget( Vector2 target, float distanceMaintained, std::vector<Rectangle> colliders );  //
+	Ray relationToTarget( );                                                                          //
+	bool updateLOS( const std::vector<Rectangle> colliders );                                         //
+	float getTargetDistance( );                                                                       //Calculates the distance between the character and a target.
 
-   //Checks if this character is colliding with the left side of another rectangle, same for all colliding functions.
-   bool collidingLeft( Rectangle other );
+	~Character( )                                                                                     //Destructor
+	{
 
-   bool collidingRight( Rectangle other );
-
-   bool collidingTop( Rectangle other );
-
-   bool collidingBottom( Rectangle other );
-
-   void updateCollisions( const std::vector<Rectangle> colliders );
-
-   Vector2 getPosition( );
-   void setPosition(Vector2 newPos);
-
-   void moveToTarget( Vector2 target, float distanceMaintained, std::vector<Rectangle> colliders );
-
-   Ray relationToTarget( );
-
-   bool updateLOS( const std::vector<Rectangle> colliders );
-
-   float getTargetDistance( );
-
+	}
 };

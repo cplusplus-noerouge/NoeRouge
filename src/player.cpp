@@ -1,3 +1,9 @@
+/*---------------------------------------------------------------------------------------------------------------------------------------
+* noeRouge
+* Player class
+* Ben A, Kaleb, Reese, Ethan, Adam
+----------------------------------------------------------------------------------------------------------------------------------------*/
+
 #include "player.h"
 #include "object.h"
 #include "customCamera.h"
@@ -7,14 +13,25 @@
 
 using namespace std;
 
+extern CustomCamera mainCamera;
 
-//class Player *objectHandler::createPlayer(Vector2 position, Vector2 size, int speed )
-//{
-//   Player* newPlayer = new Player( this->nextId++, position, size, speed );
-//   this->allObjects.push_back( newPlayer );
-//   this->numberOfObjects++;
-//   return newPlayer;
-//}
+Player::Player( int id ) : Character( id ), attackRange( 20.0f ), attackDamage( 1 )
+{
+   sprite = Sprite( "player", position, position.y );
+}
+
+Player::Player( int id, Vector2 _position, Vector2 _size, int _speed )
+   : Character( id, _position, _size, _speed ), attackRange( 20.0f ), attackDamage( 1 )
+{
+   sprite = Sprite( "player", position, position.y );
+}
+
+void Player::onRender( )
+{
+   mainCamera.setPosition( position ); // Updating the camera position should be moved to its own class or function later on
+   sprite.update( position, position.x );
+   mainCamera.addToBuffer( &sprite );
+}
 
 void Player::updateDirection()
 {
@@ -34,24 +51,6 @@ void Player::updateDirection()
     {
         direction.y = -1;
     }
-}
-
-extern CustomCamera mainCamera;
-
-void Player::onRender()
-{
-   mainCamera.setPosition( position ); // Updating the camera position should be moved to its own class or function later on
-   sprite.update( position,position.x);
-   mainCamera.addToBuffer( &sprite );
-}
-
-// Define the Player create function in the object handler
-class Player* ObjectHandler::createPlayer( Vector2 position, Vector2 size, int speed )
-{
-   class Player* Player = new class Player( 0, position, size, speed ); //id for player is always 0
-   allObjects[Player->getId()] = Player; //add <id, object*> to the map
-   this->numberOfObjects++;
-   return Player;
 }
 
 void Player::attack( std::vector<Enemy*>& enemies )
@@ -80,4 +79,13 @@ void Player::attack( std::vector<Enemy*>& enemies )
       cout << "ATTACKING" << endl;
       EndDrawing( );
    }
+}
+
+// Define the Player create function in the object handler
+class Player* ObjectHandler::createPlayer( Vector2 position, Vector2 size, int speed )
+{
+   class Player* Player = new class Player( 0, position, size, speed ); //id for player is always 0
+   allObjects[ Player->getId( ) ] = Player; //add <id, object*> to the map
+   this->numberOfObjects++;
+   return Player;
 }
