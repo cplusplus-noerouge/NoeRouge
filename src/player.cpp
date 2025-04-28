@@ -73,8 +73,8 @@ void Player::attack( std::vector<Enemy*>& enemies )
             //Vector2 position = { enemyPosition.x - 20, enemyPosition.y - 20 }; // Adjust as needed for centering text
             // Set the font size and color for the hit effect
             // Display hit effect
-            Vector2 world_position = enemy->getPosition( );
-            DrawText( "HIT!", world_position.x, world_position.y,45,RAYWHITE);
+            Vector2 position = enemy->getPosition( );
+            DrawText( "HIT!", position.x + 30, position.y + 30,30,RAYWHITE);
          }
       }
       cout << "ATTACKING" << endl;
