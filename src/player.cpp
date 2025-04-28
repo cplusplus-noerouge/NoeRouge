@@ -37,6 +37,35 @@ void Player::updateDirection()
 void Player::onRender()
 {
    mainCamera.setPosition( position ); // Updating the camera position should be moved to its own class or function later on
+
+      // Animating the player
+   animation.onTick( );
+      // Freezing the animation at frame 1 if the player isn't moving
+      // WARNING! This logic will need to be revised when implementing other animations that aren't just for walking.
+   if ( Vector2Equals( direction, { 0 , 0 } ) )
+   {
+      animation.reset( );
+   }
+   sprite.setTexture( "playerWalk" + std::to_string( animation.getFrame( ) ) );
+
+      // Setting the position referenced on the sheet based on the direction the plaer is facing
+   if ( direction.x < 0 )
+   {
+      sprite.setSourceRect( { 0, 0, 16, 16 } );
+   }
+   else if ( direction.x > 0 )
+   {
+      sprite.setSourceRect( { 32, 0, 16, 16 } );
+   }
+   else if ( direction.y >= 0 )
+   {
+      sprite.setSourceRect( { 16, 0, 16, 16 } );
+   }
+   else
+   {
+      sprite.setSourceRect( { 48, 0, 16, 16 } );
+   }
+
    sprite.update( position, position.y );
    mainCamera.addToBuffer( &sprite );
 }

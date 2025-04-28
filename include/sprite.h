@@ -12,6 +12,8 @@
 #include "baseSprite.h"
 #include "textureLoader.h"
 
+extern std::unordered_map<std::string, Texture2D> textureMap;
+
 class Sprite : public BaseSprite
 {
 	protected:
@@ -79,6 +81,11 @@ class Sprite : public BaseSprite
 	void setTexture( Texture2D texture )
 	{
 		this->texture = texture;
+		updateRectangles( );
+	}
+	void setTexture( std::string texture )
+	{
+		this->texture = textureMap[ texture ];
 		updateRectangles( );
 	}
 	Vector2 getPosition( )

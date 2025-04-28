@@ -7,11 +7,8 @@
 
 #include "sprite.h"
 #include "raylib.h"
-//#include "raymath.h"
-//#include "vector"
-//#include <iostream>
-//#include "baseSprite.h"
-//#include "textureLoader.h"
+
+extern std::unordered_map<std::string, Texture2D> textureMap;
 
 class SheetSprite : public Sprite
 {
@@ -57,6 +54,10 @@ class SheetSprite : public Sprite
 	void setTexture( Texture2D texture )
 	{
 		this->texture = texture;
+	}
+	void setTexture( std::string texture )
+	{
+		this->texture = textureMap[ texture ];
 	}
 	Rectangle getSourceRect( )
 	{
