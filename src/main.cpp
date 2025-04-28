@@ -50,18 +50,13 @@ int main( )
     int floorOn = 0;
    
     // Create a player so we can see it tick, and see it on screen
-    Vector2 playerSpawnPosition = floors[floorOn]->getLadderDownLocation();
-    floors[floorOn]->getObjHandler()->createPlayer(playerSpawnPosition, { TILE_SIZE, TILE_SIZE }, 300);
-
-    std::vector<Sprite> wallSprites = {};                    //is changed when player changes floors. prob should be in Floor or something
-    for (Rectangle wall : floors[floorOn]->getWalls())       //make the wall sprites for the starting floor
     //Vector2 playerSpawnPosition = floors[floorOn]->getPlayerSpawn( );
-    Vector2 enemySpawnPosition = floors[ floorOn ]->getEnemySpawn( );
+   // Vector2 enemySpawnPosition = floors[ floorOn ]->getEnemySpawn( );
 
     //// Set the player spawn position to the ladder up on the first floor
-    //Vector2 playerSpawnPosition = { 100, 100 }; // Example spawn position, change as needed
+    Vector2 playerSpawnPosition = { 100, 100 }; // Example spawn position, change as needed
     //  // Set the enemy spawn position to the ladder down on the first floor
-    //Vector2 enemySpawnPosition = { 120, 115 }; // Example spawn position, change as needed
+    Vector2 enemySpawnPosition = { 110, 110 }; // Example spawn position, change as needed
    
       // Create the player object in the object handler of the current floor
     floors[ floorOn ]->getObjHandler( )->createPlayer( playerSpawnPosition, { TILE_SIZE, TILE_SIZE }, PLAYER_SPEED );
