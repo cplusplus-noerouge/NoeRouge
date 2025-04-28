@@ -347,6 +347,21 @@ Floor::Floor()
 
     data[ladderDownX][ladderDownY] = LADDER_DOWN;
 
+/*--------------------------------------------------------------------------------------------
+* Enemy spawning happens here, yup I just undid two hours of work trying to git push, idk I'll talk about it on Monday
+* - Ben
+--------------------------------------------------------------------------------------------*/
+    for ( BspNode* enemy : leaves )
+    {  //the rand( ) % enemyX + 2 could be anything i just choose a small number close to the center
+       int enemyX = enemy->roomCenterPointXCoordinate;
+       enemyX = rand( ) % enemyX + 2;
+
+       int enemyY = enemy->roomCenterPointYCoordinate;
+       enemyY = rand( ) % enemyY + 2;
+
+       data[ enemyX ][ enemyY ] = ENEMY;
+    }
+
     //prints the floor in the console. this is for debugging so we can see the stuff that doesn't have graphics yet like doors and ladders
     for (int y = 0; y < HEIGHT; y++)
     {
@@ -374,6 +389,10 @@ Vector2 Floor::getLadderDownLocation( )
 }
 
 //HALLWAYS==========================================================================================================================
+/*--------------------------------------------------------------------------------------------
+* Hallways connected from the middle of each room
+* - Evan, doors by Ben
+--------------------------------------------------------------------------------------------*/
 void Hallways::calculateDistanceBetweenRoomCenters(std::list<BspNode*> leafNodes)
 {
     BspNode* hallwayCurrentNode = leafNodes.front();  //select first node in leafNodes list to start
