@@ -41,6 +41,7 @@ int main( )
     //  Audio
     InitAudioDevice();
     MusicPlayer musicPlayer = MusicPlayer();
+    musicPlayer.setVolume( 0.5f );
 
     Floor* floors[NUM_OF_FLOORS];
     for (int i = 0; i < NUM_OF_FLOORS; i++) {
