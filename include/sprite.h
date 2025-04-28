@@ -54,7 +54,7 @@ class Sprite : public BaseSprite
 	/*------------------------------------------------------------------------------------
 	* @brief: updates sourceRect, destinationRect, and boundingRect to reflect new values
 	*/
-	void updateRectangles( );
+	virtual void updateRectangles( );
 
 	/*---------------------------------------------------
 	* @brief: checks if the sprite is within the camera

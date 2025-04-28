@@ -14,7 +14,7 @@ Devon, everyone else who worked on this file put ur names here too so Vicki can 
 #include "object.h"
 #include "mapGen.h"
 #include "textureLoader.h"
-#include "sprite.h"
+#include "sheetSprite.h"
 #include "customCamera.h"
 #include "screenHandler.h"
 
@@ -24,9 +24,9 @@ const int NUM_OF_FLOORS = 4; //the number of floors in the game
 
 ScreenHandler screenHandler = ScreenHandler( );
 // IMPORTANT! These are different versions of the camera with different zoom levels, uncomment the one you want.
-//CustomCamera mainCamera = CustomCamera( Vector2 { 320.0f, 180.0f }, 4.0f );
+CustomCamera mainCamera = CustomCamera( Vector2 { 320.0f, 180.0f }, 4.0f );
 //CustomCamera mainCamera = CustomCamera( Vector2 { 640.0f, 360.0f }, 2.0f );
-CustomCamera mainCamera = CustomCamera( Vector2 { 1280, 720.0f }, 1.0f );
+//CustomCamera mainCamera = CustomCamera( Vector2 { 1280, 720.0f }, 1.0f );
 
 std::unordered_map<std::string, Texture2D> textureMap = {};
 
@@ -51,7 +51,7 @@ int main( )
     std::vector<Sprite> wallSprites = {};                    //is changed when player changes floors. prob should be in Floor or something
     for (Rectangle wall : floors[floorOn]->getWalls())       //make the wall sprites for the starting floor
     {
-        wallSprites.push_back(Sprite("wall", { wall.x, wall.y }, wall.y));
+       wallSprites.push_back( SheetSprite( "wallA", { 48, 0, 16, 16 }, { wall.x, wall.y }, wall.y ) );
     }
 
     while (!WindowShouldClose())
@@ -123,7 +123,7 @@ void changeFloor(std::vector<Sprite>& wallSprites, Floor* floors[NUM_OF_FLOORS],
     wallSprites.clear();
     for (Rectangle wall : floors[floorOn]->getWalls())
     {
-        wallSprites.push_back(Sprite("wall", { wall.x, wall.y }, wall.y));
+       wallSprites.push_back( SheetSprite( "wallA", {48, 0, 16, 16}, { wall.x, wall.y }, wall.y ) );
     }
     std::cout << "\n Moved from floor " << floorOn - changeVal << " to " << floorOn;
 }

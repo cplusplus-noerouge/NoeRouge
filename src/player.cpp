@@ -4,6 +4,7 @@
 #include "sprite.h"
 #include <iostream>
 
+extern CustomCamera mainCamera;
 
 //class Player *objectHandler::createPlayer(Vector2 position, Vector2 size, int speed )
 //{
@@ -32,8 +33,6 @@ void Player::updateDirection()
         direction.y = -1;
     }
 }
-
-extern CustomCamera mainCamera;
 
 void Player::onRender()
 {
