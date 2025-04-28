@@ -44,6 +44,8 @@ int main( )
         floors[i] = new Floor;
     }
     int floorOn = 0;                                         //the floor the player is on
+    std::vector<Enemy*> enemies; // Declare and initialize the enemies variable -  KFlowers
+    floors[ floorOn ]->getObjHandler( )-> createEnemy(enemies ); // todo - spawn enemy -Kflowers
 
     // Create a player so we can see it tick, and see it on screen
     Vector2 playerSpawnPosition = floors[floorOn]->getPlayerSpawn();
@@ -76,15 +78,22 @@ int main( )
 
         floors[floorOn]->getObjHandler()->tickAll(floors[floorOn]->getWalls());
         floors[floorOn]->getObjHandler()->renderAll();
-
-        for ( int i = 0; i < wallSprites.size( ); i++ )
+       
+        for ( int i = 0; i < wallSprites.size( ); i++ )  
         {
            mainCamera.addToBuffer( &wallSprites[ i ] );
         }
 
+             // KFlowers - player defends when left shift is pressed 
+        if ( IsKeyPressed (KEY_LEFT_SHIFT))
+        {
+           Player* player = static_cast< Player* > (floors[ floorOn ]->getObjHandler( )->getObject( 0 ));
+           player->defend( enemies );
+          
+        }
         screenHandler.renderAll( );
     }
-
+  
     return 0;
 }
 
@@ -104,7 +113,7 @@ void changeFloor(std::vector<Sprite>& wallSprites, Floor* floors[NUM_OF_FLOORS],
     floorOn+= changeVal;
     ObjectHandler* newHandler = floors[floorOn]->getObjHandler();
     oldHandler->transferObject(0, *newHandler); //player id is always 0
-
+    
     //TODO set player location to the new floors ladderUp
 
     //make new wall sprites

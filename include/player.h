@@ -4,6 +4,7 @@
 #include "object.h"
 #include "character.h"
 #include "sprite.h"
+#include <enemy.h>
 
 class Player : public Character 
 {
@@ -26,6 +27,7 @@ public:
     
     void onRender( ) override;
     void attack( std::vector<Enemy*>& enemies );
+    void defend( std::vector<Enemy*>& enemies );   //KFlowers - defense method
     void updateDirection() override;
     
 
