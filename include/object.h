@@ -61,5 +61,5 @@ public:
     class GameObject *getObject(int id);
     class GameObject *createObject();
     class Player *createPlayer(Vector2 position, Vector2 size, int speed);
-    class Enemy* createEnemy(Vector2 world_position, Vector2 size, int speed);
+    class Enemy* createEnemy(Vector2 position, Vector2 size, int speed);
 };

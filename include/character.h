@@ -65,5 +65,4 @@ class Character : public GameObject
    bool updateLOS( const std::vector<Rectangle> colliders );
 
    float getTargetDistance( );
-
 };
