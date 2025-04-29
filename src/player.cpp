@@ -1,7 +1,7 @@
 /*
 * noeRouge
 * Player class
-* Ben A, Kaleb, Reese, Ethan
+* Ben A, Kaleb, Reese, Ethan, Thomas
 */
 
 #include "player.h"
@@ -37,6 +37,11 @@ void Player::updateDirection()
     else if (IsKeyDown(KEY_W))
     {
         direction.y = -1;
+    }
+
+    if (IsKeyPressed(KEY_LEFT_SHIFT))
+    {
+      dodge();
     }
 }
 
@@ -98,5 +103,17 @@ void Player::takeDamage( int damage, bool &playerDefeated )
    {
       std::cout << "Player defeated!" << std::endl;
       playerDefeated = true;
+   }
+}
+
+void Player::dodge()
+{
+   if(GetTime() + 6 > dodgeCooldown){
+      dodgeCooldown = GetTime();
+      while(dodgeCooldown + 3 > GetTime())
+      {
+         direction.x = direction.x * 2;
+         direction.y = direction.y * 2;
+      }
    }
 }
