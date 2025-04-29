@@ -17,6 +17,7 @@ Devon, everyone else who worked on this file put ur names here too so Vicki can 
 #include "sprite.h"
 #include "customCamera.h"
 #include "screenHandler.h"
+#include "audio.h"
 
 constexpr int FPS = 60;
 constexpr int PLAYER_SPEED = 300;
@@ -37,6 +38,10 @@ int main( )
     // Setting up graphics
     loadAllTextures( );
     screenHandler.cameras.push_back( &mainCamera );
+    //  Audio
+    InitAudioDevice();
+    MusicPlayer musicPlayer = MusicPlayer();
+    musicPlayer.setVolume( 0.5f );
 
     Floor* floors[NUM_OF_FLOORS];
     for (int i = 0; i < NUM_OF_FLOORS; i++) {
@@ -76,7 +81,11 @@ int main( )
         }
 
         screenHandler.renderAll( );
+
+        musicPlayer.onTick();
     }
+
+    CloseAudioDevice();
 
     return 0;
 }
