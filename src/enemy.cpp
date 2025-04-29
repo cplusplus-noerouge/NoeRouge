@@ -87,7 +87,10 @@ void Enemy::takeDamage( int damage )
 {
    // Reduce health by damage amount, ensuring it doesn't go below zero
    stats.health -= damage;
-   
+   if ( stats.health < 0 )
+   {
+      stats.health = 0; // Ensure health doesn't go below zero
+   }
    // respawn the enemy if it is dead 
    if ( stats.health == 0 )
    {

@@ -1,6 +1,12 @@
 #include "object.h"
 #include <vector>
 
+/*---------------------------------------------------------------------------------------------------------------------------------------
+* noeRouge
+* GameObject class
+* John, Ben A, Kaleb, Reese, Ethan
+----------------------------------------------------------------------------------------------------------------------------------------*/\
+
 // ----- GameObject -----
 
 GameObject::GameObject( )
@@ -31,7 +37,7 @@ void GameObject::onRender() {
     return;
 }
 
-// ----------
+
 
 // ----- ObjectHandler -----
 
@@ -46,13 +52,13 @@ class GameObject *ObjectHandler::getObject(int id) {
     return this->allObjects[id];
 }
 
-/*------------------------------------------------------------------------------------------------------------------
+/*---------------------------------------------------------------------------------------------------------------------------------------
 * transferObject() moves an object from this handler to another object handler
 * - devon
 * param int objId: id of the object being transfered
 * param ObjectHandler &newHandler: the handler the object is being transfered to
 * return: alters data in this and newHandler
-------------------------------------------------------------------------------------------------------------------*/
+----------------------------------------------------------------------------------------------------------------------------------------*/
 void ObjectHandler::transferObject(int objId, ObjectHandler &newHandler)
 {
     //this assumes the object exists in the current handler, if it doesn't it gives an error when ticking

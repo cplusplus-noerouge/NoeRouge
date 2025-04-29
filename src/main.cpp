@@ -25,9 +25,9 @@ const int NUM_OF_FLOORS = 4; //the number of floors in the game
 
 ScreenHandler screenHandler = ScreenHandler( );
 // IMPORTANT! These are different versions of the camera with different zoom levels, uncomment the one you want.
-//CustomCamera mainCamera = CustomCamera( Vector2 { 320.0f, 180.0f }, 4.0f );
+CustomCamera mainCamera = CustomCamera( Vector2 { 320.0f, 180.0f }, 4.0f );
 //CustomCamera mainCamera = CustomCamera( Vector2 { 640.0f, 360.0f }, 2.0f );
-CustomCamera mainCamera = CustomCamera( Vector2 { 1280, 720.0f }, 1.0f );
+//CustomCamera mainCamera = CustomCamera( Vector2 { 1280, 720.0f }, 1.0f );
 
 std::unordered_map<std::string, Texture2D> textureMap = {};
 
@@ -50,8 +50,8 @@ int main( )
     int floorOn = 0;
    
     // Create a player so we can see it tick, and see it on screen
-    //Vector2 playerSpawnPosition = floors[floorOn]->getPlayerSpawn( );
-   // Vector2 enemySpawnPosition = floors[ floorOn ]->getEnemySpawn( );
+   //Vector2 playerSpawnPosition = floors[floorOn]->getPlayerSpawn( );
+  // Vector2 enemySpawnPosition = floors[ floorOn ]->getEnemySpawn( );
 
     //// Set the player spawn position to the ladder up on the first floor
     Vector2 playerSpawnPosition = { 100, 100 }; // Example spawn position, change as needed
@@ -97,7 +97,7 @@ int main( )
         {
            mainCamera.addToBuffer( &wallSprites[ i ] );
         } 
-        
+        //**Reese** added player attack, outputs "ATTACKING" to console when space is pressed
         if ( IsKeyPressed( KEY_SPACE ) )  // player attacks when space is pressed
         {
            // created a pointer to the player object in the current floor's object handler

@@ -33,7 +33,9 @@ public:
    Stats stats; // Struct holding the enemy's stats  
 
    // Constructor to initialize enemy with ID, position, and stats  
-   Enemy(int id, int x, int y, Stats stats);  
+   Enemy(int id, Vector2 _position,Vector2 _size, Stats stats) ;  
+
+   Enemy( int id, int x, int y, Stats stats );
 
    void onTick(const std::vector<Rectangle> collidables);
 

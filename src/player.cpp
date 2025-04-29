@@ -2,7 +2,14 @@
 * noeRouge
 * Player class
 * Ben A, Kaleb, Reese, Ethan
+
+
+* Reese Edens, Kaleb Flowers
+* Player Class (inherits from Character class)
+* Player class represents the player character in the game.
+* It handles player movement, rendering, and attacking functionality.
 */
+
 
 #include "player.h"
 #include "object.h"
@@ -65,7 +72,7 @@ void Player::attack( std::vector<Enemy*>& enemies )
    if ( IsKeyPressed( KEY_SPACE ) )
 
    {  // Attack with SPACE
-      BeginDrawing( );  // Ensure you're inside a drawing context
+     // BeginDrawing( );  // Ensure you're inside a drawing context
 
       for ( Enemy* enemy : enemies )
       {
@@ -75,16 +82,16 @@ void Player::attack( std::vector<Enemy*>& enemies )
             std::cout << "Hit enemy! Health: " << enemy->getHealth( ) << std::endl;
             
             //// Calculate the position to display the hit effect
-            //Vector2 enemyPosition = enemy->getPosition( );
-            //Vector2 position = { enemyPosition.x - 20, enemyPosition.y - 20 }; // Adjust as needed for centering text
+            Vector2 enemyPosition = enemy->getPosition( );
+            Vector2 position = { enemyPosition.x - 20, enemyPosition.y - 20 }; // Adjust as needed for centering text
             // Set the font size and color for the hit effect
             // Display hit effect
-            Vector2 position = enemy->getPosition( );
+           // Vector2 position = enemy->getPosition( );
             DrawText( "HIT!", position.x + 30, position.y + 30,30,RAYWHITE);
          }
       }
       cout << "ATTACKING" << endl;
-      EndDrawing( );
+     EndDrawing( );
    }
 }
 
