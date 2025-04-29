@@ -2,6 +2,17 @@
 
 // ----- GameObject -----
 
+GameObject::GameObject( )
+{
+   id = ObjectHandler::takeNextId( );
+}
+
+GameObject::GameObject( int id )
+{
+   //now that the default constructor gives an id it's prob best to not use this constructor
+   this->id = id;
+}
+
 int GameObject::getId() {
     return this->id;
 }

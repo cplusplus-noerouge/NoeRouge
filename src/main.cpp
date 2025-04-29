@@ -1,6 +1,5 @@
 /*
 NoeRouge main file
-Devon, everyone else who worked on this file put ur names here too so Vicki can grade
 */
 // Includes
 #include <iostream>
