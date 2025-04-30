@@ -11,14 +11,17 @@ class Interactable : public GameObject
 {
 	private:
 	Vector2 position;
-	//other members probably:
 	/*
-	* Sprite sprite, string interactionName
+	* string interactionName  //for the UI, this will prob be a thing?
 	*/
+
+	protected:
+	Sprite sprite;
 
 	public:
 	Interactable( );
 	Interactable(Vector2 pos);
+	Interactable(Vector2 pos, std::string texture);
 
 	virtual void interact( ) = 0;
 	void onRender( ) override;
@@ -35,7 +38,7 @@ class Interactable : public GameObject
 };
 
 /*
-a ladder that when interacted with changes the floor the player is on by floorChange amount
+a ladder that (TODO->) when interacted with changes the floor the player is on by floorChange amount
 - devon
 */
 class Ladder : public Interactable
@@ -55,5 +58,30 @@ class Ladder : public Interactable
 	void setFloorChange(int changeVal)
 	{
 		floorChange = changeVal;
+	}
+};
+
+/*
+a door that (TODO->) can be interacted with to open and close it. it is impassable when closed
+- devon
+*/
+class Door : public Interactable
+{
+private:
+	bool isClosed;
+	//bool isLocked		//future thing?
+
+public:
+	Door();
+	Door(Vector2 pos);
+
+	void interact();
+	bool getIsClosed()
+	{
+		return isClosed;
+	}
+	void setIsClosed(bool isClosed)
+	{
+		this->isClosed = isClosed;
 	}
 };

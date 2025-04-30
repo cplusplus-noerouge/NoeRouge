@@ -1,20 +1,30 @@
 #include <iostream>
 #include "interactable.h"
+#include "sprite.h"
+#include "customCamera.h"
 
-//interactable
+//Interactable ==========================================
 Interactable::Interactable( )
 {
 	position = { 0,0 };
+	sprite = Sprite("missingTexture", position, position.y);
 }
-
 Interactable::Interactable(Vector2 pos)
 {
 	position = pos;
+	sprite = Sprite("missingTexture", position, position.y);
+}
+Interactable::Interactable(Vector2 pos, std::string texture)
+{
+	position = pos;
+	sprite = Sprite(texture, position, position.y);
 }
 
+extern CustomCamera mainCamera;
 void Interactable::onRender( )
 {
-	//TODO, render the sprite
+	sprite.update(position, position.y);
+	mainCamera.addToBuffer(&sprite);
 }
 
 void Interactable::onTick( const std::vector<Rectangle> collidables )
@@ -30,7 +40,7 @@ void Interactable::onTick( const std::vector<Rectangle> collidables )
 	*/
 }
 
-//ladder
+//Ladder ==========================================
 Ladder::Ladder( )
 {
 	floorChange = 0;
@@ -40,6 +50,14 @@ Ladder::Ladder( Vector2 pos, int floorChange):
 	Interactable( pos )
 {
 	this->floorChange = floorChange;
+	if (floorChange > 0)
+	{
+		sprite = Sprite("ladderUp", pos, pos.y);
+	}
+	else if (floorChange < 0)
+	{
+		sprite = Sprite("ladderDown", pos, pos.y);
+	}
 };
 
 void Ladder::interact( )
@@ -53,4 +71,30 @@ Ladder* ObjectHandler::createLadder( Vector2 position, int floorChange )
 	allObjects[ ladder->getId( ) ] = ladder; //add <id, object*> to the map
 	this->numberOfObjects++;
 	return ladder;
+}
+
+//Door ==========================================
+Door::Door()
+{
+	isClosed = true;
+}
+
+Door::Door(Vector2 pos) :
+	Interactable(pos, "doorClosed")
+{
+	isClosed = true;
+}
+
+void Door::interact()
+{
+	isClosed = !isClosed;
+	//TODO change sprite. also needs to be some way for it to be added and removed from collidables
+}
+
+Door* ObjectHandler::createDoor(Vector2 position)
+{
+	Door* door = new Door(position);
+	allObjects[door->getId()] = door; //add <id, object*> to the map
+	this->numberOfObjects++;
+	return door;
 }

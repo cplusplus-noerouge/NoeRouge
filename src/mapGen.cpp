@@ -348,7 +348,19 @@ Floor::Floor()
 
     //make the ladder objects
     objHandler->createLadder(getLadderUpLocation( ), 1);
-    objHandler->createLadder( getLadderUpLocation( ), -1);
+    objHandler->createLadder( getLadderDownLocation( ), -1);
+
+    //make the door objects
+    for (int y = 0; y < HEIGHT; y++)
+    {
+        for (int x = 0; x < WIDTH; x++)
+        {
+            if (data[x][y] == DOOR)
+            {
+                objHandler->createDoor({(float)x * TILE_SIZE,(float)y * TILE_SIZE });
+            }
+        }
+    }
 
 /*--------------------------------------------------------------------------------------------
 * Enemy spawning happens here, yup I just undid two hours of work trying to git push, idk I'll talk about it on Monday
