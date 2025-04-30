@@ -78,6 +78,7 @@ private:
     int ladderDownY;
 
     ObjectHandler* objHandler; //contains all the objects on the floor
+    bool isWallVisible(int x, int y);
 
 public:
 

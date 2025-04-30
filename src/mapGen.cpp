@@ -125,7 +125,6 @@ void printPartitions( BspNode* node, std::vector<std::vector<char>>& map )
 }
 
 //ROOMS==========================================================================================================================
-//i don't want to take credit for this stupid function. unfortunately it's obvious who wrote it
 int randRange( int minVal, int maxVal )
 {
    return rand( ) % ( maxVal + 1 - minVal ) + minVal;
@@ -266,7 +265,7 @@ void makeBlobRoom( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )
 */
 
 /*--------------------------------------------------------------------------------------------
-* makeRandRoomShape() calls two room making functions that overlap into one room
+* makeRandRoomShape() calls one or two overlapping room making functions
 * - devon, ben
 * param BspNode& p: the partition to put the room
 * param char&map[][]: pass by ref to the array of map data
@@ -274,8 +273,9 @@ void makeBlobRoom( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )
 --------------------------------------------------------------------------------------------*/
 void makeRandRoomShape(BspNode& p, char(&map)[WIDTH][HEIGHT])
 {
-   //anyone feel free to remove the for loop if 2 overlapping room shapes isn't working
-   for ( int i = 0; i < 2; i++ )
+   //anyone feel free to remove the overlapping thing if it's not working
+   int overlapCount = (std::rand() % 2) + 1;
+   for ( int i = 0; i < overlapCount; i++ )
    {
       int randomNumber = std::rand( ) % 2;
       switch ( randomNumber )
@@ -323,7 +323,7 @@ Floor::Floor()
     {
         for (int x = 0; x < WIDTH; x++)
         {
-            if (data[x][y] == WALL || data[x][y] == DEBUGPARTITION)
+            if ((data[x][y] == WALL || data[x][y] == DEBUGPARTITION) && isWallVisible(x,y))
             {
                 Rectangle rect = { x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE };
                 walls.push_back(rect);
@@ -377,7 +377,7 @@ Floor::Floor()
        data[ enemyX ][ enemyY ] = ENEMY;
     }
 
-    //prints the floor in the console. this is for debugging so we can see the stuff that doesn't have graphics yet like doors and ladders
+    //prints the floor in the console. this is for debugging so we can see any stuff that doesn't have graphics yet
     for (int y = 0; y < HEIGHT; y++)
     {
         for (int x = 0; x < WIDTH; x++)
@@ -386,6 +386,33 @@ Floor::Floor()
         }
         std::cout << "\n";
     }
+}
+
+/*---------------------------------------------------------------------------------------------------
+* isWallVisible: checks if the wall at x,y is visible from the player's perspective inside the rooms
+* - devon
+* params: int x,y the coords that we are checking the adjacent tiles of
+* return: true if any of the adjacent tiles aren't walls
+---------------------------------------------------------------------------------------------------*/
+bool Floor::isWallVisible(int x, int y)
+{
+    std::cout << WIDTH;
+    bool inBoundsX, inBoundsY;
+    char c;
+    for (int adjX = -1; adjX <= 1; adjX++) 
+    {
+        for (int adjY = -1; adjY <= 1; adjY++)
+        {
+            inBoundsX = (x + adjX >= 0) && (x + adjX < WIDTH);
+            inBoundsY = (y + adjY >= 0) && (y + adjY < HEIGHT);
+            c = data[x + adjX][y + adjY];
+            if (c != WALL && c!= DEBUGPARTITION && inBoundsX && inBoundsY)
+            {
+                return true;
+            }
+        }
+    }
+    return false;
 }
 
 /*
