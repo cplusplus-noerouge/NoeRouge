@@ -396,7 +396,6 @@ Floor::Floor()
 ---------------------------------------------------------------------------------------------------*/
 bool Floor::isWallVisible(int x, int y)
 {
-    std::cout << WIDTH;
     bool inBoundsX, inBoundsY;
     char c;
     for (int adjX = -1; adjX <= 1; adjX++) 
