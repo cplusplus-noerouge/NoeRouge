@@ -59,6 +59,11 @@ void loadAllTextures( )
 	loadSingleTexture( "ladderDown", filePath + "ladderDown.png" );
 	loadSingleTexture( "ladderUp", filePath + "ladderUp.png" );
 	loadSingleTexture( "hole", filePath + "hole.png" );
+	loadSingleTexture( "doorH", filePath + "doorH.png" );
+	loadSingleTexture( "doorV", filePath + "doorV.png" );
+	loadSingleTexture( "doorBaseH", filePath + "doorBaseH.png" );
+	loadSingleTexture( "doorBaseV", filePath + "doorBaseV.png" );
+	loadSingleTexture( "floor", filePath + "floorSheet.png" );
 	loadSingleTexture( "wallA", filePath + "wallSheetA.png" );
 	loadSingleTexture( "wallB", filePath + "wallSheetB.png" );
 	loadSingleTexture( "wallC", filePath + "wallSheetC.png" );
