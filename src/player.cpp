@@ -39,9 +39,11 @@ void Player::updateDirection()
         direction.y = -1;
     }
 
-    if (IsKeyPressed(KEY_LEFT_SHIFT))
+    if (GetTime() - 6 < dodgeCooldown)
     {
       dodge();
+    } else {
+      dodgeCooldown--;
     }
 }
 
@@ -108,12 +110,10 @@ void Player::takeDamage( int damage, bool &playerDefeated )
 
 void Player::dodge()
 {
-   if(GetTime() + 6 > dodgeCooldown){
-      dodgeCooldown = GetTime();
-      while(dodgeCooldown + 3 > GetTime())
-      {
-         direction.x = direction.x * 2;
-         direction.y = direction.y * 2;
-      }
+   if(IsKeyDown(KEY_LEFT_SHIFT))
+   {
+      direction.x = direction.x * 2;
+      direction.y = direction.y * 2;
+      std::cout << "dodging!" << std::endl;
    }
 }

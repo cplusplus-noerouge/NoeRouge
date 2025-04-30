@@ -1,7 +1,7 @@
 /*
 * noeRouge
 * Player class
-* Ben A, Kaleb, Reese, Ethan
+* Ben A, Kaleb, Reese, Ethan, Thomas
 */
 
 #pragma once
@@ -18,10 +18,12 @@ private:
    float attackRange;    // Attack radius
    int attackDamage;     // Damage per hit
    int health;           // Player health
+   int dodgeSpeed;
+   int dodgeCooldown;
    Sprite sprite;
 
 public:
-    Player(int id): Character(id), attackRange( 50.0f ), attackDamage( 1 ), health( 5 )
+    Player(int id): Character(id), attackRange( 50.0f ), attackDamage( 1 ), health( 5 ), dodgeSpeed( 1 * GetFrameTime() ), dodgeCooldown( 0 )
     { 
        sprite = Sprite( "player", position, position.y );
     }
@@ -35,6 +37,7 @@ public:
     void onRender( ) override;
     void attack( std::vector<Enemy*>& enemies );
     void takeDamage( int damage, bool& playerDefeated );  //Decrements player health based off enemy damage and checks for player death.
+    void dodge();
                    
 };
 // <<<<<<< combat-character-copy
