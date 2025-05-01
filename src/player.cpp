@@ -3,8 +3,8 @@
 * Player Class (inherits from Character class)
 * Player class represents the player character in the game.
 * It handles player movement, rendering, and attacking functionality.
-* Ben A, Kaleb, Reese, Ethan
 */
+
 
 #include "player.h"
 #include "object.h"
@@ -87,25 +87,5 @@ void Player::attack( std::vector<Enemy*>& enemies )
       }
       cout << "ATTACKING" << endl;
      EndDrawing( );
-   }
-}
-
-/*-----------------------------------------------------------------------------------------------------------------------------
-* takeDamage( )
-* Ethan Sheffield
-* @brief : Decrements player health based off enemy damage and checks for player death.
-* @param int damage : amount of incoming damage to decrement from health
-* @param bool &playerDefeated : reference to a bool value, if player has been defeated or not.
-* @return : none
-* -----------------------------------------------------------------------------------------------------------------------------
-*/
-void Player::takeDamage( int damage, bool &playerDefeated )
-{
-   health -= damage;
-   std::cout << "Player taken damage!";
-   if ( health <= 0 )
-   {
-      std::cout << "Player defeated!" << std::endl;
-      playerDefeated = true;
    }
 }
