@@ -19,6 +19,7 @@ using namespace std;
 
 // Constructor for Enemy class
 // Initializes the enemy's ID, stats, and position in the world
+
 Enemy::Enemy( int id, int x, int y, Stats stats )
    : Character( id, { static_cast< float >( x ), static_cast< float >( y ) }, { 50.0f, 50.0f }, stats.speed ), // Call Character constructor
    id( id ), stats( stats )
@@ -85,6 +86,7 @@ void Enemy::onRender( )
 // Applies damage to the enemy, factoring in defense
 void Enemy::takeDamage( int damage )
 {
+
    // Reduce health by damage amount, ensuring it doesn't go below zero
    stats.health -= damage;
    if ( stats.health < 0 )
