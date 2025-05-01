@@ -1,5 +1,6 @@
 //Notes: - We should probably try to keep every line under 100 characters
 
+
 #pragma once
 
 #include <raylib.h>
@@ -103,6 +104,8 @@ public:
 
     Vector2 getLadderUpLocation();
     Vector2 getLadderDownLocation();
+    Vector2 getPlayerSpawn();
+    Vector2 getEnemySpawn( );
 };
 
 //HALLWAYS================================================================================================================================

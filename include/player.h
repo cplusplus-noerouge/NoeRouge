@@ -1,15 +1,20 @@
 /*
-* noeRouge
-* Player class
-* Ben A, Kaleb, Reese, Ethan
+
+* Reese Edens, Kaleb Flowers
+* Player Class (inherits from Character class)
+* Inherits sprite functionality from Sprite class.
+* Inherits character functionality from Character class.
+* Player class represents the player character in the game.
+* It handles player movement, rendering, and attacking functionality.
+* Player.h 
+
 */
 
 #pragma once
-#include <cstdio>
 #include "raylib.h"
-#include "object.h"
 #include "character.h"
 #include "sprite.h"
+#include "enemy.h"
 
 class Player : public Character 
 {
@@ -21,12 +26,16 @@ private:
    Sprite sprite;
 
 public:
+
     Player(int id): Character(id), attackRange( 50.0f ), attackDamage( 1 ), health( 5 )
+
     { 
        sprite = Sprite( "player", position, position.y );
-    }
+    }*/
     Player(int id, Vector2 _position, Vector2 _size, int _speed) 
+
        : Character(id, _position, _size, _speed), attackRange(50.0f), attackDamage( 1 ), health( 5 )
+
     { 
        sprite = Sprite( "player", position, position.y );
     }
@@ -35,7 +44,7 @@ public:
     void onRender( ) override;
     void attack( std::vector<Enemy*>& enemies );
     void takeDamage( int damage, bool& playerDefeated );  //Decrements player health based off enemy damage and checks for player death.
-                   
+
 };
 // <<<<<<< combat-character-copy
 //// Define the Player crate function in the object handler
