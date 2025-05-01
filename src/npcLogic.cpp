@@ -1,3 +1,10 @@
+/*----------------------------------------------------------------------------------------------------------------------------------------
+* noeRouge
+* npcLogic class
+* Matthew, Ethan
+* The npcLogic class is used implement enemy AI procedures such as Line of Sight and Move to Target
+----------------------------------------------------------------------------------------------------------------------------------------*/
+
 #include "character.h"
 #include "object.h"
 #include "mapGen.h"
@@ -5,9 +12,29 @@
 
 int HALF_SIZE = TILE_SIZE / 2;
 
+/*---------------------------------------------------------------------------------------------------------------------------------------
+* moveToTarget( )
+* @brief : Moves character to the target's position but maintain a set distance.
+* @param Vector 2 target : Target's map position.
+* @param float distanceMaintained : The set distance the character maintains from the target.
+* @param : vector<Rectangle> colliders : The collection of collidables to check for character collision.
+* @return : none
+----------------------------------------------------------------------------------------------------------------------------------------*/
+void Character::moveToTarget( Vector2 target, float distanceMaintained, std::vector<Rectangle> colliders )
+{
+	if ( Character::updateLOS( colliders ) && Character::getTargetDistance( ) > distanceMaintained )
+	{
+		updateDirection( target );
+	}
+}
 
-// Creates a ray from user to the target. ex. enemy to player.
-Ray Character::relationToTarget(  )
+/*---------------------------------------------------------------------------------------------------------------------------------------
+* relationToTarget( )
+* @brief : Calculates the line of sight from the character's position to the target.
+* @param : none
+* @return Ray : The line of sight from the character's position to the target.
+----------------------------------------------------------------------------------------------------------------------------------------*/
+Ray Character::relationToTarget( )
 {
 	Vector2 pos = position;
 	Vector2 tar = target;
@@ -16,7 +43,12 @@ Ray Character::relationToTarget(  )
 	return lineOfSight;
 }
 
-// Updates the relation to the target and creates line of sight by checking for collision with walls or target.
+/*---------------------------------------------------------------------------------------------------------------------------------------
+* updateLOS( )
+* @brief : Updates the relation to the target and creates line of sight by checking for collision with walls or target.
+* @param vector<Rectangle> colliders : The collection of collidables to check for character collision.
+* @return bool : True if the line of sight is obstructed, false otherwise.
+----------------------------------------------------------------------------------------------------------------------------------------*/
 bool Character::updateLOS( std::vector<Rectangle> colliders )
 {
 	Ray LOS = relationToTarget( );
@@ -32,27 +64,15 @@ bool Character::updateLOS( std::vector<Rectangle> colliders )
 		{
 			float dx = position.x - wall.x;
 			float dy = position.y - wall.y;
-			if ( closestDistance > sqrt( dx * dx + dy * dy ))
+			if ( closestDistance > sqrt( dx * dx + dy * dy ) )
 			{
 				closestDistance = sqrt( dx * dx + dy * dy );
 				closestCollision = walltile;
 			}
 		}
 	}
-	if ( closestDistance < getTargetDistance() )
+	if ( closestDistance < getTargetDistance( ) )
 	{
 		return true;
 	}
-}
-
-// NPC will move to their target's position but maintain a set distance.
-// this can be used to keep melee enemies from stacking on the player, and to keep ranged enemies at range.
-void Character::moveToTarget( Vector2 target, float distanceMaintained, std::vector<Rectangle> colliders )
-{
-	
-	if ( Character::updateLOS( colliders ) && Character::getTargetDistance() > distanceMaintained)
-	{
-		updateDirection( target );
-	}
-		
 }

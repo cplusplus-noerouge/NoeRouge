@@ -2,6 +2,7 @@
 * noeRouge
 * Player class
 * Ben A, Kaleb, Reese, Ethan, Adam
+* The player class is a child class of Character that represents the playable character.
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 
 #pragma once
@@ -10,20 +11,19 @@
 #include "sprite.h"
 #include "enemy.h"
 
-class Player : public Character 
+class Player : public Character
 {
 
-private:
+   private:
    float attackRange;     //Attack radius
    int attackDamage;      //Damage per hit
    Sprite sprite;         //Player sprite
 
-public:
+   public:
 
-    Player( int id );
-    Player( int id, Vector2 _position, Vector2 _size, int _speed );
-    
-    void onRender( ) override;
-    void updateDirection( ) override;
-    void attack( std::vector<Enemy*>& enemies );
+   Player( int id );                                                 //Class constructor based on object ID. 
+   Player( int id, Vector2 _position, Vector2 _size, int _speed );   //Parameterized Class constructor.
+
+   void onRender( ) override;                                        //Renders the character on screen.
+   void attack( std::vector<Enemy*>& enemies );                      //Attacks enemy objects if within range and key is pressed.
 };
