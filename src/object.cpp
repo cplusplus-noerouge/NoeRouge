@@ -1,5 +1,10 @@
 #include "object.h"
-#include <vector>
+
+/*---------------------------------------------------------------------------------------------------------------------------------------
+* noeRouge
+* GameObject class
+* John, Ben A, Kaleb, Reese, Ethan
+----------------------------------------------------------------------------------------------------------------------------------------*/\
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * noeRouge
@@ -8,17 +13,6 @@
 ----------------------------------------------------------------------------------------------------------------------------------------*/\
 
 // ----- GameObject -----
-
-GameObject::GameObject( )
-{
-   id = ObjectHandler::takeNextId( );
-}
-
-GameObject::GameObject( int id )
-{
-   //now that the default constructor gives an id it's prob best to not use this constructor
-   this->id = id;
-}
 
 int GameObject::getId() {
     return this->id;
@@ -69,21 +63,17 @@ void ObjectHandler::transferObject(int objId, ObjectHandler &newHandler)
     this->numberOfObjects--;
 }
 
-void ObjectHandler::tickAll(const std::vector<Rectangle> collidables)
-{
-    //this iterator gets all the objects
-    for (auto it = allObjects.begin(); it != allObjects.end(); ++it)
-    {
-        it->second->onTick(collidables);
+void ObjectHandler::tickAll(const std::vector<Rectangle> collidables) {
+    for (int x = 0; x < this->numberOfObjects; x++) {
+        this->allObjects[x]->onTick(collidables);
     }
 }
-  
+
 void ObjectHandler::renderAll()
 {
-    //this iterator gets all the objects
-    for (auto it = allObjects.begin(); it != allObjects.end(); ++it)
+    for (int x = 0; x < this->numberOfObjects; x++) 
     {
-        it->second->onRender();
+        this->allObjects[x]->onRender();
     }
 }
 

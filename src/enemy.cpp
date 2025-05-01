@@ -20,6 +20,7 @@ using namespace std;
 // Constructor for Enemy class
 // Initializes the enemy's ID, stats, and position in the world
 
+
 Enemy::Enemy( int id, int x, int y, Stats stats )
    : Character( id, { static_cast< float >( x ), static_cast< float >( y ) }, { 50.0f, 50.0f }, stats.speed ), // Call Character constructor
    id( id ), stats( stats )
@@ -27,6 +28,7 @@ Enemy::Enemy( int id, int x, int y, Stats stats )
    position.x = x;
    position.y = y;
 }
+
 
 Enemy* ObjectHandler::createEnemy( Vector2 position, Vector2 size, int speed )
 {
