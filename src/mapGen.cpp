@@ -337,12 +337,45 @@ Floor::Floor()
     BspNode* ladderUpNode = leaves.front();
     ladderUpX = ladderUpNode->roomCenterPointXCoordinate;
     ladderUpY = ladderUpNode->roomCenterPointYCoordinate;
+
     data[ladderUpX][ladderUpY] = LADDER_UP;
 
     BspNode* ladderDownNode = leaves.back();
     ladderDownX = ladderDownNode->roomCenterPointXCoordinate;
     ladderDownY = ladderDownNode->roomCenterPointYCoordinate;
+
     data[ladderDownX][ladderDownY] = LADDER_DOWN;
+
+    //make the ladder objects
+    objHandler->createLadder(getLadderUpLocation( ), 1);
+    objHandler->createLadder( getLadderDownLocation( ), -1);
+
+    //make the door objects
+    for (int y = 0; y < HEIGHT; y++)
+    {
+        for (int x = 0; x < WIDTH; x++)
+        {
+            if (data[x][y] == DOOR)
+            {
+                objHandler->createDoor({(float)x * TILE_SIZE,(float)y * TILE_SIZE });
+            }
+        }
+    }
+
+/*--------------------------------------------------------------------------------------------
+* Enemy spawning happens here, yup I just undid two hours of work trying to git push, idk I'll talk about it on Monday
+* - Ben
+--------------------------------------------------------------------------------------------*/
+    for ( BspNode* enemy : leaves )
+    {  //the rand( ) % enemyX + 2 could be anything i just choose a small number close to the center
+       int enemyX = enemy->roomCenterPointXCoordinate;
+       enemyX = rand( ) % enemyX + 2;
+
+       int enemyY = enemy->roomCenterPointYCoordinate;
+       enemyY = rand( ) % enemyY + 2;
+
+       data[ enemyX ][ enemyY ] = ENEMY;
+    }
 
     //prints the floor in the console. this is for debugging so we can see the stuff that doesn't have graphics yet like doors and ladders
     for (int y = 0; y < HEIGHT; y++)
@@ -355,29 +388,19 @@ Floor::Floor()
     }
 }
 
-//temporarily returns the first floor location relative to game world. should return ladder up location tho
-Vector2 Floor::getPlayerSpawn()
+/*
+returns the ladder up and ladder down location as a vector2
+returns the location as pixels
+parameters - none
+*/
+Vector2 Floor::getLadderUpLocation()
 {
-    //returns the ladder up location as a vector2 - sometimes spawns off the map for some reason even though the ladder is fine
-    //std::cout << "Player spawn location";
-    //std::cout << "\nMapX: " << ladderUpX;
-    //std::cout << "\nMapY: " << ladderUpY;
-    //std::cout << "\nPixelX: " << (float)ladderUpX * TILE_SIZE;
-    //std::cout << "\nPixelY: " << (float)ladderDownX * TILE_SIZE << "\n";
-    //return { (float)ladderUpX * TILE_SIZE, (float)ladderDownX * TILE_SIZE };
+    return { (float)ladderUpX * TILE_SIZE, (float)ladderUpY * TILE_SIZE };
+}
 
-    //returns the first floor location relative to game world - this works fine
-    for (int y = 0; y < HEIGHT; y++)
-    {
-        for (int x = 0; x < WIDTH; x++)
-        {
-            if (data[x][y] == FLOOR)
-            {
-                return { (float)x * TILE_SIZE, (float)y * TILE_SIZE };
-            }
-        }
-    }
-    std::cout << std::endl;
+Vector2 Floor::getLadderDownLocation( )
+{
+   return { ( float ) ladderDownX * TILE_SIZE, ( float ) ladderDownY * TILE_SIZE };
 }
 Vector2 Floor::getEnemySpawn( )
 {
@@ -397,6 +420,10 @@ Vector2 Floor::getEnemySpawn( )
 }
 
 //HALLWAYS==========================================================================================================================
+/*--------------------------------------------------------------------------------------------
+* Hallways connected from the middle of each room
+* - Evan, doors by Ben
+--------------------------------------------------------------------------------------------*/
 void Hallways::calculateDistanceBetweenRoomCenters(std::list<BspNode*> leafNodes)
 {
     BspNode* hallwayCurrentNode = leafNodes.front();  //select first node in leafNodes list to start
