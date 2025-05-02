@@ -28,7 +28,7 @@ private:
    Sprite sprite;
 
 public:
-    Player(int id): Character(id), attackRange( 50.0f ), attackDamage( 1 ), health( 5 )
+    //Player(int id): Character(id), attackRange( 50.0f ), attackDamage( 1 ), health( 5 )
    /* Player(int id): Character(id), attackRange( 20.0f ), attackDamage( 1 ) 
     { 
        sprite = Sprite( "player", position, position.y );
@@ -44,7 +44,7 @@ public:
     void attack( std::vector<Enemy*>& enemies );
     void takeDamage( int damage, bool& playerDefeated );  //Decrements player health based off enemy damage and checks for player death.
                    
-    void updateDirection() override;
+    //void updateDirection() override;
 };
 // <<<<<<< combat-character-copy
 //// Define the Player crate function in the object handler
