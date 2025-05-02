@@ -10,12 +10,12 @@ each subclass of interactable needs to have it's own interact() method
 class Interactable : public GameObject
 {
 	private:
-	Vector2 position;
 	/*
 	* string interactionName  //for the UI, this will prob be a thing?
 	*/
 
 	protected:
+	Vector2 position;
 	Sprite sprite;
 
 	public:
@@ -51,6 +51,7 @@ class Ladder : public Interactable
 	Ladder(Vector2 pos, int floorChange);
 
 	void interact( );
+	void onRender( ) override;
 	int getFloorChange( )
 	{
 		return floorChange;

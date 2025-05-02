@@ -14,9 +14,10 @@ Devon,Reese everyone else who worked on this file put ur names here too so Vicki
 #include "object.h"
 #include "mapGen.h"
 #include "textureLoader.h"
-#include "sprite.h"
+#include "sheetSprite.h"
 #include "customCamera.h"
 #include "screenHandler.h"
+#include "generateTileSprites.h"
 #include "audio.h"
 
 constexpr int FPS = 60;
@@ -71,10 +72,7 @@ int main( )
     std::vector<Sprite> wallSprites = {};                    //is changed when player changes floors
     // Declare a vector to hold enemy pointers
     enemies.push_back( enemy );
-    for (Rectangle wall : floors[floorOn]->getWalls())       //put the wall sprites for the starting floor
-    {
-        wallSprites.push_back(Sprite("wall", { wall.x, wall.y }, wall.y));
-    }
+    std::vector<Sprite> tileSprites = generateTileSprites( floors[ floorOn ] );
 
     while (!WindowShouldClose())
 
@@ -83,19 +81,19 @@ int main( )
         //TODO changing floors needs to only be possible when player is on a ladder, up or down
         if (IsKeyPressed(KEY_RIGHT_BRACKET)) //up
         {
-            changeFloor(wallSprites,floors,floorOn, 1);
+            changeFloor( tileSprites,floors,floorOn, 1);
         }
         if (IsKeyPressed(KEY_LEFT_BRACKET)) //down
         {
-            changeFloor(wallSprites, floors, floorOn, -1);
+            changeFloor( tileSprites, floors, floorOn, -1);
         }
  
         floors[floorOn]->getObjHandler()->tickAll(floors[floorOn]->getWalls());
         floors[floorOn]->getObjHandler()->renderAll();
 
-        for ( int i = 0; i < wallSprites.size( ); i++ )
+        for ( int i = 0; i < tileSprites.size( ); i++ )
         {
-           mainCamera.addToBuffer( &wallSprites[ i ] );
+           mainCamera.addToBuffer( &tileSprites[ i ] );
         } 
         //**Reese** added player attack, outputs "ATTACKING" to console when space is pressed
         if ( IsKeyPressed( KEY_SPACE ) )  // player attacks when space is pressed
@@ -125,7 +123,7 @@ int main( )
 * param int changeVal: the amount by which the floor index is changed. exe -1 is down a floor, and 1 is up a floor
 * return: the data in wallSprites and floorOn is altered
 ------------------------------------------------------------------------------------------------------------------*/
-void changeFloor(std::vector<Sprite>& wallSprites, Floor* floors[NUM_OF_FLOORS], int& floorOn, int changeVal)
+void changeFloor(std::vector<Sprite>& tileSprites, Floor* floors[NUM_OF_FLOORS], int& floorOn, int changeVal)
 {
     //check that the new floor exists
     if (floorOn + changeVal < 0 || floorOn + changeVal >= NUM_OF_FLOORS)
@@ -154,11 +152,7 @@ void changeFloor(std::vector<Sprite>& wallSprites, Floor* floors[NUM_OF_FLOORS],
         player->setPosition(ladderPosition);
     }
 
-    //make new wall sprites
-    wallSprites.clear();
-    for (Rectangle wall : floors[floorOn]->getWalls())
-    {
-        wallSprites.push_back(Sprite("wall", { wall.x, wall.y }, wall.y));
-    }
+    //make new tile sprites
+    tileSprites = generateTileSprites( floors[ floorOn ] );
     std::cout << "\n Moved from floor " << floorOn - changeVal << " to " << floorOn;
 }
