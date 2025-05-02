@@ -7,6 +7,11 @@
 extern const int WIDTH;
 extern const int HEIGHT;
 
+/*---------------------------------------------
+* @brief: Assigns a sprite to every visible tile
+* @param: *floor = A pointer the the current floor the player is on
+* @return: A vector of the sprites created
+*/
 std::vector<Sprite> generateTileSprites( Floor *floor )
 {
 	std::vector<Sprite> tileSprites = { };
@@ -17,7 +22,31 @@ std::vector<Sprite> generateTileSprites( Floor *floor )
 		{
 			if ( floor->data[ x ][ y ] == '.' || floor->data[ x ][ y ] == '<' )
 			{
-				tileSprites.push_back( SheetSprite( "floor", { 16, 16, 16, 16 }, { ( float ) x * 16, ( float ) y * 16 }, y * 16 - 999 ) );
+				// Determining the tile to reference on the sprite sheet
+				Vector2 sheetOffset = { 0, 0 };
+				// If there is a wall to the left of the tile
+				if ( x == 0 || floor->data[ x - 1 ][ y ] == '#' || floor->data[ x - 1 ][ y ] == '*' )
+				{
+					sheetOffset.x += 16;
+				}
+				// If there is a wall to the right of the tile
+				if ( x + 1 >= WIDTH || floor->data[ x + 1 ][ y ] == '#' || floor->data[ x + 1 ][ y ] == '*' )
+				{
+					sheetOffset.x += 32;
+				}
+				// If there is a wall above of the tile
+				if ( y == 0 || floor->data[ x ][ y - 1 ] == '#' || floor->data[ x ][ y - 1 ] == '*' )
+				{
+					sheetOffset.y += 16;
+				}
+				// If there is a wall 1 space below and 2 spaces below tile
+				if (    ( y + 1 >= HEIGHT || floor->data[ x ][ y + 1 ] == '#' || floor->data[ x ][ y + 1 ] == '*' ) 
+					  && ( y + 2 >= HEIGHT || floor->data[ x ][ y + 2 ] == '#' || floor->data[ x ][ y + 2 ] == '*' ) )
+				{
+					sheetOffset.y += 32;
+				}
+
+				tileSprites.push_back( SheetSprite( "floor", { sheetOffset.x, sheetOffset.y, 16, 16 }, { ( float ) x * 16, ( float ) y * 16 }, y * 16 - 999 ) );
 
 				if ( floor->data[ x ][ y ] == '<' )
 				{
@@ -30,12 +59,17 @@ std::vector<Sprite> generateTileSprites( Floor *floor )
 				if ( y + 1 < HEIGHT && floor->data[ x ][ y + 1 ] != '#' && floor->data[ x ][ y + 1 ] != '*' )
 				{
 					   // Determining the tile to reference on the sprite sheet
-					bool downLeftNotWall = ( x > 0 && floor->data[ x - 1 ][ y + 1 ] == '#' && floor->data[ x - 1 ][ y + 1 ] == '*' );
-					bool downRightNotWall = ( x + 1 < WIDTH && floor->data[ x + 1 ][ y + 1 ] == '#' && floor->data[ x + 1 ][ y + 1 ] == '*' );
-					float sheetOffsetX = 16;
-					if ( downLeftNotWall && downRightNotWall ) { sheetOffsetX = 48; }
-					else if ( downLeftNotWall )                { sheetOffsetX = 0; }
-					else if ( downRightNotWall )               { sheetOffsetX = 32; }
+					float sheetOffsetX = 0;
+					   // If there is a wall down and to the left of the tile
+					if ( x > 0 && ( floor->data[ x - 1 ][ y + 1 ] == '#' || floor->data[ x - 1 ][ y + 1 ] == '*' ) )
+					{
+						sheetOffsetX += 16;
+					}
+					   // If there is a wall down and to the right of the tile
+					if ( x + 1 < WIDTH && ( floor->data[ x + 1 ][ y + 1 ] == '#' || floor->data[ x + 1 ][ y + 1 ] == '*' ) )
+					{
+						sheetOffsetX += 32;
+					}
 
 					tileSprites.push_back( SheetSprite( "wallA", { sheetOffsetX, 0, 16, 16 }, { ( float ) x * 16, ( float ) y * 16 }, y * 16 ) );
 				}
@@ -59,11 +93,6 @@ std::vector<Sprite> generateTileSprites( Floor *floor )
 			}
 		}
 	}
-
-	//for ( Rectangle wall : floors[ floorOn ]->getWalls( ) )       //make the wall sprites for the starting floor
-	//{
-	//	wallSprites.push_back( SheetSprite( "wallA", { 48, 0, 16, 16 }, { wall.x, wall.y }, wall.y ) );
-	//}
 
 	return tileSprites;
 }
