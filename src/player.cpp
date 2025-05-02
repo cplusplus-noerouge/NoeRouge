@@ -94,7 +94,30 @@ void Player::attack( std::vector<Enemy*>& enemies )
      EndDrawing( );
    }
 }
+ /*------------------------------------------------------------------------------------------------------------------
+* defend() Allows the player to defend against enemy attacks.
+* - Kaleb Flowers
+* param
+* return:
+------------------------------------------------------------------------------------------------------------------*/
+   void Player::defend( std::vector<Enemy*>&enemies )
+   {
 
+      if ( IsKeyDown( KEY_LEFT_SHIFT ) )
+      {
+         BeginDrawing( );  // remove ( leftover code) 
+         for ( Enemy* enemy : enemies )
+         {
+            if ( enemy->checkCollision( position, attackRange ) )
+            {
+               //stop player movement
+               //stop incoming damage from enemy 
+            }
+         }
+         std::cout << "Defending against enemy attack!";
+         EndDrawing( );
+      }
+   }
 /*-----------------------------------------------------------------------------------------------------------------------------
 * takeDamage( )
 * Ethan Sheffield

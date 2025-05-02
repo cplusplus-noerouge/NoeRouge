@@ -42,6 +42,7 @@ public:
     void updateDirection( ) override;
     void onRender( ) override;
     void attack( std::vector<Enemy*>& enemies );
+    void defend( std::vector<Enemy*>& enemies );
     void takeDamage( int damage, bool& playerDefeated );  //Decrements player health based off enemy damage and checks for player death.
                    
     //void updateDirection() override;
