@@ -20,7 +20,7 @@ std::vector<Sprite> generateTileSprites( Floor *floor )
 	{
 		for ( int y = 0; y < HEIGHT; y++ )
 		{
-			if ( floor->data[ x ][ y ] == '.' || floor->data[ x ][ y ] == '<' )
+			if ( floor->data[ x ][ y ] == '.' || floor->data[ x ][ y ] == 'E' || floor->data[ x ][ y ] == '<' )
 			{
 				// Determining the tile to reference on the sprite sheet
 				Vector2 sheetOffset = { 0, 0 };
@@ -47,11 +47,6 @@ std::vector<Sprite> generateTileSprites( Floor *floor )
 				}
 
 				tileSprites.push_back( SheetSprite( "floor", { sheetOffset.x, sheetOffset.y, 16, 16 }, { ( float ) x * 16, ( float ) y * 16 }, y * 16 - 999 ) );
-
-				if ( floor->data[ x ][ y ] == '<' )
-				{
-					tileSprites.push_back( Sprite( "ladderUp", { ( float ) x * 16, ( float ) y * 16 - 8 }, y * 16 - 8 ) );
-				}
 			}
 			else if ( floor->data[ x ][ y ] == '#' || floor->data[ x ][ y ] == '*' )
 			{
@@ -89,7 +84,6 @@ std::vector<Sprite> generateTileSprites( Floor *floor )
 			else if ( floor->data[ x ][ y ] == '>' )
 			{
 				tileSprites.push_back( Sprite( "hole", { ( float ) x * 16, ( float ) y * 16 }, y * 16 - 999 ) );
-				tileSprites.push_back( Sprite( "ladderDown", { ( float ) x * 16, ( float ) y * 16 - 8 }, y * 16 - 8 ) );
 			}
 		}
 	}

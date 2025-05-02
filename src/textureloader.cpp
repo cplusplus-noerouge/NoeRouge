@@ -76,7 +76,8 @@ void loadAllTextures( )
 	loadSingleTexture( "healthPack", filePath + "healthPack.png" );
 
      // Misc textures
-	aogihoihafa textureMap[ "missingTexture" ] = LoadTexture((char*)"../../../assets/graphics/missingTexture.png");
+	filePath = "../../../assets/graphics/";
+	loadSingleTexture( "missingTexture", filePath + "missingTexture.png" );
 }
 
 /*---------------------------------------------
