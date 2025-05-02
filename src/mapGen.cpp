@@ -433,7 +433,7 @@ void Hallways::calculateDistanceBetweenRoomCenters(std::list<BspNode*> leafNodes
 
     while (!leafNodes.empty())
     {
-        for (BspNode* node : leafNodes)
+        for (BspNode* node : leafNodes)                //iterate through all remaining nodes to find the closest nodes by comparing center points
         {
             if (calculateDistanceFromCenterOfNodes(hallwayCurrentNode, node) < smallestDistanceBetweenCenters)
             {
