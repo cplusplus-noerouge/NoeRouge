@@ -42,7 +42,6 @@ int main( )
     //  Audio
     InitAudioDevice();
     MusicPlayer musicPlayer = MusicPlayer();
-    musicPlayer.setVolume( 0.5f );
 
     Floor* floors[NUM_OF_FLOORS];
     for (int i = 0; i < NUM_OF_FLOORS; i++) {
@@ -75,7 +74,6 @@ int main( )
     std::vector<Sprite> tileSprites = generateTileSprites( floors[ floorOn ] );
 
     while (!WindowShouldClose())
-
     { 
         //TEMPORARY testing changing floors
         //TODO changing floors needs to only be possible when player is on a ladder, up or down

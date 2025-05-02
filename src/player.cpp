@@ -10,13 +10,13 @@
 * It handles player movement, rendering, and attacking functionality.
 */
 
-
+#include <iostream>
 #include "player.h"
 #include "object.h"
 #include "customCamera.h"
 #include "sprite.h"
-#include <iostream>
 #include "enemy.h"
+#include "audio.h"
 
 using namespace std;
 
@@ -47,6 +47,19 @@ void Player::updateDirection()
     else if (IsKeyDown(KEY_W))
     {
         direction.y = -1;
+    }
+}
+
+void Player::onTick(const std::vector<Rectangle> colliders)
+{
+    Character::onTick(colliders);
+
+    walkTimer += GetFrameTime();
+
+    if (walkTimer > WALK_TIMER_MAX && (direction.x != 0 || direction.y != 0))
+    {
+        PlaySound(sfx["walkLeft.wav"]);
+        walkTimer = 0.0f;
     }
 }
 
@@ -105,8 +118,9 @@ void Player::attack( std::vector<Enemy*>& enemies )
       {
          if ( enemy->checkCollision( position, attackRange ) )
          {
+            cout << "ATTACKING" << endl;
+            PlaySound(sfx["laserShoot.wav"]);
             enemy->takeDamage( attackDamage );
-            std::cout << "Hit enemy! Health: " << enemy->getHealth( ) << std::endl;
             
             //// Calculate the position to display the hit effect
             Vector2 enemyPosition = enemy->getPosition( );
@@ -117,7 +131,6 @@ void Player::attack( std::vector<Enemy*>& enemies )
             DrawText( "HIT!", position.x + 30, position.y + 30,30,RAYWHITE);
          }
       }
-      cout << "ATTACKING" << endl;
      EndDrawing( );
    }
 }
@@ -133,6 +146,8 @@ void Player::attack( std::vector<Enemy*>& enemies )
 */
 void Player::takeDamage( int damage, bool &playerDefeated )
 {
+   PlaySound(sfx["playerDamaged.mp3"]);
+
    health -= damage;
    std::cout << "Player taken damage!";
    if ( health <= 0 )

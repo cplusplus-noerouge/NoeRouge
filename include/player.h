@@ -19,6 +19,8 @@
 #include "animation.h"
 #include "enemy.h"
 
+const float WALK_TIMER_MAX = 0.5f;
+
 class Player : public Character 
 {
 
@@ -26,6 +28,7 @@ private:
    float attackRange;    // Attack radius
    int attackDamage;      // Damage per hit
    int health;           // Player health
+   float walkTimer;      // Time between steps
    SheetSprite sprite;
    Animation animation = Animation( 4, 0.15 );
 
@@ -36,9 +39,11 @@ public:
     { 
        Animation animation = Animation( 4, 0.1 );
        sprite = SheetSprite( "playerWalk1", { 16, 0, 16, 16 }, position, position.y );
+       walkTimer = 0.0f;
     }
     
     void updateDirection( ) override;
+    void onTick(const std::vector<Rectangle> colliders) override;
     void onRender( ) override;
     void attack( std::vector<Enemy*>& enemies );
     void takeDamage( int damage, bool& playerDefeated );  //Decrements player health based off enemy damage and checks for player death.
