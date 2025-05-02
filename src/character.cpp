@@ -51,6 +51,7 @@ void Character::onTick( const std::vector<Rectangle> collidables )
    //direction is multiplied by speed, which makes velocity
    //speed is multiplied by the time between frames, which forces speed to be the same regardless of framerate.
    velocity = Vector2Scale( direction, speed * GetFrameTime( ) );
+   velocity = Vector2Normalize( velocity );
 
    //collisions must be done before velocity is added to position so that the character does not go past a wall before collisions are checked, but that is
    //only necessary for very high movement speed
