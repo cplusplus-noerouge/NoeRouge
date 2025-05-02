@@ -8,7 +8,7 @@ class Character : public GameObject
    private:
 
    Vector2 size;
-   int speed;
+   
 
    protected:
 
@@ -20,6 +20,8 @@ class Character : public GameObject
    Vector2 target; 
    
    public:
+   int speed; // Speed of the character in pixels per second
+   
 
    Character( int _id, Vector2 _position, Vector2 _size, Vector2 target, int _speed );
 
@@ -63,5 +65,4 @@ class Character : public GameObject
    bool updateLOS( const std::vector<Rectangle> colliders );
 
    float getTargetDistance( );
-
 };
