@@ -45,7 +45,7 @@ Ray Character::relationToTarget( )
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * updateLOS( )
-* @brief : Updates the relation to the target and creates line of sight by checking for collision with walls or target.
+* @brief : Updates relation to target and creates line of sight by checking for collisions.
 * @param vector<Rectangle> colliders : The collection of collidables to check for character collision.
 * @return bool : True if the line of sight is obstructed, false otherwise.
 ----------------------------------------------------------------------------------------------------------------------------------------*/
