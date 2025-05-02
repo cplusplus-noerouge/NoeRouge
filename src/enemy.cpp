@@ -34,8 +34,8 @@ Enemy* ObjectHandler::createEnemy( Vector2 world_position, Vector2 size, int spe
    allObjects[ newEnemy->getId( ) ] = newEnemy; // Add <id, object*> to the map
    this->numberOfObjects++;
    return newEnemy;
-
 }
+
 // Called every frame to update the enemy's logic and behavior
 void Enemy::onTick( const std::vector<Rectangle> collidables )
 {

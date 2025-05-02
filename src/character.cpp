@@ -16,6 +16,7 @@
 Character::Character(int _id, Vector2 _position, Vector2 _size, int _speed)
 {
     this->setId(_id);
+    target = { 0,0 };
     position = _position;
     size = _size;
     speed = _speed;
@@ -29,6 +30,7 @@ Character::Character(int _id, Vector2 _position, Vector2 _size, int _speed)
 Character::Character( int _id )
 {
    this->setId( _id );
+   target = { 0,0 };
    position = { 0 };
    size = { 1 };
    speed = 0;
@@ -38,6 +40,7 @@ Character::Character( int _id )
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * onTick( )
+* By Ben Aguilon
 * @brief : Updates the state of the character during a single frame.
 * @param vector<Rectangle> collidables : The collection of collidables to check for character collision.
 * @return : none
@@ -48,13 +51,13 @@ void Character::onTick( const std::vector<Rectangle> collidables )
 
    updateDirection( );
 
-   //direction is multiplied by speed, which makes velocity
-   //speed is multiplied by the time between frames, which forces speed to be the same regardless of framerate.
+       //direction is multiplied by speed, which makes velocity
+       //speed is multiplied by the time between frames, which forces speed to be the same regardless of framerate.
    velocity = Vector2Scale( direction, speed * GetFrameTime( ) );
    velocity = Vector2Normalize( velocity );
 
-   //collisions must be done before velocity is added to position so that the character does not go past a wall before collisions are checked, but that is
-   //only necessary for very high movement speed
+       //collisions must be done before velocity is added to position so that the character does not go past a wall before collisions are checked, but that is
+       //only necessary for very high movement speed
    updateCollisions( collidables );
 
    position = Vector2Add( position, velocity );
@@ -62,6 +65,7 @@ void Character::onTick( const std::vector<Rectangle> collidables )
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * onRender( )
+* By Ben Aguilon
 * @brief : Renders the character on screen.
 * @param : none
 * @return : none
@@ -126,6 +130,7 @@ void Character::updateDirection( Vector2 target )
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * bounds( )
+* By Ben Aguilon
 * @brief : Creates a Rectangle representing the character's current position and size.
 * @param : none
 * @return Rectangle : The Rectangle representing the character's current position and size.
@@ -137,6 +142,7 @@ Rectangle Character::bounds()
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * Collision Methods
+* By Ben Aguilon
 * @brief : Checks for collisions in cardinal directions.
 * @param Rectangle other : The Rectangle the character is potentially colliding with.
 * @return bool : True if a collision is detected, false if otherwise. 
@@ -167,6 +173,7 @@ bool Character::collidingBottom(Rectangle other)
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * updateCollisions( )
+* By Ben Aguilon
 * @brief : Detects and resolves collisions between the character and a list of colliders.
 * @param vector<Rectangle> colliders : The collection of collidables to check for character collision.
 * @return : none

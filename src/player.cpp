@@ -82,6 +82,7 @@ void Player::attack( std::vector<Enemy*>& enemies )
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * createPlayer( )
+* By Ben Aguilon
 * @brief : Object creation function defined in ObjectHandler.
 * @param Vector2 position : Initial position of player.
 * @param Vector2 size : Initial size of player.
