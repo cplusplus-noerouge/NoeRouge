@@ -1,6 +1,6 @@
 /*
 NoeRouge map generation
-Devon, Irene, Evan, Ben S, possible others?
+Devon, Irene, Evan, Ben S, possible others, 
 */
 #include "mapGen.h"
 #include <iostream>
@@ -401,6 +401,22 @@ Vector2 Floor::getLadderUpLocation()
 Vector2 Floor::getLadderDownLocation( )
 {
    return { ( float ) ladderDownX * TILE_SIZE, ( float ) ladderDownY * TILE_SIZE };
+}
+Vector2 Floor::getEnemySpawn( )
+{
+  
+   for ( int y = 1; y < HEIGHT; y++ )
+   {
+      for ( int x = 1; x < WIDTH; x++ )
+      {
+         if ( data[ x ][ y ] == FLOOR )
+
+         {
+            return { ( float ) x * TILE_SIZE, ( float ) y * TILE_SIZE };
+         }
+      }
+   }
+   std::cout << std::endl;
 }
 
 //HALLWAYS==========================================================================================================================
