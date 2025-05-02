@@ -61,8 +61,7 @@ void CustomCamera::prepareRender( )
 		}
 	}
 
-	// Sorting buffer by layer (lowest to highest)
-	//Andrew Thomas (this part)
+	// Sorting buffer by layer (lowest to highest) - Andrew
 	for ( int i = 0; i < buffer.size( ); i++ )
 	{
 		int minIndex = i;                          //variable to track lowest layer value
