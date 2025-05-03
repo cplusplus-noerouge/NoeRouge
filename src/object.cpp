@@ -1,6 +1,8 @@
 #include "object.h"
+#include "objectHandler.h"
 #include <vector>
 
+class Floor;
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * noeRouge
 * GameObject class
@@ -12,6 +14,12 @@
 GameObject::GameObject( )
 {
    id = ObjectHandler::takeNextId( );
+}
+
+GameObject::GameObject( ObjectHandler* handler )
+{
+   id = ObjectHandler::takeNextId( );
+   this->handler = handler;
 }
 
 GameObject::GameObject( int id )
@@ -26,6 +34,16 @@ int GameObject::getId() {
 
 void GameObject::setId(int id) {
     this->id = id;
+}
+
+ObjectHandler* GameObject::getHandler( )
+{
+   return this->handler;
+}
+
+void GameObject::setHandler( ObjectHandler* handler )
+{
+   this->handler = handler;
 }
 
 void GameObject::onTick(const std::vector<Rectangle> collidables) {
@@ -50,6 +68,16 @@ class GameObject *ObjectHandler::createObject() {
 
 class GameObject *ObjectHandler::getObject(int id) {
     return this->allObjects[id];
+}
+
+Floor* ObjectHandler::getFloor( )
+{
+   return this->floor;
+}
+
+void ObjectHandler::setFloor( Floor* floor )
+{
+   this->floor = floor;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
