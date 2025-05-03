@@ -23,7 +23,7 @@ private:
    Sprite sprite;
 
 public:
-    Player(int id): Character(id), attackRange( 50.0f ), attackDamage( 1 ), health( 5 ), dodgeSpeed( 1 * GetFrameTime() ), dodgeCooldown( 0 )
+    Player(int id): Character(id), attackRange( 50.0f ), attackDamage( 1 ), health( 5 ), dodgeCooldown( 0 )
     { 
        sprite = Sprite( "player", position, position.y );
     }
