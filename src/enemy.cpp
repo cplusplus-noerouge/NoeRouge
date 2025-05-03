@@ -10,11 +10,13 @@
 #include <raylib.h>
 #include <iostream>
 #include <cmath>
+#include <raymath.h>
 #include <vector>
 #include "object.h"
 #include "character.h"
 #include "enemy.h"
-#include <raymath.h>
+#include "audio.h"
+
 using namespace std;
 
 // Constructor for Enemy class
@@ -85,33 +87,26 @@ void Enemy::onRender( )
 // Applies damage to the enemy, factoring in defense
 void Enemy::takeDamage( int damage )
 {
-   // Reduce health by damage amount, ensuring it doesn't go below zero
+   // Reduce health by damage amount, and ensures it doesn't go below zero
    stats.health -= damage;
-   if ( stats.health < 0 )
+   stats.health = (int)Clamp(stats.health, 0, stats.health);
+
+   if (stats.health > 0)
    {
-      stats.health = 0; // Ensure health doesn't go below zero
+      cout << "Enemy took " << damage << " damage!" << endl;
+      cout << "Enemy health is now: " << stats.health << endl;
    }
-   // respawn the enemy if it is dead 
-   if ( stats.health == 0 )
+   else if ( stats.health <= 0 )
    {
+      PlaySound(sfx["hitHurt (3).wav"]);
       // Reset health to initial value (could be defined in Stats struct)
       stats.health = 3; // Assuming initial health is 3
    
       Enemy::position.x = 100; // Reset position to some default value
       Enemy::position.y = 100; // Reset position to some default value
-      std::cout << "Enemy respawned!" << std::endl;
-      return; // Exit if the enemy is respawned
-   }
-   // Check for death
-   if ( stats.health <= 0 )
-   {
-      stats.health = 0; // Ensure health doesn't go below zero
       std::cout << "Enemy is dead!" << std::endl;
-      return; // Exit if the enemy is already dead
+      std::cout << "Enemy respawned!" << std::endl;
    }
-   // Print damage taken and remaining health
-   cout << "Enemy took " << damage << " damage!" << endl;
-   cout << "Enemy health is now: " << stats.health << endl;  
 }
 
 // Checks if the player is within the enemy's attack range

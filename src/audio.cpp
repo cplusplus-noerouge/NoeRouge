@@ -2,6 +2,8 @@
 #include <raylib.h>
 #include <raymath.h>
 
+std::map<std::string, Sound> sfx = {};
+
 /*
 ---------------------------------------------------------------------------------------------------
 * By: Ben Aguilon
@@ -16,12 +18,22 @@ MusicPlayer::MusicPlayer(bool autoplay)
 	paused = true;
 	currentSongIndex = 0;
 
+	for (const auto& entry : std::filesystem::directory_iterator(SFX_PATH))
+	{
+		std::string fullPath = entry.path().string();
+
+		std::filesystem::path filePath(fullPath);
+		std::string filename = filePath.filename().string();
+		sfx.insert({ filename, LoadSound(fullPath.c_str()) });
+		SetSoundVolume(sfx[filename], DEFAULT_SFX_VOLUME);
+	}
+
 	for (const auto& entry : std::filesystem::directory_iterator(MUSIC_PATH))
 	{
 		auto fullPath = entry.path();
 		songs.push_back(LoadMusicStream(fullPath.string().c_str()));
 		songs.back().looping = false;
-		SetMusicVolume(songs.back(), DEFAULT_VOLUME);
+		SetMusicVolume(songs.back(), DEFAULT_MUSIC_VOLUME);
 	}
 
 	if (autoplay)
@@ -44,6 +56,11 @@ MusicPlayer::~MusicPlayer( )
 	for ( auto& song: songs )
 	{
 		UnloadMusicStream( song );
+	}
+
+	for ( auto& sound : sfx )
+	{
+		UnloadSound(sound.second);
 	}
 }
 
