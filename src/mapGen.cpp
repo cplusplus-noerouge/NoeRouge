@@ -1,6 +1,6 @@
 /*
 NoeRouge map generation
-Devon, Irene, Evan, Ben S, possible others?
+Devon, Irene, Evan, Ben S, possible others, 
 */
 #include "mapGen.h"
 #include <iostream>
@@ -334,7 +334,6 @@ Floor::Floor()
     objHandler = new ObjectHandler;             //make the object handler
 
     //create ladders between floors. could be changed to guarantee they are a certain distance apart or something
-
     BspNode* ladderUpNode = leaves.front();
     ladderUpX = ladderUpNode->roomCenterPointXCoordinate;
     ladderUpY = ladderUpNode->roomCenterPointYCoordinate;
@@ -346,6 +345,22 @@ Floor::Floor()
     ladderDownY = ladderDownNode->roomCenterPointYCoordinate;
 
     data[ladderDownX][ladderDownY] = LADDER_DOWN;
+
+    //make the ladder objects
+    objHandler->createLadder(getLadderUpLocation( ), 1);
+    objHandler->createLadder( getLadderDownLocation( ), -1);
+
+    //make the door objects
+    for (int y = 0; y < HEIGHT; y++)
+    {
+        for (int x = 0; x < WIDTH; x++)
+        {
+            if (data[x][y] == DOOR)
+            {
+                objHandler->createDoor({(float)x * TILE_SIZE,(float)y * TILE_SIZE });
+            }
+        }
+    }
 
 /*--------------------------------------------------------------------------------------------
 * Enemy spawning happens here, yup I just undid two hours of work trying to git push, idk I'll talk about it on Monday
@@ -387,6 +402,22 @@ Vector2 Floor::getLadderDownLocation( )
 {
    return { ( float ) ladderDownX * TILE_SIZE, ( float ) ladderDownY * TILE_SIZE };
 }
+Vector2 Floor::getEnemySpawn( )
+{
+  
+   for ( int y = 1; y < HEIGHT; y++ )
+   {
+      for ( int x = 1; x < WIDTH; x++ )
+      {
+         if ( data[ x ][ y ] == FLOOR )
+
+         {
+            return { ( float ) x * TILE_SIZE, ( float ) y * TILE_SIZE };
+         }
+      }
+   }
+   std::cout << std::endl;
+}
 
 //HALLWAYS==========================================================================================================================
 /*--------------------------------------------------------------------------------------------
@@ -402,7 +433,7 @@ void Hallways::calculateDistanceBetweenRoomCenters(std::list<BspNode*> leafNodes
 
     while (!leafNodes.empty())
     {
-        for (BspNode* node : leafNodes)
+        for (BspNode* node : leafNodes)                //iterate through all remaining nodes to find the closest nodes by comparing center points
         {
             if (calculateDistanceFromCenterOfNodes(hallwayCurrentNode, node) < smallestDistanceBetweenCenters)
             {

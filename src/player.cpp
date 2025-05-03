@@ -2,15 +2,23 @@
 * noeRouge
 * Player class
 * Ben A, Kaleb, Reese, Ethan, Thomas
+* Reese Edens, Kaleb Flowers
+* Player Class (inherits from Character class)
+* Player class represents the player character in the game.
+* It handles player movement, rendering, and attacking functionality.
 */
 
+#include <iostream>
 #include "player.h"
 #include "object.h"
 #include "customCamera.h"
 #include "sprite.h"
-#include <iostream>
 #include "enemy.h"
+#include "audio.h"
 
+using namespace std;
+
+extern CustomCamera mainCamera;
 
 //class Player *objectHandler::createPlayer(Vector2 position, Vector2 size, int speed )
 //{
@@ -42,11 +50,50 @@ void Player::updateDirection()
     dodge();
 }
 
-extern CustomCamera mainCamera;
+void Player::onTick(const std::vector<Rectangle> colliders)
+{
+    Character::onTick(colliders);
+
+    walkTimer += GetFrameTime();
+
+    if (walkTimer > WALK_TIMER_MAX && (direction.x != 0 || direction.y != 0))
+    {
+        PlaySound(sfx["walkLeft.wav"]);
+        walkTimer = 0.0f;
+    }
+}
 
 void Player::onRender()
 {
    mainCamera.setPosition( position ); // Updating the camera position should be moved to its own class or function later on
+      // Animating the player
+   animation.onTick( );
+      // Freezing the animation at frame 1 if the player isn't moving
+      // WARNING! This logic will need to be revised when implementing other animations that aren't just for walking.
+   if ( Vector2Equals( direction, { 0 , 0 } ) )
+   {
+      animation.reset( );
+   }
+   sprite.setTexture( "playerWalk" + std::to_string( animation.getFrame( ) ) );
+
+      // Setting the position referenced on the sheet based on the direction the plaer is facing
+   if ( direction.x < 0 )
+   {
+      sprite.setSourceRect( { 0, 0, 16, 16 } );
+   }
+   else if ( direction.x > 0 )
+   {
+      sprite.setSourceRect( { 32, 0, 16, 16 } );
+   }
+   else if ( direction.y >= 0 )
+   {
+      sprite.setSourceRect( { 16, 0, 16, 16 } );
+   }
+   else
+   {
+      sprite.setSourceRect( { 48, 0, 16, 16 } );
+   }
+
    sprite.update( position, position.y );
    mainCamera.addToBuffer( &sprite );
 }
@@ -63,23 +110,28 @@ class Player* ObjectHandler::createPlayer( Vector2 position, Vector2 size, int s
 void Player::attack( std::vector<Enemy*>& enemies )
 {
    if ( IsKeyPressed( KEY_SPACE ) )
+
    {  // Attack with SPACE
-      BeginDrawing( );  // Ensure you're inside a drawing context
+     // BeginDrawing( );  // Ensure you're inside a drawing context
 
       for ( Enemy* enemy : enemies )
       {
          if ( enemy->checkCollision( position, attackRange ) )
          {
+            cout << "ATTACKING" << endl;
+            PlaySound(sfx["laserShoot.wav"]);
             enemy->takeDamage( attackDamage );
-            std::cout << "Hit enemy! Health: " << enemy->getHealth( ) << std::endl;
-
+            
+            //// Calculate the position to display the hit effect
+            Vector2 enemyPosition = enemy->getPosition( );
+            Vector2 position = { enemyPosition.x - 20, enemyPosition.y - 20 }; // Adjust as needed for centering text
+            // Set the font size and color for the hit effect
             // Display hit effect
-            Vector2 enemyPos = enemy->getPosition( );
-            DrawText( "HIT!", enemyPos.x, enemyPos.y - 30, 20, RED );
+           // Vector2 position = enemy->getPosition( );
+            DrawText( "HIT!", position.x + 30, position.y + 30,30,RAYWHITE);
          }
       }
-
-      EndDrawing( );
+     EndDrawing( );
    }
 }
 
@@ -94,6 +146,8 @@ void Player::attack( std::vector<Enemy*>& enemies )
 */
 void Player::takeDamage( int damage, bool &playerDefeated )
 {
+   PlaySound(sfx["playerDamaged.mp3"]);
+
    health -= damage;
    std::cout << "Player taken damage!";
    if ( health <= 0 )
