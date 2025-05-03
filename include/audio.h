@@ -15,16 +15,20 @@
 #include <filesystem>
 #include <vector>
 #include <string>
+#include <map>
 
-const float DEFAULT_VOLUME = 1.0f;
+const float DEFAULT_MUSIC_VOLUME = 0.3f;
+const float DEFAULT_SFX_VOLUME = 0.8f;
 const std::string MUSIC_PATH = "../../../assets/audio/music/";    // I hate this
+const std::string SFX_PATH = "../../../assets/audio/sfx/";
+
+extern std::map<std::string, Sound> sfx;
 
 class MusicPlayer
 {
-
 private:
 
-   std::vector<Music> songs;    //List of all songs to be loaded from folder.
+    std::vector<Music> songs;    //List of all songs to be loaded from folder.
 	int currentSongIndex;    //Current song index.
 	bool paused;    //If the music is paused or not.
 

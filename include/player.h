@@ -15,31 +15,35 @@
 #pragma once
 #include "raylib.h"
 #include "character.h"
-#include "sprite.h"
+#include "sheetSprite.h"
+#include "animation.h"
 #include "enemy.h"
+
+const float WALK_TIMER_MAX = 0.5f;
 
 class Player : public Character 
 {
 
 private:
    float attackRange;    // Attack radius
-   int attackDamage;     // Damage per hit
+   int attackDamage;      // Damage per hit
    int health;           // Player health
-   Sprite sprite;
+   float walkTimer;      // Time between steps
+   SheetSprite sprite;
+   Animation animation = Animation( 4, 0.15 );
 
 public:
     //Player(int id): Character(id), attackRange( 50.0f ), attackDamage( 1 ), health( 5 )
-   /* Player(int id): Character(id), attackRange( 20.0f ), attackDamage( 1 ) 
-    { 
-       sprite = Sprite( "player", position, position.y );
-    }*/
     Player(int id, Vector2 _position, Vector2 _size, int _speed) 
        : Character(id, _position, _size, _speed), attackRange(50.0f), attackDamage( 1 ), health( 5 )
     { 
-       sprite = Sprite( "player", position, position.y );
+       Animation animation = Animation( 4, 0.1 );
+       sprite = SheetSprite( "playerWalk1", { 16, 0, 16, 16 }, position, position.y );
+       walkTimer = 0.0f;
     }
     
     void updateDirection( ) override;
+    void onTick(const std::vector<Rectangle> colliders) override;
     void onRender( ) override;
     void attack( std::vector<Enemy*>& enemies );
     void defend( std::vector<Enemy*>& enemies );

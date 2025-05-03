@@ -3,6 +3,8 @@
 #include "sprite.h"
 #include "customCamera.h"
 
+extern CustomCamera mainCamera;
+
 //Interactable ==========================================
 Interactable::Interactable( )
 {
@@ -20,7 +22,6 @@ Interactable::Interactable(Vector2 pos, std::string texture)
 	sprite = Sprite(texture, position, position.y);
 }
 
-extern CustomCamera mainCamera;
 void Interactable::onRender( )
 {
 	sprite.update(position, position.y);
@@ -52,7 +53,7 @@ Ladder::Ladder( Vector2 pos, int floorChange):
 	this->floorChange = floorChange;
 	if (floorChange > 0)
 	{
-		sprite = Sprite("ladderUp", pos, pos.y);
+		sprite = Sprite( "ladderUp", pos, pos.y );
 	}
 	else if (floorChange < 0)
 	{
@@ -63,6 +64,12 @@ Ladder::Ladder( Vector2 pos, int floorChange):
 void Ladder::interact( )
 {
 	std::cout << "ladder interacted";
+}
+
+void Ladder::onRender( )
+{
+	sprite.update( Vector2Subtract( position, { 0, 8 } ), position.y - 8 );
+	mainCamera.addToBuffer( &sprite );
 }
 
 Ladder* ObjectHandler::createLadder( Vector2 position, int floorChange )
