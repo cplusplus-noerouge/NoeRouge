@@ -22,6 +22,7 @@ const char LADDER_DOWN = '>';           //ladder to the below floor
 const char DEBUGPARTITION = '*';        //a wall that is within a partition aka an ok place for rooms to spawn.
 const char PLAYER = 'p';                //represents player spawn
 const char DOOR = '@';                  //represents where doors are
+const char ENEMY = 'E';                 //represents where the enemies are
 
 //PARTITIONS=============================================================================================================================
 // Class representing a node in the BSP tree
@@ -101,6 +102,8 @@ public:
         return objHandler;
     }
 
+    Vector2 getLadderUpLocation();
+    Vector2 getLadderDownLocation();
     Vector2 getPlayerSpawn();
     Vector2 getEnemySpawn( );
 };
