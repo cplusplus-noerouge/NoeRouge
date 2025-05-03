@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include "raylib.h"
+#include "objectHandler.h"
 
 class ObjectHandler;
 
@@ -12,15 +13,13 @@ private:
     int id;
 
 protected:
-   ObjectHandler* handler;
+    ObjectHandler* handler;
 
 public:
+    
 
     GameObject( );
-    GameObject( ObjectHandler* handler )
-    {
-       this->handler = handler;
-    }
+    GameObject( ObjectHandler* handler );
     GameObject( int id );
     ~GameObject() {
         // No memory is currently allocated, do nothing

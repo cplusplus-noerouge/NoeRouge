@@ -33,6 +33,14 @@ private:
    Animation animation = Animation( 4, 0.15 );
 
 public:
+
+   Player( Vector2 spawn, ObjectHandler* handler )
+      : Character( 0, spawn, handler ), attackRange( 50.0f ), attackDamage( 1 ), health( 5 )
+   {
+      Animation animation = Animation( 4, 0.1 );
+      sprite = SheetSprite( "playerWalk1", { 16, 0, 16, 16 }, position, position.y );
+      walkTimer = 0.0f;
+   }
     //Player(int id): Character(id), attackRange( 50.0f ), attackDamage( 1 ), health( 5 )
     Player(int id, Vector2 _position, Vector2 _size, int _speed) 
        : Character(id, _position, _size, _speed), attackRange(50.0f), attackDamage( 1 ), health( 5 )

@@ -1,6 +1,8 @@
 #pragma once
 #include "object.h"
 
+class GameObject;
+
 class Floor;
 
 class ObjectHandler
@@ -38,6 +40,7 @@ class ObjectHandler
    void renderAll( );
    Floor* getFloor( );
    void setFloor( Floor* floor );
+   void playerCreate( );
 
    void transferObject( int objId, ObjectHandler& newHandler );
    class GameObject* getObject( int id );
