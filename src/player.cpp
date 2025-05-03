@@ -1,9 +1,7 @@
 /*
 * noeRouge
 * Player class
-* Ben A, Kaleb, Reese, Ethan
-
-
+* Ben A, Kaleb, Reese, Ethan, Thomas
 * Reese Edens, Kaleb Flowers
 * Player Class (inherits from Character class)
 * Player class represents the player character in the game.
@@ -48,6 +46,8 @@ void Player::updateDirection()
     {
         direction.y = -1;
     }
+
+    dodge();
 }
 
 void Player::onTick(const std::vector<Rectangle> colliders)
@@ -155,4 +155,35 @@ void Player::takeDamage( int damage, bool &playerDefeated )
       std::cout << "Player defeated!" << std::endl;
       playerDefeated = true;
    }
+}
+
+/*-----------------------------------------------------------------------------------------------------------------------------
+**dodge()
+**Thomas Orozco
+**Increases players speed by 1.4 times for 1 second when left shift is pressed and prevents user from doing it for another 2 seconds
+** int dodgeCooldown, decriments each frame and is used to measure cooldown
+**-----------------------------------------------------------------------------------------------------------------------------
+*/
+void Player::dodge()
+{
+   if(IsKeyPressed(KEY_LEFT_SHIFT))
+   {
+      if(dodgeCooldown <= 0)
+      {
+         dodgeCooldown = 3 * GetFPS(); //Change what dodgeCooldown get set to alter cooldown length, remember it is decrimented each frame.
+      }
+   }
+
+   if (dodgeCooldown > 2 * GetFPS()) // Change lenght of time dodging happens by altering what dodgeCooldown is compared to, lower is longer.
+      {
+         direction.x = direction.x * 1.4; //Alter speed of dodging by changing numbers direction is multiplied by, * 1 is base walking speed
+         direction.y = direction.y * 1.4;
+      }
+
+
+   if(dodgeCooldown > 0)
+   {
+      dodgeCooldown--;
+   }
+   
 }

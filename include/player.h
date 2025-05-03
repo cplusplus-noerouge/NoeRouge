@@ -1,7 +1,8 @@
 /*
 * noeRouge
 * Player class
-* Ben A, Kaleb, Reese, Ethan
+
+* Ben A, Kaleb, Reese, Ethan, Thomas
 * Reese Edens, Kaleb Flowers
 * Player Class (inherits from Character class)
 * Inherits sprite functionality from Sprite class.
@@ -9,7 +10,6 @@
 * Player class represents the player character in the game.
 * It handles player movement, rendering, and attacking functionality.
 * Player.h 
-   
 */
 
 #pragma once
@@ -28,14 +28,16 @@ private:
    float attackRange;    // Attack radius
    int attackDamage;      // Damage per hit
    int health;           // Player health
+   int dodgeSpeed;
+   int dodgeCooldown;
    float walkTimer;      // Time between steps
    SheetSprite sprite;
    Animation animation = Animation( 4, 0.15 );
 
 public:
-    //Player(int id): Character(id), attackRange( 50.0f ), attackDamage( 1 ), health( 5 )
+
     Player(int id, Vector2 _position, Vector2 _size, int _speed) 
-       : Character(id, _position, _size, _speed), attackRange(50.0f), attackDamage( 1 ), health( 5 )
+       : Character(id, _position, _size, _speed), attackRange(50.0f), attackDamage( 1 ), health( 5 ), dodgeCooldown( 0 )
     { 
        Animation animation = Animation( 4, 0.1 );
        sprite = SheetSprite( "playerWalk1", { 16, 0, 16, 16 }, position, position.y );
@@ -47,6 +49,7 @@ public:
     void onRender( ) override;
     void attack( std::vector<Enemy*>& enemies );
     void takeDamage( int damage, bool& playerDefeated );  //Decrements player health based off enemy damage and checks for player death.
+    void dodge();
                    
     //void updateDirection() override;
 };
