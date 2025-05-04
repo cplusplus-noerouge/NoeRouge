@@ -55,7 +55,7 @@ int main( )
    
       // Create the player object in the object handler of the current floor
     //floors[ floorOn ]->getObjHandler( )->createPlayer( playerSpawnPosition, { TILE_SIZE, TILE_SIZE }, PLAYER_SPEED );
-    floors[ floorOn ]->getObjHandler( )->playerCreate( );
+    //floors[ floorOn ]->getObjHandler( )->playerCreate( );
     floors[ floorOn ]->getObjHandler( )->createPlayer( playerSpawnPosition, { Settings::TILE_SIZE, Settings::TILE_SIZE }, Settings::PLAYER_SPEED );
 
     // Add enemies to the vector after creating them

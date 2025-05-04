@@ -346,23 +346,6 @@ void Floor::generateMapData()
             }
         }
     }
-
-
-    objHandler = new ObjectHandler(this);             //make the object handler
-
-    //create ladders between floors. could be changed to guarantee they are a certain distance apart or something
-    BspNode* ladderUpNode = leaves.front();
-    ladderUpX = ladderUpNode->roomCenterPointXCoordinate;
-    ladderUpY = ladderUpNode->roomCenterPointYCoordinate;
-
-    data[ladderUpX][ladderUpY] = LADDER_UP;
-
-    BspNode* ladderDownNode = leaves.back();
-    ladderDownX = ladderDownNode->roomCenterPointXCoordinate;
-    ladderDownY = ladderDownNode->roomCenterPointYCoordinate;
-
-    data[ladderDownX][ladderDownY] = LADDER_DOWN;
-
 }
 /*-----------------------------------------------------------------------------------------------------------------------
 * Floor::generateObjects() creates the objects on the floor: ladders, doors, enemies, and anything added in the future

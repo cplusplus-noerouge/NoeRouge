@@ -65,5 +65,5 @@ int ObjectHandler::nextId = 1;  //this is shared between all object handlers. st
 void ObjectHandler::playerCreate( )
 {
    Vector2 spawn = getFloor( )->getLadderDownLocation( );
-   Player* player = new Player( spawn, this );
+   //Player* player = new Player( spawn, this );
 }

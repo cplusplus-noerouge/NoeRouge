@@ -34,13 +34,13 @@ private:
 
 public:
 
-   Player( Vector2 spawn, ObjectHandler* handler )
+   /*Player( Vector2 spawn, ObjectHandler* handler )
       : Character( 0, spawn, handler ), attackRange( 50.0f ), attackDamage( 1 ), health( 5 )
    {
       Animation animation = Animation( 4, 0.1 );
       sprite = SheetSprite( "playerWalk1", { 16, 0, 16, 16 }, position, position.y );
       walkTimer = 0.0f;
-   }
+   }*/
 
     /*-----------------------------------------------------------------------------------------------------------------------------------
      * @brief : Parameterized Class constructor.

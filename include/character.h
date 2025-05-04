@@ -34,10 +34,6 @@ class Character : public GameObject
 	//Character( int _id, Vector2 _position, Vector2 _size, Vector2 target, int _speed );   //Parameterized Class constructor, including target.
 	Character( int _id, Vector2 _position, Vector2 _size, int _speed );                   //Parameterized Class constructor.
 	Character( int _id = -1 );                                                            //Class constructor based on object ID. 
-  ~Character( )
-   {
-      //destructor
-   }
 
 	void onTick( const std::vector<Rectangle> collidables ) override;                     //Updates the state of the character during a single frame.
 	void onRender( ) override;                                                            //Renders the character on screen.
