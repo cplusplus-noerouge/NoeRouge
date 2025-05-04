@@ -7,61 +7,62 @@
 
 
 class GameObject {
-private:
-    int id;
+	private:
+	int id;
 
-public:
+	public:
 
-    GameObject( );
-    GameObject( int id );
-    ~GameObject() {
-        // No memory is currently allocated, do nothing
-        ;;
-    }
+	GameObject( );
+	GameObject( int id );
+	~GameObject( )
+	{
+		// No memory is currently allocated, do nothing
+		;;
+	}
 
-    // Getters
-    int getId();
-    // Setters
-    void setId(int id);
+	// Getters
+	int getId( );
+	// Setters
+	void setId( int id );
 
-    virtual void onTick(const std::vector<Rectangle> collidables);
-    // TODO 00
+	virtual void onTick( const std::vector<Rectangle> collidables );
+	// TODO 00
 
-    virtual void onRender();
+	virtual void onRender( );
 };
 
-class ObjectHandler 
+class ObjectHandler
 {
-private:
-    static int nextId; //this is shared between all object handlers (each floor has an object handler)
+	private:
+	static int nextId; //this is shared between all object handlers (each floor has an object handler)
 
-public:
+	public:
 
-    int numberOfObjects;
+	int numberOfObjects;
 
-    std::map<int, GameObject* > allObjects;
+	std::map<int, GameObject* > allObjects;
 
-    static int takeNextId( )
-    {
-       return nextId++;
-    }
+	static int takeNextId( )
+	{
+		return nextId++;
+	}
 
-    ObjectHandler() 
-    {
-        this->numberOfObjects = 0;
-    }
-    ~ObjectHandler() 
-    {
-        ;;
-    }
+	ObjectHandler( )
+	{
+		this->numberOfObjects = 0;
+	}
+	~ObjectHandler( )
+	{
+		;;
+	}
 
-    void tickAll(const std::vector<Rectangle> collidables);
-    void renderAll();
-    void transferObject(int objId, ObjectHandler& newHandler);
-    class GameObject *getObject(int id);
-    class GameObject *createObject();
-    class Player *createPlayer(Vector2 position, Vector2 size, int speed);
-    class Enemy* createEnemy( Vector2 position, Vector2 size, int speed );
-    class Ladder* createLadder( Vector2 position, int floorChange );
-    class Door* ObjectHandler::createDoor(Vector2 position);
+	void tickAll( const std::vector<Rectangle> collidables );
+	void renderAll( );
+	void transferObject( int objId, ObjectHandler& newHandler );
+	class GameObject* getObject( int id );
+	class GameObject* createObject( );
+	class Player* createPlayer( Vector2 position, Vector2 size, int speed );
+	class Enemy* createEnemy( Vector2 position, Vector2 size, int speed );
+	class Ladder* createLadder( Vector2 position, int floorChange );
+	class Door* ObjectHandler::createDoor( Vector2 position );
 };

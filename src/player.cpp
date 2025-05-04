@@ -21,26 +21,32 @@ using namespace std;
 
 extern CustomCamera mainCamera;   //Camera view of the map
 
-void Player::updateDirection()
+/*---------------------------------------------------------------------------------------------------------------------------------------
+* updateDirection( )
+* @brief : Sets the movement direction of the player based on control input. Implements dodge ability.
+* @param : none
+* @return : none
+----------------------------------------------------------------------------------------------------------------------------------------*/
+void Player::updateDirection( )
 {
-    if (IsKeyDown(KEY_A))
-    {
-        direction.x = -1;
-    }
-    else if (IsKeyDown(KEY_D))
-    {
-        direction.x = 1;
-    }
-    if (IsKeyDown(KEY_S))
-    {
-        direction.y = 1;
-    }
-    else if (IsKeyDown(KEY_W))
-    {
-        direction.y = -1;
-    }
+	if ( IsKeyDown( KEY_A ) )
+	{
+		direction.x = -1;
+	}
+	else if ( IsKeyDown( KEY_D ) )
+	{
+		direction.x = 1;
+	}
+	if ( IsKeyDown( KEY_S ) )
+	{
+		direction.y = 1;
+	}
+	else if ( IsKeyDown( KEY_W ) )
+	{
+		direction.y = -1;
+	}
 
-    dodge();
+	dodge( );
 }
 
 
@@ -50,17 +56,17 @@ void Player::updateDirection()
 * @param vector<Rectangle> colliders : The collection of collidables to check for character collision.
 * @return : none
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-void Player::onTick(const std::vector<Rectangle> colliders)
+void Player::onTick( const std::vector<Rectangle> colliders )
 {
-    Character::onTick(colliders);
+	Character::onTick( colliders );
 
-    walkTimer += GetFrameTime();
+	walkTimer += GetFrameTime( );
 
-    if (walkTimer > WALK_TIMER_MAX && (direction.x != 0 || direction.y != 0))
-    {
-        PlaySound(sfx["walkLeft.wav"]);
-        walkTimer = 0.0f;
-    }
+	if ( walkTimer > WALK_TIMER_MAX && ( direction.x != 0 || direction.y != 0 ) )
+	{
+		PlaySound( sfx[ "walkLeft.wav" ] );
+		walkTimer = 0.0f;
+	}
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -69,39 +75,39 @@ void Player::onTick(const std::vector<Rectangle> colliders)
 * @param : none
 * @return : none
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-void Player::onRender()
+void Player::onRender( )
 {
-   mainCamera.setPosition( position ); // Updating the camera position should be moved to its own class or function later on
-      // Animating the player
-   animation.onTick( );
-      // Freezing the animation at frame 1 if the player isn't moving
-      // WARNING! This logic will need to be revised when implementing other animations that aren't just for walking.
-   if ( Vector2Equals( direction, { 0 , 0 } ) )
-   {
-      animation.reset( );
-   }
-   sprite.setTexture( "playerWalk" + std::to_string( animation.getFrame( ) ) );
+	mainCamera.setPosition( position ); // Updating the camera position should be moved to its own class or function later on
+	// Animating the player
+	animation.onTick( );
+	// Freezing the animation at frame 1 if the player isn't moving
+	// WARNING! This logic will need to be revised when implementing other animations that aren't just for walking.
+	if ( Vector2Equals( direction, { 0 , 0 } ) )
+	{
+		animation.reset( );
+	}
+	sprite.setTexture( "playerWalk" + std::to_string( animation.getFrame( ) ) );
 
-      // Setting the position referenced on the sheet based on the direction the plaer is facing
-   if ( direction.x < 0 )
-   {
-      sprite.setSourceRect( { 0, 0, 16, 16 } );
-   }
-   else if ( direction.x > 0 )
-   {
-      sprite.setSourceRect( { 32, 0, 16, 16 } );
-   }
-   else if ( direction.y >= 0 )
-   {
-      sprite.setSourceRect( { 16, 0, 16, 16 } );
-   }
-   else
-   {
-      sprite.setSourceRect( { 48, 0, 16, 16 } );
-   }
+	// Setting the position referenced on the sheet based on the direction the plaer is facing
+	if ( direction.x < 0 )
+	{
+		sprite.setSourceRect( { 0, 0, 16, 16 } );
+	}
+	else if ( direction.x > 0 )
+	{
+		sprite.setSourceRect( { 32, 0, 16, 16 } );
+	}
+	else if ( direction.y >= 0 )
+	{
+		sprite.setSourceRect( { 16, 0, 16, 16 } );
+	}
+	else
+	{
+		sprite.setSourceRect( { 48, 0, 16, 16 } );
+	}
 
-   sprite.update( position, position.y );
-   mainCamera.addToBuffer( &sprite );
+	sprite.update( position, position.y );
+	mainCamera.addToBuffer( &sprite );
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -112,30 +118,30 @@ void Player::onRender()
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Player::attack( std::vector<Enemy*>& enemies )
 {
-   if ( IsKeyPressed( KEY_SPACE ) )
+	if ( IsKeyPressed( KEY_SPACE ) )
 
-   {  // Attack with SPACE
-     // BeginDrawing( );  // Ensure you're inside a drawing context
+	{  // Attack with SPACE
+	  // BeginDrawing( );  // Ensure you're inside a drawing context
 
-      for ( Enemy* enemy : enemies )
-      {
-         if ( enemy->checkCollision( position, attackRange ) )
-         {
-            cout << "ATTACKING" << endl;
-            PlaySound(sfx["laserShoot.wav"]);
-            enemy->takeDamage( attackDamage );
-            
-            //// Calculate the position to display the hit effect
-            Vector2 enemyPosition = enemy->getPosition( );
-            Vector2 position = { enemyPosition.x - 20, enemyPosition.y - 20 }; // Adjust as needed for centering text
-            // Set the font size and color for the hit effect
-            // Display hit effect
-           // Vector2 position = enemy->getPosition( );
-            DrawText( "HIT!", position.x + 30, position.y + 30,30,RAYWHITE);
-         }
-      }
-     EndDrawing( );
-   }
+		for ( Enemy* enemy : enemies )
+		{
+			if ( enemy->checkCollision( position, attackRange ) )
+			{
+				cout << "ATTACKING" << endl;
+				PlaySound( sfx[ "laserShoot.wav" ] );
+				enemy->takeDamage( attackDamage );
+
+				//// Calculate the position to display the hit effect
+				Vector2 enemyPosition = enemy->getPosition( );
+				Vector2 position = { enemyPosition.x - 20, enemyPosition.y - 20 }; // Adjust as needed for centering text
+				// Set the font size and color for the hit effect
+				// Display hit effect
+			  // Vector2 position = enemy->getPosition( );
+				DrawText( "HIT!", position.x + 30, position.y + 30, 30, RAYWHITE );
+			}
+		}
+		EndDrawing( );
+	}
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -145,24 +151,24 @@ void Player::attack( std::vector<Enemy*>& enemies )
 * @param vector<Enemy*>& enemies : The collection of enemies to check for collision with.
 * @return : none
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-   void Player::defend( std::vector<Enemy*>&enemies )
-   {
+void Player::defend( std::vector<Enemy*>& enemies )
+{
 
-      if ( IsKeyDown( KEY_LEFT_SHIFT ) )
-      {
-         BeginDrawing( );  // remove ( leftover code) 
-         for ( Enemy* enemy : enemies )
-         {
-            if ( enemy->checkCollision( position, attackRange ) )
-            {
-               //stop player movement
-               //stop incoming damage from enemy 
-            }
-         }
-         std::cout << "Defending against enemy attack!";
-         EndDrawing( );
-      }
-   }
+	if ( IsKeyDown( KEY_LEFT_SHIFT ) )
+	{
+		BeginDrawing( );  // remove ( leftover code) 
+		for ( Enemy* enemy : enemies )
+		{
+			if ( enemy->checkCollision( position, attackRange ) )
+			{
+				//stop player movement
+				//stop incoming damage from enemy 
+			}
+		}
+		std::cout << "Defending against enemy attack!";
+		EndDrawing( );
+	}
+}
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * takeDamage( )
 * Ethan Sheffield, Ben Aguilon
@@ -171,17 +177,17 @@ void Player::attack( std::vector<Enemy*>& enemies )
 * @param bool &playerDefeated : reference to a bool value, if player has been defeated or not.
 * @return : none
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-void Player::takeDamage( int damage, bool &playerDefeated )
+void Player::takeDamage( int damage, bool& playerDefeated )
 {
-   PlaySound(sfx["playerDamaged.mp3"]);
+	PlaySound( sfx[ "playerDamaged.mp3" ] );
 
-   health -= damage;
-   std::cout << "Player taken damage!";
-   if ( health <= 0 )
-   {
-      std::cout << "Player defeated!" << std::endl;
-      playerDefeated = true;
-   }
+	health -= damage;
+	std::cout << "Player taken damage!";
+	if ( health <= 0 )
+	{
+		std::cout << "Player defeated!" << std::endl;
+		playerDefeated = true;
+	}
 }
 
 
@@ -196,39 +202,37 @@ void Player::takeDamage( int damage, bool &playerDefeated )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 class Player* ObjectHandler::createPlayer( Vector2 position, Vector2 size, int speed )
 {
-   class Player* Player = new class Player( 0, position, size, speed ); //id for player is always 0
-   allObjects[ Player->getId( ) ] = Player; //add <id, object*> to the map
-   this->numberOfObjects++;
-   return Player;
+	class Player* Player = new class Player( 0, position, size, speed ); //id for player is always 0
+	allObjects[ Player->getId( ) ] = Player; //add <id, object*> to the map
+	this->numberOfObjects++;
+	return Player;
 }
 
-/*-----------------------------------------------------------------------------------------------------------------------------
-**dodge()
-**Thomas Orozco
-**Increases players speed by 1.4 times for 1 second when left shift is pressed and prevents user from doing it for another 2 seconds
-** int dodgeCooldown, decriments each frame and is used to measure cooldown
-**-----------------------------------------------------------------------------------------------------------------------------
-*/
-void Player::dodge()
+/*---------------------------------------------------------------------------------------------------------------------------------------
+* dodge()
+* Thomas Orozco
+* @brief : Increases players speed by 1.4 times for 1 second when left shift is pressed and prevents user from doing it for another 2 seconds
+* @param : none
+* @return : none
+----------------------------------------------------------------------------------------------------------------------------------------*/
+void Player::dodge( )
 {
-   if(IsKeyPressed(KEY_LEFT_SHIFT))
-   {
-      if(dodgeCooldown <= 0)
-      {
-         dodgeCooldown = 3 * GetFPS(); //Change what dodgeCooldown get set to alter cooldown length, remember it is decrimented each frame.
-      }
-   }
+	if ( IsKeyPressed( KEY_LEFT_SHIFT ) )
+	{
+		if ( dodgeCooldown <= 0 )
+		{
+			dodgeCooldown = 3 * GetFPS( ); //Change what dodgeCooldown get set to alter cooldown length, remember it is decrimented each frame.
+		}
+	}
 
-   if (dodgeCooldown > 2 * GetFPS()) // Change lenght of time dodging happens by altering what dodgeCooldown is compared to, lower is longer.
-      {
-         direction.x = direction.x * 1.4; //Alter speed of dodging by changing numbers direction is multiplied by, * 1 is base walking speed
-         direction.y = direction.y * 1.4;
-      }
+	if ( dodgeCooldown > 2 * GetFPS( ) ) // Change lenght of time dodging happens by altering what dodgeCooldown is compared to, lower is longer.
+	{
+		direction.x = direction.x * 1.4; //Alter speed of dodging by changing numbers direction is multiplied by, * 1 is base walking speed
+		direction.y = direction.y * 1.4;
+	}
 
-
-   if(dodgeCooldown > 0)
-   {
-      dodgeCooldown--;
-   }
-   
+	if ( dodgeCooldown > 0 )
+	{
+		dodgeCooldown--; //Decriments dodgeCooldown each frame
+	}
 }
