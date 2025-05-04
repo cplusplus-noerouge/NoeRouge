@@ -47,10 +47,6 @@ int main( )
         floors[i] = new Floor;
     }
     int floorOn = 0;
-   
-    // Create a player so we can see it tick, and see it on screen
-   //Vector2 playerSpawnPosition = floors[floorOn]->getPlayerSpawn( );
-  // Vector2 enemySpawnPosition = floors[ floorOn ]->getEnemySpawn( );
 
     //// Set the player spawn position to the down ladder on the first floor
     Vector2 playerSpawnPosition = floors[ floorOn ]->getLadderDownLocation( );
@@ -76,11 +72,11 @@ int main( )
     { 
         //TEMPORARY testing changing floors
         //TODO changing floors needs to only be possible when player is on a ladder, up or down
-        if (IsKeyPressed(KEY_RIGHT_BRACKET)) //up
+        if ( Controls::ladderUp() ) //up
         {
             changeFloor( tileSprites,floors,floorOn, 1);
         }
-        if (IsKeyPressed(KEY_LEFT_BRACKET)) //down
+        if ( Controls::ladderDown() ) //down
         {
             changeFloor( tileSprites, floors, floorOn, -1);
         }
@@ -93,14 +89,14 @@ int main( )
            mainCamera.addToBuffer( &tileSprites[ i ] );
         } 
         //**Reese** added player attack, outputs "ATTACKING" to console when space is pressed
-        if ( IsKeyPressed( KEY_SPACE ) )  // player attacks when space is pressed
+        if ( Controls::attack() )  // player attacks when space is pressed
         {
            // created a pointer to the player object in the current floor's object handler
            Player* player = static_cast< Player* >( floors[ floorOn ]->getObjHandler( )->getObject( 0 ) );
   
            player->attack( enemies ); // Attack with a range of 50 and damage of 10
         }
-        if ( IsKeyPressed( KEY_LEFT_SHIFT ) ) // player defends when left shift is pressed
+        if ( Controls::defend() ) // player defends when left shift is pressed
         {
            Player* player = static_cast< Player* >( floors[ floorOn ]->getObjHandler( )->getObject( 0 ) );
            player->defend( enemies ); // Defend against enemy attacks

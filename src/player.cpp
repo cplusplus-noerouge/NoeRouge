@@ -15,6 +15,7 @@
 #include "sprite.h"
 #include "enemy.h"
 #include "audio.h"
+#include "globals.h"
 
 using namespace std;
 
@@ -29,19 +30,19 @@ extern CustomCamera mainCamera;   //Camera view of the map
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Player::updateDirection( )
 {
-	if ( IsKeyDown( KEY_A ) )
+	if ( Controls::moveLeft() )
 	{
 		direction.x = -1;
 	}
-	else if ( IsKeyDown( KEY_D ) )
+	else if ( Controls::moveRight() )
 	{
 		direction.x = 1;
 	}
-	if ( IsKeyDown( KEY_S ) )
+	if ( Controls::moveDown() )
 	{
 		direction.y = 1;
 	}
-	else if ( IsKeyDown( KEY_W ) )
+	else if ( Controls::moveUp() )
 	{
 		direction.y = -1;
 	}
@@ -118,7 +119,7 @@ void Player::onRender( )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Player::attack( std::vector<Enemy*>& enemies )
 {
-	if ( IsKeyPressed( KEY_SPACE ) )
+	if ( Controls::attack() )
 
 	{  // Attack with SPACE
 	  // BeginDrawing( );  // Ensure you're inside a drawing context
@@ -154,7 +155,7 @@ void Player::attack( std::vector<Enemy*>& enemies )
 void Player::defend( std::vector<Enemy*>& enemies )
 {
 
-	if ( IsKeyDown( KEY_LEFT_SHIFT ) )
+	if ( Controls::defend() )
 	{
 		BeginDrawing( );  // remove ( leftover code) 
 		for ( Enemy* enemy : enemies )
@@ -217,7 +218,7 @@ class Player* ObjectHandler::createPlayer( Vector2 position, Vector2 size, int s
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Player::dodge( )
 {
-	if ( IsKeyPressed( KEY_LEFT_SHIFT ) )
+	if ( Controls::dodge() )
 	{
 		if ( dodgeCooldown <= 0 )
 		{

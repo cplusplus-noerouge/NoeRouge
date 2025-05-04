@@ -10,6 +10,7 @@
 #include <vector>
 #include <cmath>
 #include "Character.h"
+#include "globals.h"
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * @brief : Parameterized Class constructor.
@@ -43,19 +44,19 @@ Rectangle Character::bounds( )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Character::updateDirection( )
 {
-	if ( IsKeyDown( KEY_A ) )
+	if ( Controls::moveLeft() )
 	{
 		direction.x = -1;
 	}
-	else if ( IsKeyDown( KEY_D ) )
+	else if ( Controls::moveDown() )
 	{
 		direction.x = 1;
 	}
-	if ( IsKeyDown( KEY_S ) )
+	if ( Controls::moveRight() )
 	{
 		direction.y = 1;
 	}
-	else if ( IsKeyDown( KEY_W ) )
+	else if ( Controls::moveUp() )
 	{
 		direction.y = -1;
 	}
