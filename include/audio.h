@@ -17,10 +17,6 @@
 #include <string>
 #include <map>
 
-const float DEFAULT_MUSIC_VOLUME = 0.3f;
-const float DEFAULT_SFX_VOLUME = 0.8f;
-const std::string MUSIC_PATH = "../../../assets/audio/music/";    // I hate this
-const std::string SFX_PATH = "../../../assets/audio/sfx/";
 
 extern std::map<std::string, Sound> sfx;
 
