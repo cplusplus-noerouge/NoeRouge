@@ -9,9 +9,9 @@ class ObjectHandler
 {
    private:
    static int nextId; //this is shared between all object handlers (each floor has an object handler)
-   protected:
-   Floor* floor;
+   
    public:
+   Floor* floor;
 
    int numberOfObjects;
 
@@ -28,7 +28,7 @@ class ObjectHandler
    }
    ObjectHandler(Floor* floor)
    {
-      this->floor;
+      this->floor = floor;
       this->numberOfObjects = 0;
    }
    ~ObjectHandler( )

@@ -24,15 +24,7 @@ class Character : public GameObject
    public:
    int speed; // Speed of the character in pixels per second
    
-   Character( int _id, Vector2 _position, ObjectHandler* handler ) : GameObject( handler )
-   {
-      this->setId( _id );
-      position = _position;
-      size = { 16,16 };
-      speed = 300;
-      velocity = { 0 };
-      direction = { 0 };
-   }
+   Character::Character( int _id, Vector2 _position, Vector2 _size, int _speed, ObjectHandler* handler );
 
    Character( int _id, Vector2 _position, Vector2 _size, Vector2 target, int _speed );
 

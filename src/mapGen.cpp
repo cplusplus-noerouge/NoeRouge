@@ -331,7 +331,7 @@ Floor::Floor()
         }
     }
 
-    objHandler = new ObjectHandler;             //make the object handler
+    objHandler = new ObjectHandler(this);             //make the object handler
 
     //create ladders between floors. could be changed to guarantee they are a certain distance apart or something
     BspNode* ladderUpNode = leaves.front();

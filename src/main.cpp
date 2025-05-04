@@ -59,7 +59,8 @@ int main( )
     Vector2 enemySpawnPosition = { 110, 110 }; // Example spawn position, change as needed
    
       // Create the player object in the object handler of the current floor
-    floors[ floorOn ]->getObjHandler( )->createPlayer( playerSpawnPosition, { TILE_SIZE, TILE_SIZE }, PLAYER_SPEED );
+    //floors[ floorOn ]->getObjHandler( )->createPlayer( playerSpawnPosition, { TILE_SIZE, TILE_SIZE }, PLAYER_SPEED );
+    floors[ floorOn ]->getObjHandler( )->playerCreate( );
 
     // Add enemies to the vector after creating them
     //change this "floorOn" to change the layer enemy spawns on 
