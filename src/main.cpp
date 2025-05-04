@@ -54,12 +54,12 @@ int main( )
     Vector2 enemySpawnPosition = { 110, 110 }; // Example spawn position, change as needed
    
       // Create the player object in the object handler of the current floor
-    floors[ floorOn ]->getObjHandler( )->createPlayer( playerSpawnPosition, { TILE_SIZE, TILE_SIZE }, Settings::PLAYER_SPEED );
+    floors[ floorOn ]->getObjHandler( )->createPlayer( playerSpawnPosition, { Settings::TILE_SIZE, Settings::TILE_SIZE }, Settings::PLAYER_SPEED );
 
     // Add enemies to the vector after creating them
     //change this "floorOn" to change the layer enemy spawns on 
     Enemy* enemy = floors[ floorOn ]->getObjHandler( )->createEnemy( enemySpawnPosition,
-                                                                    { TILE_SIZE, TILE_SIZE}, 300 );  
+                                                                    { Settings::TILE_SIZE, Settings::TILE_SIZE}, 300 );
 
     // Add the following declaration at the top of the file, near other global variables.  
     std::vector<Enemy*> enemies; // Declare the enemies vector to store enemy pointers.

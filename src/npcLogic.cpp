@@ -7,10 +7,10 @@
 
 #include "character.h"
 #include "object.h"
-#include "mapGen.h"
+#include "globals.h"
 #include "raymath.h"
 
-int HALF_SIZE = TILE_SIZE / 2;
+int HALF_SIZE = Settings::TILE_SIZE / 2;
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * moveToTarget( )

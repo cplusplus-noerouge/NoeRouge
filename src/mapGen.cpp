@@ -388,7 +388,7 @@ void Floor::generateObjects()
 
         //create an enemy object.
         Vector2 EnemyPos = { (float)enemyX * TILE_SIZE, (float)enemyY * TILE_SIZE };
-        objHandler->createEnemy(EnemyPos, { TILE_SIZE, TILE_SIZE }, 300);
+        objHandler->createEnemy(EnemyPos, { Settings::TILE_SIZE, Settings::TILE_SIZE }, 300);
     }
 }
 /*------------------------------------------------------------------------------------------------------

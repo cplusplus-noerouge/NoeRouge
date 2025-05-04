@@ -8,12 +8,13 @@
 #include <vector>
 #include <random>
 #include "object.h"
+#include "globals.h"
 
 const int WIDTH = 70;                   //width/columns/maximum x of each floor in tiles
 const int HEIGHT = 30;                  //height/rows/maximum y of each floor in tiles
 const int MINSIZE = 10;                 //minimum for each partition/BSP leaf's width and height
 
-const int TILE_SIZE = 16;               //The x & y size of each tile in the game world in pixels
+const int TILE_SIZE = Settings::TILE_SIZE;               //The x & y size of each tile in the game world in pixels
 
 const char WALL = '#';                  //char to represent walls
 const char FLOOR = '.';                 //char to represent floors

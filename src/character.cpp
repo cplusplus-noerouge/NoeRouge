@@ -19,7 +19,7 @@ Character::Character( int _id, Vector2 _position, Vector2 _size, int _speed )
 {
 	this->setId( _id );
 	position = _position;
-	size = _size;
+	size = { Settings::TILE_SIZE, Settings::TILE_SIZE };
 	speed = _speed;
 	velocity = { 0 };
 	direction = { 0 };
@@ -95,7 +95,7 @@ Character::Character( int _id )
 {
 	this->setId( _id );
 	position = { 0 };
-	size = { 1 };
+	size = { Settings::TILE_SIZE, Settings::TILE_SIZE };
 	speed = 0;
 	velocity = { 0 };
 	direction = { 0 };
