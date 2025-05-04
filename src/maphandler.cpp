@@ -2,39 +2,63 @@
 #include "globals.h"
 #include "object.h"
 #include "maphandler.h"
+#include "generateTileSprites.h"
 
 class Floor;
+	
+int MapHandler::nextId = 0;
 
-MapHandler::MapHandler( )
+MapHandler::MapHandler( ) : floors {}, currentHandler ( nullptr ), player ( nullptr )
 {
-
-	//this->floors = genFloors( );
+	genFloors( );
 	this->currentFloor = 0;
+	this->currentHandler = this->floors[ currentFloor ]->getObjHandler( );
 }
 
-//Floor* MapHandler::genFloors( )
-//{
-//	Floor* floors[ Settings::NUM_OF_FLOORS ];
-//	for ( int i = 0; i < Settings::NUM_OF_FLOORS; i++ )
-//	{
-//		floors[ i ] = new Floor;
-//	}
-//	return floors;
-//}
+int MapHandler::takeNextId( )
+{
+   return nextId++;
+}
 
-//Player* MapHandler::getPlayer( )
-//{
-//	return 
-//}
+void MapHandler::genFloors( )
+{
+	for ( int i = 0; i < Settings::NUM_OF_FLOORS; i++ )
+	{
+		this->floors[ i ] = new Floor;
+	}
+}
+
+Player* MapHandler::getPlayer( )
+{
+	return player;
+}
 
 //std::vector<Enemy*> MapHandler::getEnemies(int num = 3) //num in case we want to vary it per level.
 //{
-//	
+//	return null;
 //}
 
 //getKey() { }?
 
-void MapHandler::changeFloor( )
+void MapHandler::changeFloor( bool trueisup )
 {
+	int nextFloor = currentFloor;
+	( trueisup ) ? nextFloor++ : nextFloor--;
 
+	//check that the new floor exists
+	if ( nextFloor == -1 || nextFloor > Settings::NUM_OF_FLOORS )
+	{
+		std::cout << "\nCurrent floor is " << currentFloor << ", insert disc 2 to go to " << nextFloor << "!";
+	}
+	else
+	{
+		ObjectHandler* nextHandler = floors[ nextFloor ]->getObjHandler( );
+		floors[ currentFloor ]->getObjHandler( )->transferObject( 0, *nextHandler );
+
+		Player* player = dynamic_cast< Player* >( nextHandler->getObject( 0 ) );
+		( trueisup ) ? player->setPosition( floors[ nextFloor ]->getLadderDownLocation( ) ) : player->setPosition( floors[ nextFloor ]->getLadderUpLocation( ) );
+
+		tileSprites = generateTileSprites( floors[ nextFloor ] );
+		std::cout << "\n Moved from floor " << currentFloor << " to " << nextFloor;
+	}
 }

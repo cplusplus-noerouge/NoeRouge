@@ -11,5 +11,5 @@ namespace Settings
 	const float TILE_SIZE = 16;               //The x & y size of each tile in the game world in pixels
 
 	const int PLAYER_SPEED = 300;
-	const int NUM_OF_FLOORS = 4;
+	//NUM_OF_FLOORS initialized in the globals.h file due to array requirements.
 }

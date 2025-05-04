@@ -15,16 +15,6 @@ GameObject* ObjectHandler::getObject( int id )
    return this->allObjects[ id ];
 }
 
-Floor* ObjectHandler::getFloor( )
-{
-   return this->floor;
-}
-
-void ObjectHandler::setFloor( Floor* floor )
-{
-   this->floor = floor;
-}
-
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * transferObject() moves an object from this handler to another object handler
 * - devon
@@ -61,9 +51,3 @@ void ObjectHandler::renderAll( )
 }
 
 int ObjectHandler::nextId = 1;  //this is shared between all object handlers. starts at 1 bc the player is always 0
-
-void ObjectHandler::playerCreate( )
-{
-   Vector2 spawn = getFloor( )->getLadderDownLocation( );
-   //Player* player = new Player( spawn, this );
-}

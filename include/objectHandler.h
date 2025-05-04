@@ -3,15 +3,12 @@
 
 class GameObject;
 
-class Floor;
-
 class ObjectHandler
 {
    private:
    static int nextId; //this is shared between all object handlers (each floor has an object handler)
    
    public:
-   Floor* floor;
 
    int numberOfObjects;
 
@@ -26,11 +23,6 @@ class ObjectHandler
    {
       this->numberOfObjects = 0;
    }
-   ObjectHandler(Floor* floor)
-   {
-      this->floor = floor;
-      this->numberOfObjects = 0;
-   }
    ~ObjectHandler( )
    {
       ;;
@@ -38,9 +30,6 @@ class ObjectHandler
 
    void tickAll( const std::vector<Rectangle> collidables );
    void renderAll( );
-   Floor* getFloor( );
-   void setFloor( Floor* floor );
-   void playerCreate( );
 
    void transferObject( int objId, ObjectHandler& newHandler );
    class GameObject* getObject( int id );

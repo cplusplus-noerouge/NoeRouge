@@ -21,8 +21,6 @@ Devon,Reese everyone else who worked on this file put ur names here too so Vicki
 #include "audio.h"
 #include "globals.h"
 
-const int NUM_OF_FLOORS = 4; //the number of floors in the game   
-
 ScreenHandler screenHandler = ScreenHandler( );
 // IMPORTANT! These are different versions of the camera with different zoom levels, uncomment the one you want.
 //CustomCamera mainCamera = CustomCamera( Vector2 { 320.0f, 180.0f }, 4.0f );
@@ -31,7 +29,7 @@ CustomCamera mainCamera = CustomCamera( Vector2 { 1280, 720.0f }, 1.0f );
 
 std::unordered_map<std::string, Texture2D> textureMap = {};
 
-void changeFloor(std::vector<Sprite>& wallSprites, Floor* floors[NUM_OF_FLOORS], int& floorOn, int changeVal);  //changes the floor that the player is on
+void changeFloor(std::vector<Sprite>& wallSprites, Floor* floors[Settings::NUM_OF_FLOORS], int& floorOn, int changeVal);  //changes the floor that the player is on
 
 int main( )
 {
@@ -42,8 +40,8 @@ int main( )
     InitAudioDevice();
     MusicPlayer musicPlayer = MusicPlayer();
 
-    Floor* floors[NUM_OF_FLOORS];
-    for (int i = 0; i < NUM_OF_FLOORS; i++) {
+    Floor* floors[Settings::NUM_OF_FLOORS];
+    for (int i = 0; i < Settings::NUM_OF_FLOORS; i++) {
         floors[i] = new Floor;
     }
     int floorOn = 0;
@@ -123,10 +121,10 @@ int main( )
 * param int changeVal: the amount by which the floor index is changed. exe -1 is down a floor, and 1 is up a floor
 * return: the data in wallSprites and floorOn is altered
 ------------------------------------------------------------------------------------------------------------------*/
-void changeFloor(std::vector<Sprite>& tileSprites, Floor* floors[NUM_OF_FLOORS], int& floorOn, int changeVal)
+void changeFloor(std::vector<Sprite>& tileSprites, Floor* floors[Settings::NUM_OF_FLOORS], int& floorOn, int changeVal)
 {
     //check that the new floor exists
-    if (floorOn + changeVal < 0 || floorOn + changeVal >= NUM_OF_FLOORS)
+    if (floorOn + changeVal < 0 || floorOn + changeVal >= Settings::NUM_OF_FLOORS)
     {
         std::cout << "\nTried to change floors from " << floorOn << " to " << floorOn + changeVal
                   << " but didn't because floor " << floorOn + changeVal << " doesn't exist.";

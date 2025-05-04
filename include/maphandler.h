@@ -6,19 +6,24 @@
 
 class MapHandler {
 	private:
-	//Floor* floors[ Settings::NUM_OF_FLOORS ];
+	Floor* floors[ Settings::NUM_OF_FLOORS ];
+	static int nextId;
 	int currentFloor;
-	ObjectHandler* handler;
+	ObjectHandler* currentHandler;
 	std::vector<Sprite> tileSprites;
-
+	Player* player;
 	public:
 
 	MapHandler( );
 
+	void genFloors( );
+
 	Player* getPlayer( );
-	std::vector<Enemy*> getEnemies(int num = 3);
+	std::vector<Enemy*> getEnemies(int num);
 	//getKey()?
 
-	void changeFloor( );
+	void changeFloor( bool trueisdown );
+
+	static int takeNextId( );
 
 };
