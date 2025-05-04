@@ -16,6 +16,7 @@ namespace Settings
 	//-- Gameplay
 	extern const int PLAYER_SPEED;
 	extern const float TILE_SIZE;
+	extern const int ENEMY_COUNT;
 	inline const int NUM_OF_FLOORS = 4;
 	
 }

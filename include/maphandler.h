@@ -19,7 +19,7 @@ class MapHandler {
 	void genFloors( );
 
 	Player* getPlayer( );
-	std::vector<Enemy*> getEnemies(int num);
+	std::vector<Enemy*> getEnemies( int num );
 	//getKey()?
 
 	void changeFloor( bool trueisdown );
