@@ -27,11 +27,10 @@ private:
    float attackRange;                            //Attack radius
    int attackDamage;                             //Damage per hit
    int health;                                   //Player health
-   int dodgeSpeed;
-   int dodgeCooldown;
+   int dodgeCooldown;                            //Cooldown length of dodge ability
    float walkTimer;                              //Time between steps
    SheetSprite sprite;                           //Set of 9 sprites for the player
-   Animation animation = Animation( 4, 0.15 );   //Players movement animation.
+   Animation animation = Animation( 4, 0.15 );   //Players movement animation
 
 public:
 
@@ -47,11 +46,12 @@ public:
        walkTimer = 0.0f;
     }
     
+    void updateDirection( ) override;                               //Sets the movement direction of the character based on control input.
     void onTick(const std::vector<Rectangle> colliders) override;   //Updates the state of the player during a single frame.
     void onRender( ) override;                                      //Renders the player on screen.
     void attack( std::vector<Enemy*>& enemies );                    //Attacks enemy objects if within range and key is pressed.
     void defend( std::vector<Enemy*>& enemies );                    //Allows the player to defend against enemy attacks.
     void takeDamage( int damage, bool& playerDefeated );            //Decrements player health based off enemy damage and checks for player death.
-    void dodge();
+    void dodge();                                                   //Increases players speed by 1.4 times for 1 second when input and cools down for another 2 seconds
 };
 
