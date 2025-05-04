@@ -26,9 +26,9 @@ const int NUM_OF_FLOORS = 4; //the number of floors in the game
 
 ScreenHandler screenHandler = ScreenHandler( );
 // IMPORTANT! These are different versions of the camera with different zoom levels, uncomment the one you want.
-CustomCamera mainCamera = CustomCamera( Vector2 { 320.0f, 180.0f }, 4.0f );
+//CustomCamera mainCamera = CustomCamera( Vector2 { 320.0f, 180.0f }, 4.0f );
 //CustomCamera mainCamera = CustomCamera( Vector2 { 640.0f, 360.0f }, 2.0f );
-//CustomCamera mainCamera = CustomCamera( Vector2 { 1280, 720.0f }, 1.0f );
+CustomCamera mainCamera = CustomCamera( Vector2 { 1280, 720.0f }, 1.0f );
 
 std::unordered_map<std::string, Texture2D> textureMap = {};
 
@@ -53,8 +53,8 @@ int main( )
    //Vector2 playerSpawnPosition = floors[floorOn]->getPlayerSpawn( );
   // Vector2 enemySpawnPosition = floors[ floorOn ]->getEnemySpawn( );
 
-    //// Set the player spawn position to the ladder up on the first floor
-    Vector2 playerSpawnPosition = { 100, 100 }; // Example spawn position, change as needed
+    //// Set the player spawn position to the down ladder on the first floor
+    Vector2 playerSpawnPosition = floors[ floorOn ]->getLadderDownLocation( );
     //  // Set the enemy spawn position to the ladder down on the first floor
     Vector2 enemySpawnPosition = { 110, 110 }; // Example spawn position, change as needed
    
@@ -100,6 +100,11 @@ int main( )
            Player* player = static_cast< Player* >( floors[ floorOn ]->getObjHandler( )->getObject( 0 ) );
   
            player->attack( enemies ); // Attack with a range of 50 and damage of 10
+        }
+        if ( IsKeyPressed( KEY_LEFT_SHIFT ) ) // player defends when left shift is pressed
+        {
+           Player* player = static_cast< Player* >( floors[ floorOn ]->getObjHandler( )->getObject( 0 ) );
+           player->defend( enemies ); // Defend against enemy attacks
         }
 
         screenHandler.renderAll( );
