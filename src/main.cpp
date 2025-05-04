@@ -53,8 +53,8 @@ int main( )
    //Vector2 playerSpawnPosition = floors[floorOn]->getPlayerSpawn( );
   // Vector2 enemySpawnPosition = floors[ floorOn ]->getEnemySpawn( );
 
-    //// Set the player spawn position to the ladder up on the first floor
-    Vector2 playerSpawnPosition = { 100, 100 }; // Example spawn position, change as needed
+    //// Set the player spawn position to the down ladder on the first floor
+    Vector2 playerSpawnPosition = floors[ floorOn ]->getLadderDownLocation( );
     //  // Set the enemy spawn position to the ladder down on the first floor
     Vector2 enemySpawnPosition = { 110, 110 }; // Example spawn position, change as needed
    

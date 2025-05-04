@@ -2,13 +2,14 @@
 * noeRouge
 * Character class
 * Ben A, Kaleb, Reese, Ethan
+* The Character class is a parent class for any player or enemy character that is rendered on screen and moves.
 ----------------------------------------------------------------------------------------------------------------------------------------*/
+
 #include <raylib.h>
 #include <raymath.h>
 #include <vector>
 #include <cmath>
 #include "Character.h"
-
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * @brief : Parameterized Class constructor.
@@ -133,18 +134,6 @@ void Character::onRender()
     Rectangle rectangle = bounds();
     DrawRectangle(rectangle.x, rectangle.y, rectangle.width, rectangle.height, MAROON);
 }
-
-//Explanation:
-    //  rect.x + rect.width + velocity.x > other.x :: 
-    //  rect.x + rect.width is the right side of this rectangle. Velocity is added, and the result is checked for if it is greater than the left of the other rectangle, 
-    //  ie will the right side of this rectangle touch the left side of the other rectangle if velocity is added.
-    //  
-    //  rect.y + rect.height > other.y && rect.y < other.y + other.height ::
-    //  checks to see if the bottom of this rectangle is below the top of the other rectangle, and the top of this rectangle is above the bottom of the other rectangle,
-    //  ie are the rectangles on the same horizontal plane
-    // 
-    //  rect.x < other.x ::
-    //  checks to see if this rectangle is not on the right side of the other rectangle.
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * Collision Methods

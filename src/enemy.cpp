@@ -28,6 +28,7 @@ using namespace std;
 Enemy::Enemy( int id, int x, int y, Stats stats )
    : Character( id, { static_cast< float >( x ), static_cast< float >( y ) }, { 50.0f, 50.0f }, stats.speed ), // Call Character constructor
    stats( stats )
+{
    position.x = x;
    position.y = y;
 }
@@ -160,35 +161,3 @@ Enemy* ObjectHandler::createEnemy( Vector2 position, Vector2 size, int speed )
    return newEnemy;
 
 }
-
-
-//// Returns the enemy's current position as a Vector2
-//Vector2 Enemy::getPosition( ) const
-//{
-//   return { static_cast< float >( world_position[ 0 ] ), static_cast< float >( world_position[ 1 ] ) };
-//}
-
-
-//// Moves the enemy left by the specified distance
-//void Enemy::moveLeft( int distance )
-//{
-//   position.x -= distance;
-//}
-//
-//// Moves the enemy right by the specified distance
-//void Enemy::moveRight( int distance )
-//{
-//   position.x += distance;
-//}
-//
-//// Moves the enemy up by the specified distance
-//void Enemy::moveUp( int distance )
-//{
-//   position.y -= distance;
-//}
-//
-//// Moves the enemy down by the specified distance
-//void Enemy::moveDown( int distance )
-//{
-//   position.y += distance;
-//}
