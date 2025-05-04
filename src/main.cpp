@@ -19,9 +19,8 @@ Devon,Reese everyone else who worked on this file put ur names here too so Vicki
 #include "screenHandler.h"
 #include "generateTileSprites.h"
 #include "audio.h"
+#include "globals.h"
 
-constexpr int FPS = 60;
-constexpr int PLAYER_SPEED = 300;
 const int NUM_OF_FLOORS = 4; //the number of floors in the game   
 
 ScreenHandler screenHandler = ScreenHandler( );
@@ -59,7 +58,7 @@ int main( )
     Vector2 enemySpawnPosition = { 110, 110 }; // Example spawn position, change as needed
    
       // Create the player object in the object handler of the current floor
-    floors[ floorOn ]->getObjHandler( )->createPlayer( playerSpawnPosition, { TILE_SIZE, TILE_SIZE }, PLAYER_SPEED );
+    floors[ floorOn ]->getObjHandler( )->createPlayer( playerSpawnPosition, { TILE_SIZE, TILE_SIZE }, Settings::PLAYER_SPEED );
 
     // Add enemies to the vector after creating them
     //change this "floorOn" to change the layer enemy spawns on 
