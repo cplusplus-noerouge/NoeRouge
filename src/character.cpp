@@ -15,7 +15,18 @@
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * @brief : Parameterized Class constructor.
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-Character::Character( int _id, Vector2 _position, Vector2 _size, int _speed )
+
+Character::Character( int id, Vector2 position, Vector2 size, int speed, ObjectHandler* handler ) : GameObject( handler )
+{
+   this->setId( id );
+   position = position;
+   size = { 16,16 };
+   speed = 300;
+   velocity = { 0 };
+   direction = { 0 };
+}
+
+Character::Character(int _id, Vector2 _position, Vector2 _size, int _speed)
 {
 	this->setId( _id );
 	position = _position;

@@ -358,6 +358,7 @@ void Floor::generateObjects()
     //make the object handler
     objHandler = new ObjectHandler;
 
+
     //make the ladder objects
     objHandler->createLadder(getLadderUpLocation(), 1);
     objHandler->createLadder(getLadderDownLocation(), -1);

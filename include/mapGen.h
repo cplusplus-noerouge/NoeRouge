@@ -7,8 +7,10 @@
 #include <list>
 #include <vector>
 #include <random>
+#include "objecthandler.h"
 #include "object.h"
 #include "globals.h"
+
 
 const int WIDTH = 70;                   //width/columns/maximum x of each floor in tiles
 const int HEIGHT = 30;                  //height/rows/maximum y of each floor in tiles

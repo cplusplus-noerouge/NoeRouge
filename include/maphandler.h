@@ -6,7 +6,7 @@
 
 class MapHandler {
 	private:
-	Floor* floors[ Settings::NUM_OF_FLOORS ];
+	//Floor* floors[ Settings::NUM_OF_FLOORS ];
 	int currentFloor;
 	ObjectHandler* handler;
 	std::vector<Sprite> tileSprites;

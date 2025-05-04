@@ -6,13 +6,16 @@
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 
 #include "object.h"
+#include "objectHandler.h"
 #include "raylib.h"
 
 #pragma once
+class Objecthandler;
 
 class Character : public GameObject
 {
-	private:
+
+   private:
 
 	Vector2 size;                        //Character's rectangle size
 
@@ -26,7 +29,8 @@ class Character : public GameObject
 	public:
 
 	int speed;                                                                            //Speed of the character in pixels per second.
-
+  
+  Character::Character( int _id, Vector2 _position, Vector2 _size, int _speed, ObjectHandler* handler );
 	//Character( int _id, Vector2 _position, Vector2 _size, Vector2 target, int _speed );   //Parameterized Class constructor, including target.
 	Character( int _id, Vector2 _position, Vector2 _size, int _speed );                   //Parameterized Class constructor.
 	Character( int _id = -1 );                                                            //Class constructor based on object ID. 
