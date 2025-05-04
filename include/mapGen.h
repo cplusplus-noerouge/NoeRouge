@@ -71,14 +71,17 @@ void makeRandRoomShape(BspNode& p, char(&map)[WIDTH][HEIGHT]);
 class Floor 
 {
 private:
-
+    std::list<BspNode*> leafPartitions;
     std::vector<Rectangle> walls;
     int ladderUpX;
     int ladderUpY;
     int ladderDownX;
     int ladderDownY;
 
-    ObjectHandler* objHandler; //contains all the objects on the floor
+    ObjectHandler* objHandler;    //contains all the objects on the floor
+
+    void generateMapData();       //generates data[][], intended to be called by Floor::Floor()
+    void generateObjects();       //populates objectHandler, intended to be called by Floor::Floor()
 
 public:
 
@@ -104,7 +107,6 @@ public:
 
     Vector2 getLadderUpLocation();
     Vector2 getLadderDownLocation();
-    Vector2 getPlayerSpawn();
     Vector2 getEnemySpawn( );
 };
 
