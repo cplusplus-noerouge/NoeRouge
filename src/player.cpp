@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * noeRouge
 * Player class
-* Ben A, Kaleb, Reese, Ethan, Adam
+* Ben A, Kaleb, Reese, Ethan, Thomas, Adam
 * Inherits from Character class.
 * Inherits sprite functionality from Sprite class.
 * Inherits character functionality from Character class.
@@ -18,7 +18,31 @@
 
 using namespace std;
 
+
 extern CustomCamera mainCamera;   //Camera view of the map
+
+void Player::updateDirection()
+{
+    if (IsKeyDown(KEY_A))
+    {
+        direction.x = -1;
+    }
+    else if (IsKeyDown(KEY_D))
+    {
+        direction.x = 1;
+    }
+    if (IsKeyDown(KEY_S))
+    {
+        direction.y = 1;
+    }
+    else if (IsKeyDown(KEY_W))
+    {
+        direction.y = -1;
+    }
+
+    dodge();
+}
+
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * onTick( )
@@ -160,6 +184,7 @@ void Player::takeDamage( int damage, bool &playerDefeated )
    }
 }
 
+
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * createPlayer( )
 * Ben Aguilon
@@ -175,4 +200,35 @@ class Player* ObjectHandler::createPlayer( Vector2 position, Vector2 size, int s
    allObjects[ Player->getId( ) ] = Player; //add <id, object*> to the map
    this->numberOfObjects++;
    return Player;
+}
+
+/*-----------------------------------------------------------------------------------------------------------------------------
+**dodge()
+**Thomas Orozco
+**Increases players speed by 1.4 times for 1 second when left shift is pressed and prevents user from doing it for another 2 seconds
+** int dodgeCooldown, decriments each frame and is used to measure cooldown
+**-----------------------------------------------------------------------------------------------------------------------------
+*/
+void Player::dodge()
+{
+   if(IsKeyPressed(KEY_LEFT_SHIFT))
+   {
+      if(dodgeCooldown <= 0)
+      {
+         dodgeCooldown = 3 * GetFPS(); //Change what dodgeCooldown get set to alter cooldown length, remember it is decrimented each frame.
+      }
+   }
+
+   if (dodgeCooldown > 2 * GetFPS()) // Change lenght of time dodging happens by altering what dodgeCooldown is compared to, lower is longer.
+      {
+         direction.x = direction.x * 1.4; //Alter speed of dodging by changing numbers direction is multiplied by, * 1 is base walking speed
+         direction.y = direction.y * 1.4;
+      }
+
+
+   if(dodgeCooldown > 0)
+   {
+      dodgeCooldown--;
+   }
+   
 }
