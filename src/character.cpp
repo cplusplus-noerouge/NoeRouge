@@ -2,17 +2,20 @@
 * noeRouge
 * Character class
 * Ben A, Kaleb, Reese, Ethan
+* The Character class is a parent class for any player or enemy character that is rendered on screen and moves.
 ----------------------------------------------------------------------------------------------------------------------------------------*/
+
 #include <raylib.h>
 #include <raymath.h>
 #include <vector>
 #include <cmath>
 #include "Character.h"
-
+#include "globals.h"
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * @brief : Parameterized Class constructor.
 ----------------------------------------------------------------------------------------------------------------------------------------*/
+
 Character::Character( int id, Vector2 position, Vector2 size, int speed, ObjectHandler* handler ) : GameObject( handler )
 {
    this->setId( id );
@@ -25,12 +28,12 @@ Character::Character( int id, Vector2 position, Vector2 size, int speed, ObjectH
 
 Character::Character(int _id, Vector2 _position, Vector2 _size, int _speed)
 {
-    this->setId(_id);
-    position = _position;
-    size = _size;
-    speed = _speed;
-    velocity = { 0 };
-    direction = { 0 };
+	this->setId( _id );
+	position = _position;
+	size = { Settings::TILE_SIZE, Settings::TILE_SIZE };
+	speed = _speed;
+	velocity = { 0 };
+	direction = { 0 };
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -39,7 +42,7 @@ Character::Character(int _id, Vector2 _position, Vector2 _size, int _speed)
 * @param : none
 * @return Rectangle : The Rectangle representing the character's current position and size.
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-Rectangle Character::bounds()
+Rectangle Character::bounds( )
 {
 	return { position.x, position.y, size.x, size.y };
 }
@@ -51,23 +54,23 @@ Rectangle Character::bounds()
 * @return : none
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Character::updateDirection( )
-{ 
-   if ( IsKeyDown( KEY_A ) )
-   {
-      direction.x = -1;
-   }
-   else if ( IsKeyDown( KEY_D ) )
-   {
-      direction.x = 1;
-   }
-   if ( IsKeyDown( KEY_S ) )
-   {
-      direction.y = 1;
-   }
-   else if ( IsKeyDown( KEY_W ) )
-   {
-      direction.y = -1;
-   }
+{
+	if ( Controls::moveLeft() )
+	{
+		direction.x = -1;
+	}
+	else if ( Controls::moveDown() )
+	{
+		direction.x = 1;
+	}
+	if ( Controls::moveRight() )
+	{
+		direction.y = 1;
+	}
+	else if ( Controls::moveUp() )
+	{
+		direction.y = -1;
+	}
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -78,35 +81,36 @@ void Character::updateDirection( )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Character::updateDirection( Vector2 target )
 {
-   if ( target.x > position.x )
-   {
-      direction.x = -1;
-   }
-   else if ( target.x < position.x )
-   {
-      direction.x = 1;
-   }
-   if ( target.y < position.y)
-   {
-      direction.y = 1;
-   }
-   else if ( target.y < position.y )
-   {
-      direction.y = -1;
-   }
+	if ( target.x > position.x )
+	{
+		direction.x = -1;
+	}
+	else if ( target.x < position.x )
+	{
+		direction.x = 1;
+	}
+	if ( target.y < position.y )
+	{
+		direction.y = 1;
+	}
+	else if ( target.y < position.y )
+	{
+		direction.y = -1;
+	}
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * @brief : Class constructor based on object ID.
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-Character::Character(int _id)
+Character::Character( int _id )
 {
-    this->setId(_id);
-    position = { 0 };
-    size = { 1 };
-    speed = 0;
-    velocity = { 0 };
-    direction = { 0 };
+	this->setId( _id );
+	position = { 0 };
+	size = { Settings::TILE_SIZE, Settings::TILE_SIZE };
+	speed = 0;
+	velocity = { 0 };
+	direction = { 0 };
+	target = { 0, 0 };
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -115,21 +119,21 @@ Character::Character(int _id)
 * @param vector<Rectangle> collidables : The collection of collidables to check for character collision.
 * @return : none
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-void Character::onTick(const std::vector<Rectangle> collidables)
+void Character::onTick( const std::vector<Rectangle> collidables )
 {
-    direction = { 0, 0 };
+	direction = { 0, 0 };
 
-    updateDirection();
+	updateDirection( );
 
-        //direction is multiplied by speed, which makes velocity
-        //speed is multiplied by the time between frames, which forces speed to be the same regardless of framerate.
-    velocity = Vector2Scale(direction, speed * GetFrameTime());
+	//direction is multiplied by speed, which makes velocity
+	//speed is multiplied by the time between frames, which forces speed to be the same regardless of framerate.
+	velocity = Vector2Scale( direction, speed * GetFrameTime( ) );
 
-        //collisions must be done before velocity is added to position so that the character does not go past a wall before collisions are checked, but that is
-        //only necessary for very high movement speed
-    updateCollisions(collidables);
+	//collisions must be done before velocity is added to position so that the character does not go past a wall before collisions are checked, but that is
+	//only necessary for very high movement speed
+	updateCollisions( collidables );
 
-    position = Vector2Add(position, velocity);
+	position = Vector2Add( position, velocity );
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -138,23 +142,11 @@ void Character::onTick(const std::vector<Rectangle> collidables)
 * @param : none
 * @return : none
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-void Character::onRender()
+void Character::onRender( )
 {
-    Rectangle rectangle = bounds();
-    DrawRectangle(rectangle.x, rectangle.y, rectangle.width, rectangle.height, MAROON);
+	Rectangle rectangle = bounds( );
+	DrawRectangle( rectangle.x, rectangle.y, rectangle.width, rectangle.height, MAROON );
 }
-
-//Explanation:
-    //  rect.x + rect.width + velocity.x > other.x :: 
-    //  rect.x + rect.width is the right side of this rectangle. Velocity is added, and the result is checked for if it is greater than the left of the other rectangle, 
-    //  ie will the right side of this rectangle touch the left side of the other rectangle if velocity is added.
-    //  
-    //  rect.y + rect.height > other.y && rect.y < other.y + other.height ::
-    //  checks to see if the bottom of this rectangle is below the top of the other rectangle, and the top of this rectangle is above the bottom of the other rectangle,
-    //  ie are the rectangles on the same horizontal plane
-    // 
-    //  rect.x < other.x ::
-    //  checks to see if this rectangle is not on the right side of the other rectangle.
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * Collision Methods
@@ -162,28 +154,28 @@ void Character::onRender()
 * @param Rectangle other : The Rectangle the character is potentially colliding with.
 * @return bool : True if a collision is detected, false if otherwise.
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-bool Character::collidingLeft(Rectangle other)
+bool Character::collidingLeft( Rectangle other )
 {
-    Rectangle rect = bounds();
-    return rect.x + rect.width + velocity.x > other.x && rect.y + rect.height > other.y && rect.y < other.y + other.height && rect.x < other.x;
+	Rectangle rect = bounds( );
+	return rect.x + rect.width + velocity.x > other.x && rect.y + rect.height > other.y && rect.y < other.y + other.height && rect.x < other.x;
 }
 
-bool Character::collidingRight(Rectangle other)
+bool Character::collidingRight( Rectangle other )
 {
-    Rectangle rect = bounds();
-    return rect.x + velocity.x < other.x + other.width && rect.y + rect.height > other.y && rect.y < other.y + other.height && rect.x + rect.width > other.x + other.width;
+	Rectangle rect = bounds( );
+	return rect.x + velocity.x < other.x + other.width && rect.y + rect.height > other.y && rect.y < other.y + other.height && rect.x + rect.width > other.x + other.width;
 }
 
-bool Character::collidingTop(Rectangle other)
+bool Character::collidingTop( Rectangle other )
 {
-    Rectangle rect = bounds();
-    return rect.y + rect.height + velocity.y > other.y && rect.x < other.x + other.width && rect.x + rect.width > other.x && rect.y < other.y;
+	Rectangle rect = bounds( );
+	return rect.y + rect.height + velocity.y > other.y && rect.x < other.x + other.width && rect.x + rect.width > other.x && rect.y < other.y;
 }
 
-bool Character::collidingBottom(Rectangle other)
+bool Character::collidingBottom( Rectangle other )
 {
-    Rectangle rect = bounds();
-    return rect.y + velocity.y < other.y + other.height && rect.x < other.x + other.width && rect.x + rect.width > other.x && rect.y + rect.height > other.y + other.height;
+	Rectangle rect = bounds( );
+	return rect.y + velocity.y < other.y + other.height && rect.x < other.x + other.width && rect.x + rect.width > other.x && rect.y + rect.height > other.y + other.height;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -192,33 +184,33 @@ bool Character::collidingBottom(Rectangle other)
 * @param vector<Rectangle> colliders : The collection of collidables to check for character collision.
 * @return : none
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-void Character::updateCollisions(const std::vector<Rectangle> colliders)
+void Character::updateCollisions( const std::vector<Rectangle> colliders )
 {
-    Rectangle rect = bounds();
+	Rectangle rect = bounds( );
 
-    for (Rectangle otherRect : colliders)
-    {
-        if (collidingLeft(otherRect) && velocity.x > 0)
-        {
-            velocity.x = 0;
-            position.x = otherRect.x - rect.width;
-        }
-        else if (collidingRight(otherRect) && velocity.x < 0)
-        {
-            velocity.x = 0;
-            position.x = otherRect.x + otherRect.width;
-        }
-        if (collidingTop(otherRect) && velocity.y > 0)
-        {
-            velocity.y = 0;
-            position.y = otherRect.y - rect.height;
-        }
-        else if (collidingBottom(otherRect) && velocity.y < 0)
-        {
-            velocity.y = 0;
-            position.y = otherRect.y + otherRect.height;
-        }
-    }
+	for ( Rectangle otherRect : colliders )
+	{
+		if ( collidingLeft( otherRect ) && velocity.x > 0 )
+		{
+			velocity.x = 0;
+			position.x = otherRect.x - rect.width;
+		}
+		else if ( collidingRight( otherRect ) && velocity.x < 0 )
+		{
+			velocity.x = 0;
+			position.x = otherRect.x + otherRect.width;
+		}
+		if ( collidingTop( otherRect ) && velocity.y > 0 )
+		{
+			velocity.y = 0;
+			position.y = otherRect.y - rect.height;
+		}
+		else if ( collidingBottom( otherRect ) && velocity.y < 0 )
+		{
+			velocity.y = 0;
+			position.y = otherRect.y + otherRect.height;
+		}
+	}
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -229,7 +221,7 @@ void Character::updateCollisions(const std::vector<Rectangle> colliders)
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 Vector2 Character::getPosition( )
 {
-   return position;
+	return position;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -239,10 +231,10 @@ Vector2 Character::getPosition( )
 * @return : none
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 
-void Character::setPosition(Vector2 newPos)
+void Character::setPosition( Vector2 newPos )
 {
-    position.x = newPos.x;
-    position.y = newPos.y;
+	position.x = newPos.x;
+	position.y = newPos.y;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -253,7 +245,7 @@ void Character::setPosition(Vector2 newPos)
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 float Character::getTargetDistance( )
 {
-   float dx = position.x - target.x;
-   float dy = position.y - target.y;
-   return sqrt( dx * dx + dy * dy );
+	float dx = position.x - target.x;
+	float dy = position.y - target.y;
+	return sqrt( dx * dx + dy * dy );
 }

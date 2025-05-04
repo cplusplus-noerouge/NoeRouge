@@ -15,7 +15,7 @@ class ObjectHandler;
 
 GameObject::GameObject( )
 {
-   id = ObjectHandler::takeNextId( );
+	id = ObjectHandler::takeNextId( );
 }
 
 GameObject::GameObject( ObjectHandler* handler )
@@ -26,17 +26,20 @@ GameObject::GameObject( ObjectHandler* handler )
 
 GameObject::GameObject( int id )
 {
-   //now that the default constructor gives an id it's prob best to not use this constructor
-   this->id = id;
+	//now that the default constructor gives an id it's prob best to not use this constructor
+	this->id = id;
 }
 
-int GameObject::getId() {
-    return this->id;
+int GameObject::getId( )
+{
+	return this->id;
 }
 
-void GameObject::setId(int id) {
-    this->id = id;
+void GameObject::setId( int id )
+{
+	this->id = id;
 }
+
 
 ObjectHandler* GameObject::getHandler( )
 {
@@ -48,13 +51,15 @@ void GameObject::setHandler( ObjectHandler* handler )
    this->handler = handler;
 }
 
-void GameObject::onTick(const std::vector<Rectangle> collidables) {
-    printf("I am a generic object, my id is %d, and I have been ticked\n", this->id);
-    return;
+void GameObject::onTick( const std::vector<Rectangle> collidables )
+{
+	printf( "I am a generic object, my id is %d, and I have been ticked\n", this->id );
+	return;
 }
 
-void GameObject::onRender() {
-    return;
+void GameObject::onRender( )
+{
+	return;
 }
 
 

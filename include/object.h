@@ -9,8 +9,9 @@
 class ObjectHandler;
 
 class GameObject {
-private:
-    int id;
+	private:
+	int id;
+
 
 protected:
     ObjectHandler* handler;
@@ -33,11 +34,13 @@ public:
     void setId(int id);
     void setHandler( ObjectHandler* handler );
 
-    virtual void onTick(const std::vector<Rectangle> collidables);
-    // TODO 00
 
-    virtual void onRender();
+	virtual void onTick( const std::vector<Rectangle> collidables );
+	// TODO 00
+
+	virtual void onRender( );
 };
+
 
 //class ObjectHandler 
 //{
