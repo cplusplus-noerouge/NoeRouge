@@ -3,25 +3,39 @@
 #include "object.h"
 #include "mapGen.h"
 #include "player.h"
+#include "enemy.h"
+#include "generateTileSprites.h"
 
 class MapHandler {
 	private:
-	Floor* floors[ Settings::NUM_OF_FLOORS ];
+	
+	std::map<int, std::tuple<Floor*, std::vector<Sprite>, std::vector<Enemy*>>> floorMap;
 	static int nextId;
-	int currentFloor;
+	Player* player;
+
+	int floorIndex;
+	Floor* currentFloor;
 	ObjectHandler* currentHandler;
 	std::vector<Sprite> tileSprites;
-	Player* player;
+	
+
 	public:
 
 	MapHandler( );
 
-	void genFloors( );
+	Player* newPlayer( );
+	void generateFloors( );
+	std::vector<Enemy*> generateEnemies( int num );
 
 	Player* getPlayer( );
-	std::vector<Enemy*> getEnemies( int num );
+	std::vector<Enemy*> getEnemies( );
+	std::vector<Sprite> getTileSprites();
+	Floor* getCurrentFloor( );
+	ObjectHandler* getCurrentHandler( );
 	//getKey()?
 
+	void onTick( );
+	void onRender( );
 	void changeFloor( bool trueisdown );
 
 	static int takeNextId( );

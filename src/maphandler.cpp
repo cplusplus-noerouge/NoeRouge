@@ -2,19 +2,19 @@
 #include "globals.h"
 #include "object.h"
 #include "maphandler.h"
-#include "generateTileSprites.h"
-#include "enemy.h"
+
 
 class Floor;
 	
 int MapHandler::nextId = 0;
 
-MapHandler::MapHandler( ) : floors {}, currentHandler ( nullptr ), player ( nullptr )
+MapHandler::MapHandler( ) : currentHandler ( nullptr ), player ( nullptr )
 {
-	genFloors( );
-	this->currentFloor = 0;
-	this->currentHandler = this->floors[ currentFloor ]->getObjHandler( );
-	this->player = dynamic_cast< Player* >( currentHandler->getObject( 0 ) );
+	generateFloors( );
+	this->floorIndex = 0;
+	this->currentFloor = std::get<0>( floorMap[ floorIndex ] );
+	this->currentHandler = this->currentFloor->getObjHandler( );
+	this->player = newPlayer( );
 }
 
 int MapHandler::takeNextId( )
@@ -22,57 +22,107 @@ int MapHandler::takeNextId( )
    return nextId++;
 }
 
-void MapHandler::genFloors( )
-{
-	for ( int i = 0; i < Settings::NUM_OF_FLOORS; i++ )
-	{
-		this->floors[ i ] = new Floor;
-		std::vector<Enemy*> getEnemies( Settings::ENEMY_COUNT );
-		floors[ i ]->getObjHandler( );
-	}
-}
+//-- Building the Handler
 
-Player* MapHandler::getPlayer( )
+Player* MapHandler::newPlayer( )
 {
+	Vector2 spawnLocation = getCurrentFloor( )->getLadderDownLocation( );
+	Player* player = new Player( 0, spawnLocation, { Settings::TILE_SIZE,Settings::TILE_SIZE }, Settings::PLAYER_SPEED );
 	return player;
 }
 
-std::vector<Enemy*> MapHandler::getEnemies( int num = 1 )
+void MapHandler::generateFloors( )
+{
+	std::map<int, std::tuple<Floor*, std::vector<Sprite>, std::vector<Enemy*>>> floorMap;
+	for ( int i = 0; i < Settings::NUM_OF_FLOORS; i++ )
+	{
+		Floor* floor = new Floor;
+		std::vector<Sprite> tileSprites = generateTileSprites( floor );
+		std::vector<Enemy*> enemieslist = generateEnemies( Settings::ENEMY_COUNT );
+		floorMap.insert( { i,{floor,tileSprites,enemieslist} } );
+	}
+	this->floorMap = floorMap;
+}
+
+std::vector<Enemy*> MapHandler::generateEnemies( int num = 1 )
 {
 	std::vector<Enemy*> enemieslist;
+	Floor* floor = std::get<0>( floorMap[ floorIndex ] );
 	for ( int i = 0; i < num; i++ )
 	{
-		Vector2 enemySpawn = floors[ currentFloor ]->getEnemySpawn( );
-		Enemy* enemy = currentHandler->createEnemy( enemySpawn, { Settings::TILE_SIZE, Settings::TILE_SIZE }, Settings::PLAYER_SPEED );
+		Vector2 enemySpawn = { 0,0 };
+		//Vector2 enemySpawn = floor->getEnemySpawn( );
+		Enemy* enemy = new Enemy( 0, 0, 0, { 0,0,0,0 } );
+		//Enemy* enemy = currentHandler->createEnemy( enemySpawn, { Settings::TILE_SIZE, Settings::TILE_SIZE }, Settings::PLAYER_SPEED );
 		enemieslist.push_back( enemy );
 	}
 	return enemieslist;
 }
 
-//getKey() { }?
+Player* MapHandler::getPlayer( )
+{
+	return this->player;
+}
+
+std::vector<Enemy*> MapHandler::getEnemies( )
+{
+	return std::get<2>( floorMap[ floorIndex ] );
+}
+
+std::vector<Sprite> MapHandler::getTileSprites( )
+{
+	return std::get<1>( floorMap[ floorIndex ] );
+}
+
+Floor* MapHandler::getCurrentFloor( )
+{
+	return std::get<0>( floorMap[ floorIndex ] );
+}
+
+ObjectHandler* MapHandler::getCurrentHandler( )
+{
+	return this->currentHandler;
+}
+
+
+//-- During Gameplay
+
+void MapHandler::onTick( )
+{
+	this->player->onTick( currentFloor->getWalls( ) );
+}
+void MapHandler::onRender( )
+{
+	currentHandler->renderAll( );
+	player->onRender( );
+}
+
 
 void MapHandler::changeFloor( bool trueisup )
 {
-	int nextFloor = currentFloor;
+	int nextFloor = floorIndex;
 	( trueisup ) ? nextFloor++ : nextFloor--;
 
 	//check that the new floor exists
 	if ( nextFloor < 0 || nextFloor >= Settings::NUM_OF_FLOORS )
 	{
-		std::cout << "\nCurrent floor is " << currentFloor << ", insert disc 2 to go to " << nextFloor << "!";
+		std::cout << "\nCurrent floor is " << floorIndex << ", insert disc 2 to go to " << nextFloor << "!";
 	}
 	else
 	{
-		ObjectHandler* nextHandler = floors[ nextFloor ]->getObjHandler( );
-		floors[ currentFloor ]->getObjHandler( )->transferObject( 0, *nextHandler );
+		Floor* floorNext = std::get<0>( floorMap[ nextFloor ] );
+
+		ObjectHandler* nextHandler = floorNext->getObjHandler( );
+		currentFloor->getObjHandler( )->transferObject( 0, *nextHandler );
 
 		this->player = dynamic_cast< Player* >( nextHandler->getObject( 0 ) );
-		Vector2 goingUp = floors[ nextFloor ]->getLadderDownLocation( );
-		Vector2 goingDown = floors[ nextFloor ]->getLadderUpLocation( );
+		Vector2 goingUp = floorNext->getLadderDownLocation( );
+		Vector2 goingDown = floorNext->getLadderUpLocation( );
 		( trueisup ) ? player->setPosition( goingUp ) : player->setPosition( goingDown );
 
-		tileSprites = generateTileSprites( floors[ nextFloor ] );
-		std::cout << "\n Moved from floor " << currentFloor << " to " << nextFloor;
-		currentFloor = nextFloor;
+		tileSprites = generateTileSprites( floorNext );
+		std::cout << "\n Moved from floor " << floorIndex << " to " << nextFloor;
+		floorIndex = nextFloor;
+		currentFloor = std::get<0>( floorMap[ floorIndex ] );
 	}
 }
