@@ -78,6 +78,8 @@ void loadAllTextures( )
      // Misc textures
 	filePath = "../../../assets/graphics/";
 	loadSingleTexture( "missingTexture", filePath + "missingTexture.png" );
+	loadSingleTexture( "gameOverOverlay", filePath + "gameOverOverlay.png" );
+	loadSingleTexture( "winOverlay", filePath + "WinOverlay.png" );
 }
 
 /*---------------------------------------------

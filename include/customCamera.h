@@ -15,6 +15,7 @@
 const float DEFAULT_CAM_HEIGHT = 320;    // The default width for all cameras
 const float DEFAULT_CAM_WIDTH = 180;   // The default height for all cameras
 
+// To be commented by Evan
 class CustomCamera
 {
 	private:

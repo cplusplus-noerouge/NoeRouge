@@ -14,6 +14,7 @@
 
 extern std::unordered_map<std::string, Texture2D> textureMap;
 
+// To be commented by Evan
 class Sprite : public BaseSprite
 {
 	protected:

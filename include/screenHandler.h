@@ -9,6 +9,7 @@
 #include "vector"
 #include "customCamera.h"
 
+// To be commented by Evan
 class ScreenHandler
 {
 	private:
