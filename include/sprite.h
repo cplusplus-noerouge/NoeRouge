@@ -62,12 +62,12 @@ class Sprite : public BaseSprite
 	* @brief: checks if the sprite is within the camera
 	* @param: Rectangle rect = the bounding rectangle of the camera
 	*/
-	bool isWithinRect( Rectangle rect );
+	virtual bool isWithinRect( Rectangle rect );
 
 	/*---------------------------------------------------
 	* @brief: renders the texture to the camera
 	*/
-	void render( Vector2 cameraPosition );
+	virtual void render( Vector2 cameraPosition );
 
 	/*---------------------------------------------------
 	* @brief: prints all sprite information to the console

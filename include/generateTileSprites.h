@@ -9,6 +9,7 @@
 #include "raylib.h"
 #include "sprite.h"
 #include "sheetSprite.h"
+#include "staticSprite.h"
 #include "mapGen.h"
 
 /*---------------------------------------------

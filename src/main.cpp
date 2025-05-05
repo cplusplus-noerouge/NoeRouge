@@ -24,9 +24,9 @@ Devon,Reese everyone else who worked on this file put ur names here too so Vicki
 
 ScreenHandler screenHandler = ScreenHandler( );
 // IMPORTANT! These are different versions of the camera with different zoom levels, uncomment the one you want.
-//CustomCamera mainCamera = CustomCamera( Vector2 { 320.0f, 180.0f }, 4.0f );
+CustomCamera mainCamera = CustomCamera( Vector2 { 320.0f, 180.0f }, 4.0f );
 //CustomCamera mainCamera = CustomCamera( Vector2 { 640.0f, 360.0f }, 2.0f );
-CustomCamera mainCamera = CustomCamera( Vector2 { 1280, 720.0f }, 1.0f );
+//CustomCamera mainCamera = CustomCamera( Vector2 { 1280, 720.0f }, 1.0f );
 
 std::unordered_map<std::string, Texture2D> textureMap = {};
 
@@ -71,6 +71,8 @@ int main( )
 
     MapHandler* maphandler = new MapHandler;
 
+    StaticSprite background = StaticSprite( "spaceBackground", { 320, 180 }, -9999999 );
+
     while (!WindowShouldClose())
     { 
         //TEMPORARY testing changing floors
@@ -94,11 +96,6 @@ int main( )
         //floors[floorOn]->getObjHandler()->tickAll(floors[floorOn]->getWalls());
         //floors[floorOn]->getObjHandler()->renderAll();
 
-        for ( int i = 0; i < tileSprites.size( ); i++ )
-        {
-           mainCamera.addToBuffer( &tileSprites[ i ] );
-        } 
-
         //**Reese** added player attack, outputs "ATTACKING" to console when space is pressed
         if ( Controls::attack() )  // player attacks when space is pressed
         {
@@ -112,6 +109,15 @@ int main( )
            Player* player = static_cast< Player* >( maphandler->getCurrentHandler( )->getObject( 0 ) );
            player->defend( enemies ); // Defend against enemy attacks
         }
+
+        floors[ floorOn ]->getObjHandler( )->renderAll( );
+
+        for ( int i = 0; i < tileSprites.size( ); i++ )
+        {
+           mainCamera.addToBuffer( &tileSprites[ i ] );
+        }
+
+        mainCamera.addToBuffer( &background );
 
         screenHandler.renderAll( );
 
