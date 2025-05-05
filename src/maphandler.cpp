@@ -15,6 +15,7 @@ MapHandler::MapHandler( ) : currentHandler ( nullptr ), player ( nullptr )
 	this->currentFloor = std::get<0>( floorMap[ floorIndex ] );
 	this->currentHandler = this->currentFloor->getObjHandler( );
 	this->player = newPlayer( );
+	this->tileSprites = std::get<1>( floorMap[ floorIndex ] );
 }
 
 int MapHandler::takeNextId( )
@@ -118,7 +119,7 @@ void MapHandler::changeFloor( bool trueisup )
 		{
 			Vector2 goingUp = floorNext->getLadderDownLocation( );
 			this->player->setPosition( goingUp );
-			tileSprites = generateTileSprites( floorNext );
+			this->tileSprites = std::get<1>( floorMap[ floorIndex ] );
 			std::cout << "\n Moved from floor " << floorIndex << " to " << nextFloor;
 			floorIndex = nextFloor;
 			currentFloor = std::get<0>( floorMap[ floorIndex ] );
@@ -127,7 +128,7 @@ void MapHandler::changeFloor( bool trueisup )
 		{
 			Vector2 goingDown = floorNext->getLadderUpLocation( );
 			this->player->setPosition( goingDown );
-			tileSprites = generateTileSprites( floorNext );
+			this->tileSprites = std::get<1>( floorMap[ floorIndex ] );
 			std::cout << "\n Moved from floor " << floorIndex << " to " << nextFloor;
 			floorIndex = nextFloor;
 			currentFloor = std::get<0>( floorMap[ floorIndex ] );
