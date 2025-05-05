@@ -12,6 +12,7 @@
 #include "sprite.h"
 #include "textureLoader.h"
 
+// To be commented by Evan
 class StaticSprite : public Sprite
 {
 	public:

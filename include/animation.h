@@ -7,6 +7,7 @@
 
 #include "raylib.h"
 
+// To be commented by Evan
 class Animation
 {
 	private:

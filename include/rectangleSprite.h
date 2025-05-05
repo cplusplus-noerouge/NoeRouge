@@ -11,6 +11,7 @@
 #include <iostream>
 #include "baseSprite.h"
 
+// To be commented by Evan
 class RectangleSprite : public BaseSprite
 {
 	protected:
