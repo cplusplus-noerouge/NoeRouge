@@ -110,8 +110,6 @@ int main( )
            player->defend( enemies ); // Defend against enemy attacks
         }
 
-        floors[ floorOn ]->getObjHandler( )->renderAll( );
-
         for ( int i = 0; i < tileSprites.size( ); i++ )
         {
            mainCamera.addToBuffer( &tileSprites[ i ] );

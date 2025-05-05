@@ -76,7 +76,7 @@ std::vector<Sprite> MapHandler::getTileSprites( )
 
 Floor* MapHandler::getCurrentFloor( )
 {
-	return std::get<0>( floorMap[ floorIndex ] );
+return std::get<0>( floorMap[ floorIndex ] );
 }
 
 ObjectHandler* MapHandler::getCurrentHandler( )
@@ -112,17 +112,26 @@ void MapHandler::changeFloor( bool trueisup )
 	{
 		Floor* floorNext = std::get<0>( floorMap[ nextFloor ] );
 
-		ObjectHandler* nextHandler = floorNext->getObjHandler( );
-		currentFloor->getObjHandler( )->transferObject( 0, *nextHandler );
+		float distanceToUpLadder = Vector2Distance( currentFloor->getLadderUpLocation( ), player->getPosition( ) );
+		float distanceToDownLadder = Vector2Distance( currentFloor->getLadderDownLocation( ), player->getPosition( ) );
+		if ( trueisup && distanceToUpLadder < Settings::TILE_SIZE )
+		{
+			Vector2 goingUp = floorNext->getLadderDownLocation( );
+			this->player->setPosition( goingUp );
+			tileSprites = generateTileSprites( floorNext );
+			std::cout << "\n Moved from floor " << floorIndex << " to " << nextFloor;
+			floorIndex = nextFloor;
+			currentFloor = std::get<0>( floorMap[ floorIndex ] );
+		}
+		else if ( !trueisup && distanceToDownLadder < Settings::TILE_SIZE )
+		{
+			Vector2 goingDown = floorNext->getLadderUpLocation( );
+			this->player->setPosition( goingDown );
+			tileSprites = generateTileSprites( floorNext );
+			std::cout << "\n Moved from floor " << floorIndex << " to " << nextFloor;
+			floorIndex = nextFloor;
+			currentFloor = std::get<0>( floorMap[ floorIndex ] );
+		}
 
-		this->player = dynamic_cast< Player* >( nextHandler->getObject( 0 ) );
-		Vector2 goingUp = floorNext->getLadderDownLocation( );
-		Vector2 goingDown = floorNext->getLadderUpLocation( );
-		( trueisup ) ? player->setPosition( goingUp ) : player->setPosition( goingDown );
-
-		tileSprites = generateTileSprites( floorNext );
-		std::cout << "\n Moved from floor " << floorIndex << " to " << nextFloor;
-		floorIndex = nextFloor;
-		currentFloor = std::get<0>( floorMap[ floorIndex ] );
 	}
 }
