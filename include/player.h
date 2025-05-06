@@ -2,7 +2,6 @@
 * noeRouge
 * Player class
 * Ben A, Kaleb, Reese, Ethan
-* Reese Edens, Kaleb Flowers
 * Player Class (inherits from Character class)
 * Inherits sprite functionality from Sprite class.
 * Inherits character functionality from Character class.
@@ -28,11 +27,24 @@ private:
    float attackRange;    // Attack radius
    int attackDamage;      // Damage per hit
    int health;           // Player health
+   bool isInvincible = false; // Tracks if the player is invincible-KF
+   float invincibilityTimer = 0.0f; // Timer for invincibility frames-KF
+   const float invincibilityDuration = 0.7f; // Duration of invincibility in seconds-KF
    float walkTimer;      // Time between steps
    SheetSprite sprite;
    Animation animation = Animation( 4, 0.15 );
 
 public:
+      //for I-Frame
+     void setInvincible( bool invincible );
+     void updateInvincibility( ); // Updates the invincibility timer
+     bool getIsInvincible( ) const
+      {
+         return isInvincible;
+      }
+
+    void defend( std::vector<Enemy*>& enemies ); // Defend against enemy attacks
+
     //Player(int id): Character(id), attackRange( 50.0f ), attackDamage( 1 ), health( 5 )
     Player(int id, Vector2 _position, Vector2 _size, int _speed) 
        : Character(id, _position, _size, _speed), attackRange(50.0f), attackDamage( 1 ), health( 5 )

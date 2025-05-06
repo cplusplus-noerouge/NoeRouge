@@ -99,8 +99,20 @@ int main( )
            // created a pointer to the player object in the current floor's object handler
            Player* player = static_cast< Player* >( floors[ floorOn ]->getObjHandler( )->getObject( 0 ) );
   
-           player->attack( enemies ); // Attack with a range of 50 and damage of 10
+           player->attack( enemies ); // Attack with a range of 50 and damage of 1
         }
+
+        if ( IsKeyPressed( KEY_LEFT_SHIFT ) ) // player defends when left shift is pressed
+        {
+           //**Kaleb** added player defends, outputs "Defending" to console when Left Shift is held down
+           Player* player = static_cast< Player* >( floors[ floorOn ]->getObjHandler( )->getObject( 0 ) );
+           player->defend( enemies ); // Defend against enemy attacks
+        }
+        // Ensure the "player" variable is properly declared and initialized before usage.  
+        // Add this declaration and initialization where "player" is used.  
+
+        Player* player = static_cast<Player*>(floors[floorOn]->getObjHandler()->getObject(0));  
+        player->updateInvincibility(); // Updates invincibility during defend action.
 
         screenHandler.renderAll( );
 

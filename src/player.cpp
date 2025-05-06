@@ -76,7 +76,7 @@ void Player::onRender()
    }
    sprite.setTexture( "playerWalk" + std::to_string( animation.getFrame( ) ) );
 
-      // Setting the position referenced on the sheet based on the direction the plaer is facing
+      // Setting the position referenced on the sheet based on the direction the player is facing
    if ( direction.x < 0 )
    {
       sprite.setSourceRect( { 0, 0, 16, 16 } );
@@ -106,19 +106,27 @@ class Player* ObjectHandler::createPlayer( Vector2 position, Vector2 size, int s
    this->numberOfObjects++;
    return Player;
 }
-
+/*****************************************************************************
+* player::attack()
+* Use: Draws hitbox, text and a sound when player attacks within the enemy hit box
+* Input: takes in the enemy array bringing in the spawn location as well as player
+* attackRange and damage
+* vector<Enemy*>& enemies: vector bringing in enemy stats and locations
+* 
+*
+********************************************************************************/
 void Player::attack( std::vector<Enemy*>& enemies )
 {
    if ( IsKeyPressed( KEY_SPACE ) )
 
    {  // Attack with SPACE
-     // BeginDrawing( );  // Ensure you're inside a drawing context
+      BeginDrawing( );  // Ensure you're inside a drawing context
 
       for ( Enemy* enemy : enemies )
-      {
+      {  cout << "ATTACKING" << endl;
          if ( enemy->checkCollision( position, attackRange ) )
          {
-            cout << "ATTACKING" << endl;
+            // Play the attack sound effect
             PlaySound(sfx["laserShoot.wav"]);
             enemy->takeDamage( attackDamage );
             
@@ -128,13 +136,74 @@ void Player::attack( std::vector<Enemy*>& enemies )
             // Set the font size and color for the hit effect
             // Display hit effect
            // Vector2 position = enemy->getPosition( );
-            DrawText( "HIT!", position.x + 30, position.y + 30,30,RAYWHITE);
+            DrawText( "HIT!",position.x,position.y, 30, RAYWHITE );
          }
       }
      EndDrawing( );
    }
 }
+  
 
+/*------------------------------------------------------------------------------------------------------------------
+ * defend() Allows the player to defend against enemy attacks.
+ * - Kaleb Flowers
+ * Kaleb Flowers
+ * param
+ * return:
+ ------------------------------------------------------------------------------------------------------------------*/
+void Player::defend( std::vector<Enemy*>& enemies )
+{
+
+   if ( IsKeyDown( KEY_LEFT_SHIFT ) )
+   {
+      BeginDrawing( );  // remove ( leftover code) 
+      if ( !isInvincible )
+      {
+         setInvincible( true );
+      }
+      for ( Enemy* enemy : enemies )
+      {
+         if ( enemy->checkCollision( position, attackRange ) )
+         {
+            //stop player movement
+            //stop incoming damage from enemy 
+            enemy->setDamageBlocked( true );
+         }
+      }
+      std::cout << "Defending against enemy attack!\n";
+      EndDrawing( );
+
+   }
+   else
+   {
+      for ( Enemy* enemy : enemies )
+      {
+         enemy->setDamageBlocked( false ); // Reset damage block
+      }
+   }
+}
+// Sets the invincibility state and resets the timer if invincible
+void Player::setInvincible( bool invincible )
+{
+   isInvincible = invincible;
+   if ( invincible )
+   {
+      invincibilityTimer = invincibilityDuration; // Reset the timer
+   }
+}
+// Updates the invincibility timer and disables invincibility when the timer expires
+void Player::updateInvincibility( )
+{
+   if ( isInvincible )
+   {
+      invincibilityTimer -= GetFrameTime( ); // Decrease timer by frame time
+      if ( invincibilityTimer <= 0.0f )
+      {
+         isInvincible = false; // Disable invincibility
+         invincibilityTimer = 0.0f;
+      }
+   }
+}
 /*-----------------------------------------------------------------------------------------------------------------------------
 * takeDamage( )
 * Ethan Sheffield

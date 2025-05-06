@@ -5,6 +5,8 @@
 *
 * TO-DO :
 * - Add attack functionality?
+    // Add the missing method declaration in the Enemy class  
+   
 * - Add AI behavior?
 * - Include more interaction with player?
 */
@@ -26,6 +28,7 @@ class Enemy : public Character
 {  
 private:  
    int id; // Unique ID for the enemy  
+   bool damageBlocked = false; // Tracks if damage is blocked
 
 public:  
    int world_position[2]; // Make this public for accessibility  
@@ -37,6 +40,8 @@ public:
 
    Enemy( int id, int x, int y, Stats stats );
 
+
+
    void onTick(const std::vector<Rectangle> collidables);
 
    void updateDirection( Vector2 target );
@@ -44,9 +49,18 @@ public:
    // Renders the enemy on screen  
    void onRender();  
 
-   // Reduces health when damage is taken, accounting for defense  
-   void takeDamage(int damage);  
+   void setDamageBlocked( bool blocked )
+   {
+      damageBlocked = blocked;
+   }
 
+   bool isDamageBlocked( ) const
+   {
+      return damageBlocked;
+   }
+   //Reese. take damage method used on enemy to take dmg from player
+   void takeDamage( int damage );
+  
    // Checks if a player's position is within attack range of the enemy  
    bool checkCollision(Vector2 playerPos, float attackRange) const;  
 

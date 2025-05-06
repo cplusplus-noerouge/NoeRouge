@@ -402,6 +402,11 @@ Vector2 Floor::getLadderDownLocation( )
 {
    return { ( float ) ladderDownX * TILE_SIZE, ( float ) ladderDownY * TILE_SIZE };
 }
+
+/*****************************************************************************
+* Enemy spawn tester for debugging and testing hit box and damage on enemy
+* Reese
+******************************************************************************/
 Vector2 Floor::getEnemySpawn( )
 {
   
