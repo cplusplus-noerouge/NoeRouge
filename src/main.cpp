@@ -70,11 +70,17 @@ int main( )
     //std::vector<Sprite> tileSprites = generateTileSprites( floors[ floorOn ] );
 
     MapHandler* maphandler = new MapHandler;
+    Floor* currentFloor = maphandler->getCurrentFloor( );
+    currentFloor->getObjHandler( )->createPlayer( currentFloor->getLadderDownLocation( ) );
+    //Player* player = static_cast< Player* >( currentFloor->getObjHandler( )->getObject( 0 ) );
 
     StaticSprite background = StaticSprite( "spaceBackground", { 320, 180 }, -9999999 );
 
     while (!WindowShouldClose())
     { 
+
+       
+       
         //TEMPORARY testing changing floors
         //TODO changing floors needs to only be possible when player is on a ladder, up or down
         if ( Controls::ladderUp() ) //up
@@ -88,27 +94,11 @@ int main( )
             //changeFloor( tileSprites, floors, floorOn, -1);
         }
  
-        maphandler->onTick( );
-        maphandler->onRender( );
+        currentFloor->getObjHandler( )->tickAll( currentFloor->getWalls( ) );
+        currentFloor->getObjHandler( )->renderAll( );
 
         std::vector<Sprite> tileSprites = maphandler->getTileSprites();
         std::vector<Enemy*> enemies = maphandler->getEnemies( );
-        //floors[floorOn]->getObjHandler()->tickAll(floors[floorOn]->getWalls());
-        //floors[floorOn]->getObjHandler()->renderAll();
-
-        //**Reese** added player attack, outputs "ATTACKING" to console when space is pressed
-        if ( Controls::attack() )  // player attacks when space is pressed
-        {
-           // created a pointer to the player object in the current floor's object handler
-           Player* player = static_cast< Player* >( maphandler->getCurrentHandler()->getObject( 0 ) );
-  
-           player->attack( enemies ); // Attack with a range of 50 and damage of 10
-        }
-        if ( Controls::defend() ) // player defends when left shift is pressed
-        {
-           Player* player = static_cast< Player* >( maphandler->getCurrentHandler( )->getObject( 0 ) );
-           player->defend( enemies ); // Defend against enemy attacks
-        }
 
         for ( int i = 0; i < tileSprites.size( ); i++ )
         {

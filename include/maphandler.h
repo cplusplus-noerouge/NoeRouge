@@ -15,7 +15,6 @@ class MapHandler {
 
 	int floorIndex;
 	Floor* currentFloor;
-	ObjectHandler* currentHandler;
 	std::vector<Sprite> tileSprites;
 	
 
@@ -23,7 +22,6 @@ class MapHandler {
 
 	MapHandler( );
 
-	Player* newPlayer( );
 	void generateFloors( );
 	std::vector<Enemy*> generateEnemies( int num );
 
@@ -31,7 +29,6 @@ class MapHandler {
 	std::vector<Enemy*> getEnemies( );
 	std::vector<Sprite> getTileSprites();
 	Floor* getCurrentFloor( );
-	ObjectHandler* getCurrentHandler( );
 	//getKey()?
 
 	void onTick( );

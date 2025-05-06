@@ -322,16 +322,18 @@ void Floor::generateMapData()
 
     //create ladders between floors. could be changed to guarantee they are a certain distance apart or something
     BspNode* ladderUpNode = leafPartitions.front();
-    ladderUpX = ladderUpNode->roomCenterPointXCoordinate;
-    ladderUpY = ladderUpNode->roomCenterPointYCoordinate;
+    int ladderUpX = ladderUpNode->roomCenterPointXCoordinate;
+    int ladderUpY = ladderUpNode->roomCenterPointYCoordinate;
 
     data[ladderUpX][ladderUpY] = LADDER_UP;
+    ladderUpLocation = scaleToTile( ladderUpX, ladderUpY );
 
     BspNode* ladderDownNode = leafPartitions.back();
-    ladderDownX = ladderDownNode->roomCenterPointXCoordinate;
-    ladderDownY = ladderDownNode->roomCenterPointYCoordinate;
+    int ladderDownX = ladderDownNode->roomCenterPointXCoordinate;
+    int ladderDownY = ladderDownNode->roomCenterPointYCoordinate;
 
     data[ladderDownX][ladderDownY] = LADDER_DOWN;
+    ladderDownLocation = scaleToTile( ladderDownX, ladderDownY );
 
     //make the walls into rectangles that can be rendered
     walls = std::vector<Rectangle>();
@@ -370,7 +372,7 @@ void Floor::generateObjects()
         {
             if (data[x][y] == DOOR)
             {
-                objHandler->createDoor({ (float)x * TILE_SIZE,(float)y * TILE_SIZE });
+               objHandler->createDoor( scaleToTile( x, y ) );
             }
         }
     }
@@ -388,8 +390,8 @@ void Floor::generateObjects()
         data[enemyX][enemyY] = ENEMY;
 
         //create an enemy object.
-        Vector2 EnemyPos = { (float)enemyX * TILE_SIZE, (float)enemyY * TILE_SIZE };
-        objHandler->createEnemy(EnemyPos, { Settings::TILE_SIZE, Settings::TILE_SIZE }, 300);
+        Vector2 EnemyPos = scaleToTile( enemyX, enemyY );
+        objHandler->createEnemy( EnemyPos );
     }
 }
 /*------------------------------------------------------------------------------------------------------
@@ -419,12 +421,12 @@ parameters - none
 ------------------------------------------------------------*/
 Vector2 Floor::getLadderUpLocation()
 {
-    return { (float)ladderUpX * TILE_SIZE, (float)ladderUpY * TILE_SIZE };
+   return ladderUpLocation;
 }
 
 Vector2 Floor::getLadderDownLocation( )
 {
-   return { ( float ) ladderDownX * TILE_SIZE, ( float ) ladderDownY * TILE_SIZE };
+   return ladderDownLocation;
 }
 Vector2 Floor::getEnemySpawn( )
 {
@@ -436,7 +438,7 @@ Vector2 Floor::getEnemySpawn( )
          if ( data[ x ][ y ] == FLOOR )
 
          {
-            return { ( float ) x * TILE_SIZE, ( float ) y * TILE_SIZE };
+            return scaleToTile( x, y );
          }
       }
    }

@@ -152,7 +152,7 @@ bool Enemy::checkCollision( Vector2 playerPos, float attackRange ) const
 * @param int speed : Initial speed of the enemy.
 * @return Enemy* : Pointer to the created Enemy object.
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-Enemy* ObjectHandler::createEnemy( Vector2 position, Vector2 size, int speed )
+Enemy* ObjectHandler::createEnemy( Vector2 position )
 {
 	Stats enemyStats = { 3, 1, 25, 5 }; // stats: hp, damage, range, speed
 	Enemy* newEnemy = new Enemy( nextId++, position.x, position.y, enemyStats );

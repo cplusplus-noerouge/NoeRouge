@@ -8,13 +8,11 @@ class Floor;
 	
 int MapHandler::nextId = 0;
 
-MapHandler::MapHandler( ) : currentHandler ( nullptr ), player ( nullptr )
+MapHandler::MapHandler( )
 {
 	generateFloors( );
 	this->floorIndex = 0;
 	this->currentFloor = std::get<0>( floorMap[ floorIndex ] );
-	this->currentHandler = this->currentFloor->getObjHandler( );
-	this->player = newPlayer( );
 	this->tileSprites = std::get<1>( floorMap[ floorIndex ] );
 }
 
@@ -24,13 +22,6 @@ int MapHandler::takeNextId( )
 }
 
 //-- Building the Handler
-
-Player* MapHandler::newPlayer( )
-{
-	Vector2 spawnLocation = getCurrentFloor( )->getLadderDownLocation( );
-	Player* player = new Player( 0, spawnLocation, { Settings::TILE_SIZE,Settings::TILE_SIZE }, Settings::PLAYER_SPEED );
-	return player;
-}
 
 void MapHandler::generateFloors( )
 {
@@ -80,24 +71,8 @@ Floor* MapHandler::getCurrentFloor( )
 return std::get<0>( floorMap[ floorIndex ] );
 }
 
-ObjectHandler* MapHandler::getCurrentHandler( )
-{
-	return this->currentHandler;
-}
-
 
 //-- During Gameplay
-
-void MapHandler::onTick( )
-{
-	this->player->onTick( currentFloor->getWalls( ) );
-}
-void MapHandler::onRender( )
-{
-	currentHandler->renderAll( );
-	player->onRender( );
-}
-
 
 void MapHandler::changeFloor( bool trueisup )
 {

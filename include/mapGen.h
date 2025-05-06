@@ -4,6 +4,7 @@
 #pragma once
 
 #include <raylib.h>
+#include <raymath.h>
 #include <list>
 #include <vector>
 #include <random>
@@ -76,10 +77,8 @@ class Floor
 private:
     std::list<BspNode*> leafPartitions;
     std::vector<Rectangle> walls;
-    int ladderUpX;
-    int ladderUpY;
-    int ladderDownX;
-    int ladderDownY;
+    Vector2 ladderUpLocation;
+    Vector2 ladderDownLocation;
 
     ObjectHandler* objHandler;    //contains all the objects on the floor
 
@@ -111,6 +110,11 @@ public:
     Vector2 getLadderUpLocation();
     Vector2 getLadderDownLocation();
     Vector2 getEnemySpawn( );
+
+    Vector2 scaleToTile(int x, int y ) //scales up the coordinates of items on the data array to tiles.
+    {
+       return Vector2Multiply( { ( float ) x,( float ) y }, Settings::TILE_DIMENSIONS );
+    }
 };
 
 //HALLWAYS================================================================================================================================

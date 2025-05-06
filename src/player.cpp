@@ -68,6 +68,17 @@ void Player::onTick( const std::vector<Rectangle> colliders )
 		PlaySound( sfx[ "walkLeft.wav" ] );
 		walkTimer = 0.0f;
 	}
+	//**Reese** added player attack, outputs "ATTACKING" to console when space is pressed
+	if ( Controls::attack( ) )  // player attacks when space is pressed
+	{
+		//this->attack( enemies ); // Attack with a range of 50 and damage of 10
+	}
+	if ( Controls::defend( ) ) // player defends when left shift is pressed
+	{
+		//this->defend( enemies ); // Defend against enemy attacks
+	}
+
+	
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -201,9 +212,9 @@ void Player::takeDamage( int damage, bool& playerDefeated )
 * @param int speed : Initial speed of player.
 * @return Player* : Pointer to the created Player object.
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-class Player* ObjectHandler::createPlayer( Vector2 position, Vector2 size, int speed )
+class Player* ObjectHandler::createPlayer( Vector2 position )
 {
-	class Player* Player = new class Player( 0, position, size, speed ); //id for player is always 0
+	class Player* Player = new class Player( 0, position, Settings::TILE_DIMENSIONS, Settings::PLAYER_SPEED ); //id for player is always 0
 	allObjects[ Player->getId( ) ] = Player; //add <id, object*> to the map
 	this->numberOfObjects++;
 	return Player;
