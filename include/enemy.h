@@ -18,7 +18,7 @@ struct Stats
    int health;        // Health points of the enemy
    int attackDamage;  // Amount of damage enemy can deal per attack
    int attackRange;   // Distance at which the enemy can hit the player
-   int speed;         //character speed
+   int speed;         // Character speed
 };
 
 // Change the `world_position` array from private to public or provide a getter method for access.  
@@ -26,6 +26,7 @@ class Enemy : public Character
 {  
 private:  
    int id; // Unique ID for the enemy  
+   bool damageBlocked = false; // Tracks if damage is blocked
 
 public:  
    int world_position[2]; // Make this public for accessibility  
@@ -55,4 +56,23 @@ public:
 
    // Getter for current health  
    int getHealth() const { return stats.health; }  
+
+   void setDamageBlocked( bool blocked )
+   {
+      damageBlocked = blocked;
+   }
+
+   bool isDamageBlocked( ) const
+   {
+      return damageBlocked;
+   }
+
+   void takeDamage( int damage )
+   {
+      if ( !damageBlocked )
+      {
+         stats.health -= damage;
+         if ( stats.health < 0 ) stats.health = 0;
+      }
+   }
 };

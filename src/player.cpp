@@ -96,26 +96,56 @@ void Player::attack( std::vector<Enemy*>& enemies )
 }
  /*------------------------------------------------------------------------------------------------------------------
 * defend() Allows the player to defend against enemy attacks.
-* - Kaleb Flowers
+* Kaleb Flowers
 * param
 * return:
 ------------------------------------------------------------------------------------------------------------------*/
    void Player::defend( std::vector<Enemy*>&enemies )
    {
-
       if ( IsKeyDown( KEY_LEFT_SHIFT ) )
       {
-         BeginDrawing( );  // remove ( leftover code) 
+         if ( !isInvincible )
+         {
+            setInvincible( true );
+         }
          for ( Enemy* enemy : enemies )
          {
             if ( enemy->checkCollision( position, attackRange ) )
             {
-               //stop player movement
-               //stop incoming damage from enemy 
+               enemy->setDamageBlocked( true );
             }
          }
          std::cout << "Defending against enemy attack!";
-         EndDrawing( );
+         
+      }
+      else
+      {
+         for ( Enemy* enemy : enemies )
+         {
+            enemy->setDamageBlocked( false ); // Reset damage block
+         }
+      }
+   }
+   // Sets the invincibility state and resets the timer if invincible
+   void Player::setInvincible( bool invincible )
+   {
+      isInvincible = invincible;
+      if ( invincible )
+      {
+         invincibilityTimer = invincibilityDuration; // Reset the timer
+      }
+   }
+   // Updates the invincibility timer and disables invincibility when the timer expires
+   void Player::updateInvincibility( )
+   {
+      if ( isInvincible )
+      {
+         invincibilityTimer -= GetFrameTime( ); // Decrease timer by frame time
+         if ( invincibilityTimer <= 0.0f )
+         {
+            isInvincible = false; // Disable invincibility
+            invincibilityTimer = 0.0f;
+         }
       }
    }
 /*-----------------------------------------------------------------------------------------------------------------------------

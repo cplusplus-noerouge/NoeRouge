@@ -25,9 +25,20 @@ private:
    float attackRange;    // Attack radius
    int attackDamage;     // Damage per hit
    int health;           // Player health
+   bool isInvincible = false; // Tracks if the player is invincible-KF
+   float invincibilityTimer = 0.0f; // Timer for invincibility frames-KF
+   const float invincibilityDuration = 0.7f; // Duration of invincibility in seconds-KF
    Sprite sprite;
 
 public:
+      //for I-Frame
+     void setInvincible( bool invincible );
+     void updateInvincibility( ); // Updates the invincibility timer
+     bool getIsInvincible( ) const
+     {
+        return isInvincible;
+     }
+
     //Player(int id): Character(id), attackRange( 50.0f ), attackDamage( 1 ), health( 5 )
    /* Player(int id): Character(id), attackRange( 20.0f ), attackDamage( 1 ) 
     { 

@@ -105,11 +105,11 @@ int main( )
   
            player->attack( enemies ); // Attack with a range of 50 and damage of 10
         }
-        if ( IsKeyPressed( KEY_LEFT_SHIFT ) ) // player defends when left shift is pressed
-        {
+        //**Kaleb** added player defends, outputs "Defending" to console when Left Shift is held down
            Player* player = static_cast< Player* >( floors[ floorOn ]->getObjHandler( )->getObject( 0 ) );
            player->defend( enemies ); // Defend against enemy attacks
-        }
+           player->updateInvincibility( );// Updates invincibily during defend action.
+        
 
         screenHandler.renderAll( );
 
