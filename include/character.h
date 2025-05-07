@@ -17,22 +17,22 @@ class Character : public GameObject
 
    private:
 
-	Vector2 size;                        //Character's rectangle size
+	Vector2 _size;                        //Character's rectangle size
 
 	protected:
 
-	Vector2 position;                    //Character's map position
+	Vector2 _position;                    //Character's map position
 	Vector2 direction;                   //Character's direction
 	Vector2 velocity;                    //Character's velocity
-	Vector2 target;                      //Position of target.
+	Vector2 _target;                      //Position of target.
 
 	public:
 
-	int speed;                                                                            //Speed of the character in pixels per second.
+	int _speed;                                                                            //Speed of the character in pixels per second.
   
-  Character::Character( int _id, Vector2 _position, Vector2 _size, int _speed, ObjectHandler* handler );
-	//Character( int _id, Vector2 _position, Vector2 _size, Vector2 target, int _speed );   //Parameterized Class constructor, including target.
-	Character( int _id, Vector2 _position, Vector2 _size, int _speed );                   //Parameterized Class constructor.
+  
+	Character( int id, Vector2 position, Vector2 target);                                 //Parameterized Class constructor, including target.
+	Character( int id, Vector2 position);                                                 //Parameterized Class constructor.
 	Character( int _id = -1 );                                                            //Class constructor based on object ID. 
 
 	void onTick( const std::vector<Rectangle> collidables ) override;                     //Updates the state of the character during a single frame.

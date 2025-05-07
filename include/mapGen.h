@@ -11,7 +11,7 @@
 #include "objecthandler.h"
 #include "object.h"
 #include "globals.h"
-
+#include "sprite.h"
 
 const int WIDTH = 70;                   //width/columns/maximum x of each floor in tiles
 const int HEIGHT = 30;                  //height/rows/maximum y of each floor in tiles
@@ -79,7 +79,7 @@ private:
     std::vector<Rectangle> walls;
     Vector2 ladderUpLocation;
     Vector2 ladderDownLocation;
-
+    
     ObjectHandler* objHandler;    //contains all the objects on the floor
 
     void generateMapData();       //generates data[][], intended to be called by Floor::Floor()
@@ -89,7 +89,7 @@ public:
 
     char data[WIDTH][HEIGHT];                                   //TODO make this private with accessor or something like that
     BspNode* rootNode = generateBspTree();                      //generate the partitions
-
+    std::vector<Sprite> _tileSprites;
     Floor();
 
     BspNode* getMapRootNode()
@@ -100,6 +100,12 @@ public:
     std::vector<Rectangle> getWalls()
     {
         return walls;
+    }
+
+    /*void setTileSprites( std::vector<Sprite> tileSprites );*/
+    std::vector<Sprite> getTileSprites( )
+    {
+       return _tileSprites;
     }
 
     ObjectHandler* getObjHandler()

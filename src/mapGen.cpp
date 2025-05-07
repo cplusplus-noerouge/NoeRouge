@@ -6,6 +6,7 @@ Devon, Irene, Evan, Ben S, possible others,
 #include <iostream>
 #include <vector>
 #include <list>
+#include <generateTileSprites.h>
 
 //PARITIONS =============================================================================================================================
 // Class representing a node in the BSP tree
@@ -402,6 +403,9 @@ Floor::Floor()
 {
     generateMapData();
     generateObjects();
+    _tileSprites = generateTileSprites( data );
+
+    
 
     //prints the floor in the console. this is for debugging so we can see the stuff that doesn't have graphics yet
     for (int y = 0; y < HEIGHT; y++)
@@ -413,6 +417,11 @@ Floor::Floor()
         std::cout << "\n";
     }
 }
+
+//void Floor::setTileSprites( std::vector<Sprite> tileSprites )
+//{
+//   _tileSprites = tileSprites;
+//}
 
 /*------------------------------------------------------------
 returns the ladder up and ladder down location as a vector2

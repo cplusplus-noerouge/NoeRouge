@@ -9,32 +9,20 @@
 class MapHandler {
 	private:
 	
-	std::map<int, std::tuple<Floor*, std::vector<Sprite>, std::vector<Enemy*>>> floorMap;
-	static int nextId;
-	Player* player;
+	std::map<int, Floor*> _floorMap;
 
-	int floorIndex;
-	Floor* currentFloor;
-	std::vector<Sprite> tileSprites;
+	int _floorIndex;
+	Floor* _currentFloor;
 	
+	std::map<int, Floor*> generateFloors( );
 
 	public:
 
 	MapHandler( );
 
-	void generateFloors( );
-	std::vector<Enemy*> generateEnemies( int num );
+	Floor* getCurrentFloor( ) { return _currentFloor; }
 
-	Player* getPlayer( );
-	std::vector<Enemy*> getEnemies( );
-	std::vector<Sprite> getTileSprites();
-	Floor* getCurrentFloor( );
-	//getKey()?
-
-	void onTick( );
-	void onRender( );
+	void tickAndRender( );
 	void changeFloor( bool trueisdown );
-
-	static int takeNextId( );
 
 };

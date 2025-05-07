@@ -30,8 +30,6 @@ CustomCamera mainCamera = CustomCamera( Vector2 { 320.0f, 180.0f }, 4.0f );
 
 std::unordered_map<std::string, Texture2D> textureMap = {};
 
-void changeFloor(std::vector<Sprite>& wallSprites, Floor* floors[Settings::NUM_OF_FLOORS], int& floorOn, int changeVal);  //changes the floor that the player is on
-
 int main( )
 {
     // Setting up graphics
@@ -41,64 +39,35 @@ int main( )
     InitAudioDevice();
     MusicPlayer musicPlayer = MusicPlayer();
 
-    //Floor* floors[Settings::NUM_OF_FLOORS];
-    //for (int i = 0; i < Settings::NUM_OF_FLOORS; i++) {
-    //    floors[i] = new Floor;
-    //}
-    //int floorOn = 0;
 
-    ////// Set the player spawn position to the down ladder on the first floor
-    //Vector2 playerSpawnPosition = floors[ floorOn ]->getLadderDownLocation( );
-    ////  // Set the enemy spawn position to the ladder down on the first floor
-    //Vector2 enemySpawnPosition = { 110, 110 }; // Example spawn position, change as needed
-   
-    //  // Create the player object in the object handler of the current floor
-    ////floors[ floorOn ]->getObjHandler( )->createPlayer( playerSpawnPosition, { TILE_SIZE, TILE_SIZE }, PLAYER_SPEED );
-    ////floors[ floorOn ]->getObjHandler( )->playerCreate( );
-    //floors[ floorOn ]->getObjHandler( )->createPlayer( playerSpawnPosition, { Settings::TILE_SIZE, Settings::TILE_SIZE }, Settings::PLAYER_SPEED );
-
-    //// Add enemies to the vector after creating them
-    ////change this "floorOn" to change the layer enemy spawns on 
-    //Enemy* enemy = floors[ floorOn ]->getObjHandler( )->createEnemy( enemySpawnPosition,
-    //                                                                { Settings::TILE_SIZE, Settings::TILE_SIZE}, 300 );
-
-    //// Add the following declaration at the top of the file, near other global variables.  
-    //std::vector<Enemy*> enemies; // Declare the enemies vector to store enemy pointers.
-    //std::vector<Sprite> wallSprites = {};                    //is changed when player changes floors
-    //// Declare a vector to hold enemy pointers
-    //enemies.push_back( enemy );
-    //std::vector<Sprite> tileSprites = generateTileSprites( floors[ floorOn ] );
-
-    MapHandler* maphandler = new MapHandler;
-    Floor* currentFloor = maphandler->getCurrentFloor( );
+    MapHandler* mapHandler = new MapHandler;
+    Floor* currentFloor = mapHandler->getCurrentFloor( );
     currentFloor->getObjHandler( )->createPlayer( currentFloor->getLadderDownLocation( ) );
-    //Player* player = static_cast< Player* >( currentFloor->getObjHandler( )->getObject( 0 ) );
+    std::vector<Sprite> tileSprites = currentFloor->getTileSprites( );
+    
 
     StaticSprite background = StaticSprite( "spaceBackground", { 320, 180 }, -9999999 );
 
     while (!WindowShouldClose())
     { 
+       float dT = GetFrameTime( );
 
-       
-       
-        //TEMPORARY testing changing floors
-        //TODO changing floors needs to only be possible when player is on a ladder, up or down
-        if ( Controls::ladderUp() ) //up
-        {
-           maphandler->changeFloor( true );
-            //changeFloor( tileSprites,floors,floorOn, 1);
-        }
-        if ( Controls::ladderDown() ) //down
-        {
-           maphandler->changeFloor( false );
-            //changeFloor( tileSprites, floors, floorOn, -1);
-        }
- 
+       if ( Controls::ladderUp( ) ) //up
+       {
+          mapHandler->changeFloor( true );
+       }
+       if ( Controls::ladderDown( ) ) //down
+       {
+          mapHandler->changeFloor( false );
+       }
+
+       currentFloor->getObjHandler( )->tickAll( currentFloor->getWalls( ) );
+       currentFloor->getObjHandler( )->renderAll( );
+
+        currentFloor = mapHandler->getCurrentFloor( );
         currentFloor->getObjHandler( )->tickAll( currentFloor->getWalls( ) );
         currentFloor->getObjHandler( )->renderAll( );
-
-        std::vector<Sprite> tileSprites = maphandler->getTileSprites();
-        std::vector<Enemy*> enemies = maphandler->getEnemies( );
+        tileSprites = currentFloor->getTileSprites( );
 
         for ( int i = 0; i < tileSprites.size( ); i++ )
         {

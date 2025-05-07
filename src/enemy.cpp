@@ -15,6 +15,7 @@
 #include <cmath>
 #include <raymath.h>
 #include <vector>
+#include "globals.h"
 #include "object.h"
 #include "character.h"
 #include "enemy.h"
@@ -25,12 +26,12 @@ using namespace std;
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * @brief : Parameterized Class constructor, initializes the enemy's ID, stats, and position in the world.
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-Enemy::Enemy( int id, int x, int y, Stats stats )
-	: Character( id, { static_cast< float >( x ), static_cast< float >( y ) }, { 50.0f, 50.0f }, stats.speed ), // Call Character constructor
+Enemy::Enemy( int id, Vector2 position, Stats stats )
+	: Character( id, position ), // Call Character constructor
 	stats( stats )
 {
-	position.x = x;
-	position.y = y;
+	this->setId( id );
+	_position = position;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -42,13 +43,13 @@ Enemy::Enemy( int id, int x, int y, Stats stats )
 void Enemy::onTick( const std::vector<Rectangle> collidables )
 {
 	//Update movement direction (likely handled by inherited Character method)
-	updateDirection( position );
+	updateDirection( _position );
 
 	//Calculate velocity based on direction and frame time
-	velocity = Vector2Scale( direction, speed * GetFrameTime( ) );
+	velocity = Vector2Scale( direction, Settings::PLAYER_SPEED * GetFrameTime( ) );
 
 	//Update position by adding velocity
-	position = Vector2Add( position, velocity );
+	_position = Vector2Add( _position, velocity );
 
 	//Check and resolve collisions with game world objects
 	updateCollisions( collidables );
@@ -62,19 +63,19 @@ void Enemy::onTick( const std::vector<Rectangle> collidables )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Enemy::updateDirection( Vector2 target )
 {
-	if ( target.x > position.x )
+	if ( target.x > _position.x )
 	{
 		direction.x = -1;
 	}
-	else if ( target.x < position.x )
+	else if ( target.x < _position.x )
 	{
 		direction.x = 1;
 	}
-	if ( target.y < position.y )
+	if ( target.y < _position.y )
 	{
 		direction.y = 1;
 	}
-	else if ( target.y < position.y )
+	else if ( target.y < _position.y )
 	{
 		direction.y = -1;
 	}
@@ -89,10 +90,10 @@ void Enemy::updateDirection( Vector2 target )
 void Enemy::onRender( )
 {
 	//Draw the enemy as a red rectangle
-	DrawRectangle( Enemy::position.x, Enemy::position.y, 100, 100, RED );
+	DrawRectangle( _position.x, _position.y, 100, 100, RED );
 
 	//Draw the enemy's health above the rectangle
-	DrawText( TextFormat( "HP: %d", stats.health ), Enemy::position.x, Enemy::position.y, 35, BLACK );
+	DrawText( TextFormat( "HP: %d", stats.health ), _position.x, _position.y, 35, BLACK );
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -119,8 +120,8 @@ void Enemy::takeDamage( int damage )
 		stats.health = 3;
 
 		//Reset position to some default value
-		Enemy::position.x = 100;
-		Enemy::position.y = 100;
+		_position.x = 100;
+		_position.y = 100;
 		std::cout << "Enemy is dead!" << std::endl;
 		std::cout << "Enemy respawned!" << std::endl;
 	}
@@ -135,8 +136,8 @@ void Enemy::takeDamage( int damage )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 bool Enemy::checkCollision( Vector2 playerPos, float attackRange ) const
 {
-	float dx = playerPos.x - position.y;
-	float dy = playerPos.y - position.x;
+	float dx = playerPos.x - _position.y;
+	float dy = playerPos.y - _position.x;
 	float distance = sqrt( dx * dx + dy * dy );
 
 	//Returns true if the distance is less than the attack range
@@ -155,7 +156,7 @@ bool Enemy::checkCollision( Vector2 playerPos, float attackRange ) const
 Enemy* ObjectHandler::createEnemy( Vector2 position )
 {
 	Stats enemyStats = { 3, 1, 25, 5 }; // stats: hp, damage, range, speed
-	Enemy* newEnemy = new Enemy( nextId++, position.x, position.y, enemyStats );
+	Enemy* newEnemy = new Enemy( nextId++, position, enemyStats );
 	allObjects[ newEnemy->getId( ) ] = newEnemy; // Add <id, object*> to the map
 	this->numberOfObjects++;
 	return newEnemy;

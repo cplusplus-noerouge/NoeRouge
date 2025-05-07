@@ -16,22 +16,12 @@
 * @brief : Parameterized Class constructor.
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 
-Character::Character( int id, Vector2 position, Vector2 size, int speed, ObjectHandler* handler ) : GameObject( handler )
+Character::Character( int id, Vector2 position ) : _target( { 0,0 } )
 {
-   this->setId( id );
-   position = position;
-   size = { 16,16 };
-   speed = 300;
-   velocity = { 0 };
-   direction = { 0 };
-}
-
-Character::Character(int _id, Vector2 _position, Vector2 _size, int _speed)
-{
-	this->setId( _id );
-	position = _position;
-	size = { Settings::TILE_SIZE, Settings::TILE_SIZE };
-	speed = _speed;
+	this->setId( id );
+	_position = position;
+	_size = Settings::TILE_DIMENSIONS;
+	_speed = Settings::PLAYER_SPEED;
 	velocity = { 0 };
 	direction = { 0 };
 }
@@ -44,7 +34,7 @@ Character::Character(int _id, Vector2 _position, Vector2 _size, int _speed)
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 Rectangle Character::bounds( )
 {
-	return { position.x, position.y, size.x, size.y };
+	return { _position.x, _position.y, _size.x, _size.y };
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -81,19 +71,19 @@ void Character::updateDirection( )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Character::updateDirection( Vector2 target )
 {
-	if ( target.x > position.x )
+	if ( target.x > _position.x )
 	{
 		direction.x = -1;
 	}
-	else if ( target.x < position.x )
+	else if ( target.x < _position.x )
 	{
 		direction.x = 1;
 	}
-	if ( target.y < position.y )
+	if ( target.y < _position.y )
 	{
 		direction.y = 1;
 	}
-	else if ( target.y < position.y )
+	else if ( target.y < _position.y )
 	{
 		direction.y = -1;
 	}
@@ -102,15 +92,15 @@ void Character::updateDirection( Vector2 target )
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * @brief : Class constructor based on object ID.
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-Character::Character( int _id )
+Character::Character( int id )
 {
-	this->setId( _id );
-	position = { 0 };
-	size = { Settings::TILE_SIZE, Settings::TILE_SIZE };
-	speed = 0;
+	this->setId( id );
+	_position = { 0 };
+	_size = Settings::TILE_DIMENSIONS;
+	_speed = Settings::PLAYER_SPEED;
 	velocity = { 0 };
 	direction = { 0 };
-	target = { 0, 0 };
+	_target = { 0, 0 };
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -127,13 +117,13 @@ void Character::onTick( const std::vector<Rectangle> collidables )
 
 	//direction is multiplied by speed, which makes velocity
 	//speed is multiplied by the time between frames, which forces speed to be the same regardless of framerate.
-	velocity = Vector2Scale( direction, speed * GetFrameTime( ) );
+	velocity = Vector2Scale( direction, _speed * GetFrameTime( ) );
 
 	//collisions must be done before velocity is added to position so that the character does not go past a wall before collisions are checked, but that is
 	//only necessary for very high movement speed
 	updateCollisions( collidables );
 
-	position = Vector2Add( position, velocity );
+	_position = Vector2Add( _position, velocity );
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -193,22 +183,22 @@ void Character::updateCollisions( const std::vector<Rectangle> colliders )
 		if ( collidingLeft( otherRect ) && velocity.x > 0 )
 		{
 			velocity.x = 0;
-			position.x = otherRect.x - rect.width;
+			_position.x = otherRect.x - rect.width;
 		}
 		else if ( collidingRight( otherRect ) && velocity.x < 0 )
 		{
 			velocity.x = 0;
-			position.x = otherRect.x + otherRect.width;
+			_position.x = otherRect.x + otherRect.width;
 		}
 		if ( collidingTop( otherRect ) && velocity.y > 0 )
 		{
 			velocity.y = 0;
-			position.y = otherRect.y - rect.height;
+			_position.y = otherRect.y - rect.height;
 		}
 		else if ( collidingBottom( otherRect ) && velocity.y < 0 )
 		{
 			velocity.y = 0;
-			position.y = otherRect.y + otherRect.height;
+			_position.y = otherRect.y + otherRect.height;
 		}
 	}
 }
@@ -221,7 +211,7 @@ void Character::updateCollisions( const std::vector<Rectangle> colliders )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 Vector2 Character::getPosition( )
 {
-	return position;
+	return _position;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -233,8 +223,7 @@ Vector2 Character::getPosition( )
 
 void Character::setPosition( Vector2 newPos )
 {
-	position.x = newPos.x;
-	position.y = newPos.y;
+	_position = newPos;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -245,7 +234,7 @@ void Character::setPosition( Vector2 newPos )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 float Character::getTargetDistance( )
 {
-	float dx = position.x - target.x;
-	float dy = position.y - target.y;
+	float dx = _position.x - _target.x;
+	float dy = _position.y - _target.y;
 	return sqrt( dx * dx + dy * dy );
 }

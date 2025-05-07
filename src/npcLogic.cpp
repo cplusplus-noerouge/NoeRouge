@@ -36,9 +36,9 @@ void Character::moveToTarget( Vector2 target, float distanceMaintained, std::vec
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 Ray Character::relationToTarget( )
 {
-	Vector2 pos = position;
-	Vector2 tar = target;
-	Vector3 direction = Vector3Normalize( { tar.x - position.x, tar.y - position.y, 0 } );
+	Vector2 pos = _position;
+	Vector2 tar = _target;
+	Vector3 direction = Vector3Normalize( { tar.x - _position.x, tar.y - _position.y, 0 } );
 	Ray lineOfSight = { { pos.x, pos.y, 0 }, direction };
 	return lineOfSight;
 }
@@ -62,8 +62,8 @@ bool Character::updateLOS( std::vector<Rectangle> colliders )
 		//There are probably some weird angles where this wouldn't work, might need review.
 		if ( GetRayCollisionBox( LOS, walltile ).hit )
 		{
-			float dx = position.x - wall.x;
-			float dy = position.y - wall.y;
+			float dx = _position.x - wall.x;
+			float dy = _position.y - wall.y;
 			if ( closestDistance > sqrt( dx * dx + dy * dy ) )
 			{
 				closestDistance = sqrt( dx * dx + dy * dy );
