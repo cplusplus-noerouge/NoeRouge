@@ -37,9 +37,8 @@ public:
     /*-----------------------------------------------------------------------------------------------------------------------------------
      * @brief : Parameterized Class constructor.
     ------------------------------------------------------------------------------------------------------------------------------------*/
-
-    Player(int id, Vector2 _position, Vector2 _size, int _speed) 
-       : Character(id, _position, _size, _speed), attackRange(50.0f), attackDamage( 1 ), health( 5 ), dodgeCooldown( 0 )
+    Player(int id, Vector2 position) 
+       : Character(id, position), attackRange(50.0f), attackDamage( 1 ), health( 5 ), dodgeCooldown( 0 )
     { 
        Animation animation = Animation( 4, 0.1 );
        sprite = SheetSprite( "playerWalk1", { 16, 0, 16, 16 }, position, position.y );

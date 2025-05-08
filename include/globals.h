@@ -15,7 +15,10 @@ namespace Settings
 
 	//-- Gameplay
 	extern const int PLAYER_SPEED;
-	extern const int NUM_OF_FLOORS;
+	extern const float TILE_SIZE;
+	extern const Vector2 TILE_DIMENSIONS;
+	extern const int ENEMY_COUNT;
+	inline const int NUM_OF_FLOORS = 4;
 	
 }
 

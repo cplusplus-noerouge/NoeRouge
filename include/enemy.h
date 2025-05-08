@@ -32,7 +32,7 @@ class Enemy : public Character
 	int world_position[ 2 ];                                             //Make this public for accessibility  
 	Stats stats;                                                         //Struct holding the enemy's stats 
 
-	Enemy( int id, int x, int y, Stats stats );                          //Parameterized Class constructor.
+	Enemy( int id, Vector2 position, Stats stats );                          //Parameterized Class constructor.
 
 	void onTick( const std::vector<Rectangle> collidables );             //Updates the state of the enemy during a single frame.
 	void updateDirection( Vector2 target );                              //Sets the movement direction of the character based on target position.
@@ -46,7 +46,7 @@ class Enemy : public Character
 	* @param : none
 	* @return Vector2 : The current position of the enemy.
 	---------------------------------------------------------------------------------------------------------------------------------------*/
-	Vector2 getPosition( ) const { return position; }
+	//Vector2 getPosition( ) const { return position; }
 
 	/*--------------------------------------------------------------------------------------------------------------------------------------
 	* getHealth( )

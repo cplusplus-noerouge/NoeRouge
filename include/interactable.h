@@ -1,5 +1,5 @@
 #pragma once
-#include "object.h"
+#include "objecthandler.h"
 #include "sprite.h"
 
 /*

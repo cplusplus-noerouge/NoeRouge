@@ -17,7 +17,6 @@
 #include "audio.h"
 #include "globals.h"
 
-using namespace std;
 
 
 extern CustomCamera mainCamera;   //Camera view of the map
@@ -68,6 +67,17 @@ void Player::onTick( const std::vector<Rectangle> colliders )
 		PlaySound( sfx[ "walkLeft.wav" ] );
 		walkTimer = 0.0f;
 	}
+	//**Reese** added player attack, outputs "ATTACKING" to console when space is pressed
+	if ( Controls::attack( ) )  // player attacks when space is pressed
+	{
+		//this->attack( enemies ); // Attack with a range of 50 and damage of 10
+	}
+	if ( Controls::defend( ) ) // player defends when left shift is pressed
+	{
+		//this->defend( enemies ); // Defend against enemy attacks
+	}
+
+	
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -78,7 +88,7 @@ void Player::onTick( const std::vector<Rectangle> colliders )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Player::onRender( )
 {
-	mainCamera.setPosition( position ); // Updating the camera position should be moved to its own class or function later on
+	mainCamera.setPosition( _position ); // Updating the camera position should be moved to its own class or function later on
 	// Animating the player
 	animation.onTick( );
 	// Freezing the animation at frame 1 if the player isn't moving
@@ -107,7 +117,7 @@ void Player::onRender( )
 		sprite.setSourceRect( { 48, 0, 16, 16 } );
 	}
 
-	sprite.update( position, position.y );
+	sprite.update( _position, _position.y );
 	mainCamera.addToBuffer( &sprite );
 }
 
@@ -126,9 +136,9 @@ void Player::attack( std::vector<Enemy*>& enemies )
 
 		for ( Enemy* enemy : enemies )
 		{
-			if ( enemy->checkCollision( position, attackRange ) )
+			if ( enemy->checkCollision( _position, attackRange ) )
 			{
-				cout << "ATTACKING" << endl;
+				std::cout << "ATTACKING" << std::endl;
 				PlaySound( sfx[ "laserShoot.wav" ] );
 				enemy->takeDamage( attackDamage );
 
@@ -160,7 +170,7 @@ void Player::defend( std::vector<Enemy*>& enemies )
 		BeginDrawing( );  // remove ( leftover code) 
 		for ( Enemy* enemy : enemies )
 		{
-			if ( enemy->checkCollision( position, attackRange ) )
+			if ( enemy->checkCollision( _position, attackRange ) )
 			{
 				//stop player movement
 				//stop incoming damage from enemy 
@@ -201,9 +211,9 @@ void Player::takeDamage( int damage, bool& playerDefeated )
 * @param int speed : Initial speed of player.
 * @return Player* : Pointer to the created Player object.
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-class Player* ObjectHandler::createPlayer( Vector2 position, Vector2 size, int speed )
+class Player* ObjectHandler::createPlayer( Vector2 position )
 {
-	class Player* Player = new class Player( 0, position, size, speed ); //id for player is always 0
+	class Player* Player = new class Player( 0, position); //id for player is always 0
 	allObjects[ Player->getId( ) ] = Player; //add <id, object*> to the map
 	this->numberOfObjects++;
 	return Player;

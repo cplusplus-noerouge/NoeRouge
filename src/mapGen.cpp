@@ -6,6 +6,7 @@ Devon, Irene, Evan, Ben S, possible others,
 #include <iostream>
 #include <vector>
 #include <list>
+#include <generateTileSprites.h>
 
 //PARITIONS =============================================================================================================================
 // Class representing a node in the BSP tree
@@ -322,16 +323,18 @@ void Floor::generateMapData()
 
     //create ladders between floors. could be changed to guarantee they are a certain distance apart or something
     BspNode* ladderUpNode = leafPartitions.front();
-    ladderUpX = ladderUpNode->roomCenterPointXCoordinate;
-    ladderUpY = ladderUpNode->roomCenterPointYCoordinate;
+    int ladderUpX = ladderUpNode->roomCenterPointXCoordinate;
+    int ladderUpY = ladderUpNode->roomCenterPointYCoordinate;
 
     data[ladderUpX][ladderUpY] = LADDER_UP;
+    ladderUpLocation = scaleToTile( ladderUpX, ladderUpY );
 
     BspNode* ladderDownNode = leafPartitions.back();
-    ladderDownX = ladderDownNode->roomCenterPointXCoordinate;
-    ladderDownY = ladderDownNode->roomCenterPointYCoordinate;
+    int ladderDownX = ladderDownNode->roomCenterPointXCoordinate;
+    int ladderDownY = ladderDownNode->roomCenterPointYCoordinate;
 
     data[ladderDownX][ladderDownY] = LADDER_DOWN;
+    ladderDownLocation = scaleToTile( ladderDownX, ladderDownY );
 
     //make the walls into rectangles that can be rendered
     walls = std::vector<Rectangle>();
@@ -358,6 +361,7 @@ void Floor::generateObjects()
     //make the object handler
     objHandler = new ObjectHandler;
 
+
     //make the ladder objects
     objHandler->createLadder(getLadderUpLocation(), 1);
     objHandler->createLadder(getLadderDownLocation(), -1);
@@ -369,7 +373,7 @@ void Floor::generateObjects()
         {
             if (data[x][y] == DOOR)
             {
-                objHandler->createDoor({ (float)x * TILE_SIZE,(float)y * TILE_SIZE });
+               objHandler->createDoor( scaleToTile( x, y ) );
             }
         }
     }
@@ -387,8 +391,8 @@ void Floor::generateObjects()
         data[enemyX][enemyY] = ENEMY;
 
         //create an enemy object.
-        Vector2 EnemyPos = { (float)enemyX * TILE_SIZE, (float)enemyY * TILE_SIZE };
-        objHandler->createEnemy(EnemyPos, { TILE_SIZE, TILE_SIZE }, 300);
+        Vector2 EnemyPos = scaleToTile( enemyX, enemyY );
+        objHandler->createEnemy( EnemyPos );
     }
 }
 /*------------------------------------------------------------------------------------------------------
@@ -399,6 +403,9 @@ Floor::Floor()
 {
     generateMapData();
     generateObjects();
+    _tileSprites = generateTileSprites( data );
+
+    
 
     //prints the floor in the console. this is for debugging so we can see the stuff that doesn't have graphics yet
     for (int y = 0; y < HEIGHT; y++)
@@ -411,6 +418,11 @@ Floor::Floor()
     }
 }
 
+//void Floor::setTileSprites( std::vector<Sprite> tileSprites )
+//{
+//   _tileSprites = tileSprites;
+//}
+
 /*------------------------------------------------------------
 returns the ladder up and ladder down location as a vector2
 returns the location as pixels
@@ -418,12 +430,12 @@ parameters - none
 ------------------------------------------------------------*/
 Vector2 Floor::getLadderUpLocation()
 {
-    return { (float)ladderUpX * TILE_SIZE, (float)ladderUpY * TILE_SIZE };
+   return ladderUpLocation;
 }
 
 Vector2 Floor::getLadderDownLocation( )
 {
-   return { ( float ) ladderDownX * TILE_SIZE, ( float ) ladderDownY * TILE_SIZE };
+   return ladderDownLocation;
 }
 Vector2 Floor::getEnemySpawn( )
 {
@@ -435,7 +447,7 @@ Vector2 Floor::getEnemySpawn( )
          if ( data[ x ][ y ] == FLOOR )
 
          {
-            return { ( float ) x * TILE_SIZE, ( float ) y * TILE_SIZE };
+            return scaleToTile( x, y );
          }
       }
    }
