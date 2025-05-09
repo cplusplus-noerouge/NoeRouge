@@ -1,6 +1,6 @@
 /*
 NoeRouge main file
-Devon,Reese everyone else who worked on this file put ur names here too so Vicki can grade
+Devon, Reese, others
 */
 // Includes
 #include <iostream>
@@ -28,6 +28,8 @@ CustomCamera mainCamera = CustomCamera( Vector2 { 320.0f, 180.0f }, 4.0f );
 //CustomCamera mainCamera = CustomCamera( Vector2 { 640.0f, 360.0f }, 2.0f );
 //CustomCamera mainCamera = CustomCamera( Vector2 { 1280, 720.0f }, 1.0f );
 
+MapHandler* mapHandler;
+
 std::unordered_map<std::string, Texture2D> textureMap = {};
 
 int main( )
@@ -39,8 +41,7 @@ int main( )
     InitAudioDevice();
     MusicPlayer musicPlayer = MusicPlayer();
 
-
-    MapHandler* mapHandler = new MapHandler;
+    mapHandler = new MapHandler;
     Floor* currentFloor = mapHandler->getCurrentFloor( );
     currentFloor->getObjHandler( )->createPlayer( currentFloor->getLadderDownLocation( ) );
     std::vector<Sprite> tileSprites = currentFloor->getTileSprites( );
@@ -51,15 +52,6 @@ int main( )
     while (!WindowShouldClose())
     { 
        float dT = GetFrameTime( );
-
-       if ( Controls::ladderUp( ) ) //up
-       {
-          mapHandler->changeFloor( true );
-       }
-       if ( Controls::ladderDown( ) ) //down
-       {
-          mapHandler->changeFloor( false );
-       }
 
        currentFloor->getObjHandler( )->tickAll( currentFloor->getWalls( ) );
        currentFloor->getObjHandler( )->renderAll( );

@@ -363,8 +363,8 @@ void Floor::generateObjects()
 
 
     //make the ladder objects
-    objHandler->createLadder(getLadderUpLocation(), 1);
-    objHandler->createLadder(getLadderDownLocation(), -1);
+    objHandler->createLadder(getLadderUpLocation(), true);
+    objHandler->createLadder(getLadderDownLocation(), false);
 
     //make the door objects
     for (int y = 0; y < HEIGHT; y++)

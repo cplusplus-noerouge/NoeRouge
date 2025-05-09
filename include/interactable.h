@@ -9,21 +9,16 @@ each subclass of interactable needs to have it's own interact() method
 */
 class Interactable : public GameObject
 {
-	private:
-	/*
-	* string interactionName  //for the UI, this will prob be a thing?
-	*/
-
 	protected:
-	Vector2 position;
-	Sprite sprite;
+	Vector2 position;				//coordinates in pixels
+	Sprite sprite;					//sprite that gets rendered at the object's position
 
 	public:
 	Interactable( );
 	Interactable(Vector2 pos);
 	Interactable(Vector2 pos, std::string texture);
 
-	virtual void interact( ) = 0;
+	virtual void interact( ) = 0;	//subclasses will override this with their own interact functionality
 	void onRender( ) override;
 	void onTick( const std::vector<Rectangle> collidables ) override;
 
@@ -38,39 +33,40 @@ class Interactable : public GameObject
 };
 
 /*
-a ladder that (TODO->) when interacted with changes the floor the player is on by floorChange amount
+a ladder that when interacted with changes the floor the player is on, either up or down
 - devon
 */
 class Ladder : public Interactable
 {
 	private:
-	int floorChange; //amount the floor index is changed by on interaction.
+	bool isLadderUp;	//true if it's an up ladder, false if it's a down ladder
 
 	public:
 	Ladder( );
-	Ladder(Vector2 pos, int floorChange);
+	Ladder(Vector2 pos, bool isLadderUp);
 
 	void interact( );
 	void onRender( ) override;
-	int getFloorChange( )
+	int getIsLadderUp( )
 	{
-		return floorChange;
+		return isLadderUp;
 	}
-	void setFloorChange(int changeVal)
+	void setIsLadderUp(int isLadderUp)
 	{
-		floorChange = changeVal;
+		this->isLadderUp = isLadderUp;
 	}
 };
 
 /*
-a door that (TODO->) can be interacted with to open and close it. it is impassable when closed
+a door that can be interacted with to open and close it. it is impassable when closed
 - devon
 */
 class Door : public Interactable
 {
 private:
 	bool isClosed;
-	//bool isLocked		//future thing?
+	const std::string openTexture = "doorOpen";			//name of the texture displayed when the door is open
+	const std::string closedTexture = "doorClosed";		//name of the texture displayed when the door is closed
 
 public:
 	Door();

@@ -25,12 +25,9 @@ std::map<int, Floor*> MapHandler::generateFloors( )
 }
 
 
-
-
 //-- During Gameplay
 
 void MapHandler::tickAndRender( ){}
-
 
 void MapHandler::changeFloor( bool trueisup )
 {
@@ -49,10 +46,10 @@ void MapHandler::changeFloor( bool trueisup )
 		Floor* floorNext = _floorMap[ nextFloor ];
 		ObjectHandler* handlerNext = floorNext->getObjHandler( );
 
-		float distanceToUpLadder = Vector2Distance( _currentFloor->getLadderUpLocation( ), player->getPosition( ) );
-		float distanceToDownLadder = Vector2Distance( _currentFloor->getLadderDownLocation( ), player->getPosition( ) );
+		//float distanceToUpLadder = Vector2Distance( _currentFloor->getLadderUpLocation( ), player->getPosition( ) ); //not needed anymore
+		//float distanceToDownLadder = Vector2Distance( _currentFloor->getLadderDownLocation( ), player->getPosition( ) );
 		
-		if ( trueisup && distanceToUpLadder < Settings::TILE_SIZE )
+		if ( trueisup ) //&& distanceToUpLadder < Settings::TILE_SIZE 
 		{
 			Vector2 goingUp = floorNext->getLadderDownLocation( );
 			_currentFloor->getObjHandler( )->transferObject( 0, *handlerNext );
@@ -61,7 +58,7 @@ void MapHandler::changeFloor( bool trueisup )
 			_floorIndex = nextFloor;
 			_currentFloor = _floorMap[ _floorIndex ];
 		}
-		else if ( !trueisup && distanceToDownLadder < Settings::TILE_SIZE )
+		else
 		{
 			Vector2 goingDown = floorNext->getLadderUpLocation( );
 			_currentFloor->getObjHandler( )->transferObject( 0, *handlerNext );
@@ -70,7 +67,22 @@ void MapHandler::changeFloor( bool trueisup )
 			_floorIndex = nextFloor;
 			_currentFloor = _floorMap[ _floorIndex ];
 		}
-		
-
 	}
+}
+
+// returns all the interactables on the current floor -devon
+std::vector<Interactable*> MapHandler::getInteractables()
+{
+	std::vector<Interactable*> interactables;
+	Interactable* casted;
+
+	std::map<int, GameObject*> objs = getCurrentFloor()->getObjHandler()->allObjects;
+	for (auto it = objs.begin(); it != objs.end(); ++it)
+	{
+		casted = dynamic_cast<Interactable*>(it->second);
+		if (casted)
+			interactables.push_back(casted);
+	}
+
+	return interactables;
 }
