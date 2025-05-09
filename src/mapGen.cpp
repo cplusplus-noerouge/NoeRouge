@@ -210,7 +210,7 @@ void makeCircleRoom( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )
    }
 }
 
-//a function that was just for testing and should be deleted but first it needs to be removed from the doors code -devon
+//originally just for testing but now is needed for the doors code - devon
 //Fill partition with DEBUGPARTITION
 void makeRoomContainer(BspNode& p, char(&map)[WIDTH][HEIGHT])
 {
@@ -291,6 +291,62 @@ void makeRandRoomShape(BspNode& p, char(&map)[WIDTH][HEIGHT])
    }
 }
 
+/*---------------------------------------------------------------------------------------------------------------
+* cullDoorIfBad() is a helper function for cullBadDoors(). it erases doors if they aren't sandwiched between walls
+* - devon
+* param char&map[][]: pass by ref to the array of map data
+* return: none, alters the data in char&map[][]
+---------------------------------------------------------------------------------------------------------------*/
+void cullDoorIfBad(char(&map)[WIDTH][HEIGHT], int x, int y)
+{
+    char left = map[x - 1][y];
+    char right = map[x + 1][y];
+    char above = map[x][y - 1];
+    char below = map[x][y + 1];
+
+    bool goodDoorX = left != FLOOR && right != FLOOR;
+    bool goodDoorY = above != FLOOR && below != FLOOR;
+
+    if (!(goodDoorX || goodDoorY))
+    {
+        map[x][y] = FLOOR;
+
+        //check for doors to the left or above that were mistakenly skipped when map[x,y] was a door
+        if (left == DOOR)
+            cullDoorIfBad(map, x - 1, y);
+        if (above == DOOR)
+            cullDoorIfBad(map, x, y - 1);
+    }
+}
+
+/*---------------------------------------------------------------------------------------------------------------
+* cullBadDoors() replaces doors that aren't sandwiched between walls (aka bad doors) with floors
+* - devon
+* param char&map[][]: pass by ref to the array of map data
+* return: none, alters the data in char&map[][]
+---------------------------------------------------------------------------------------------------------------*/
+void cullBadDoors(char(&map)[WIDTH][HEIGHT])
+{
+    bool inBoundsX, inBoundsY, goodDoorY, goodDoorX;
+
+    for (int y = 0; y < HEIGHT; y++)
+    {
+        for (int x = 0; x < WIDTH; x++)
+        {
+            if (map[x][y] != DOOR) //skip non-door tiles
+                continue;
+
+            inBoundsX = (x != 0) && (x != WIDTH - 1);
+            inBoundsY = (y != 0) && (y != HEIGHT - 1);
+            if (!inBoundsX || !inBoundsY) //skip edge tiles
+                continue;
+
+            //for all non-edge door tiles:
+            cullDoorIfBad(map, x, y);
+        }
+    }
+}
+
 //FLOOR================================================================================================================================
 /*------------------------------------------------------------------------------------------------------------------
 * Floor::generateMapData() generates the floors and walls, and determines spawn locations for ladders and doors
@@ -320,6 +376,7 @@ void Floor::generateMapData()
 
     //Create hallways and doors
     Hallways hallways(rootNode, *this);
+    cullBadDoors(data);
 
     //create ladders between floors. could be changed to guarantee they are a certain distance apart or something
     BspNode* ladderUpNode = leafPartitions.front();
@@ -388,7 +445,8 @@ void Floor::generateObjects()
         int enemyY = enemy->roomCenterPointYCoordinate;
         enemyY = rand() % enemyY + 2;
 
-        data[enemyX][enemyY] = ENEMY;
+        if (data[enemyX][enemyY] == FLOOR)
+            data[enemyX][enemyY] = ENEMY;
 
         //create an enemy object.
         Vector2 EnemyPos = scaleToTile( enemyX, enemyY );
@@ -404,8 +462,6 @@ Floor::Floor()
     generateMapData();
     generateObjects();
     _tileSprites = generateTileSprites( data );
-
-    
 
     //prints the floor in the console. this is for debugging so we can see the stuff that doesn't have graphics yet
     for (int y = 0; y < HEIGHT; y++)
