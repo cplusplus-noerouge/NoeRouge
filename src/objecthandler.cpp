@@ -34,16 +34,17 @@ void ObjectHandler::transferObject( int objId, ObjectHandler& newHandler )
 
 void ObjectHandler::tickAll( const std::vector<Rectangle> collidables )
 {
-   //this iterator gets all the objects
-   for ( auto it = allObjects.begin( ); it != allObjects.end( ); ++it )
-   {
-      it->second->onTick( collidables );
-   }
+    //this iterator visits all the objects. using a copy because allObjects can be edited by onTick -devon
+    std::map<int, GameObject*>objsCopy = allObjects;
+    for ( auto it = objsCopy.begin( ); it != objsCopy.end( ); ++it )
+    {
+        it->second->onTick( collidables );
+    }
 }
 
 void ObjectHandler::renderAll( )
 {
-   //this iterator gets all the objects
+   //this iterator visits all the objects
    for ( auto it = allObjects.begin( ); it != allObjects.end( ); ++it )
    {
       it->second->onRender( );

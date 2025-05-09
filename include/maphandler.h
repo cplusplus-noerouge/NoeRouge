@@ -1,10 +1,12 @@
 #pragma once
+#include <vector>
 #include "globals.h"
 #include "object.h"
 #include "mapGen.h"
 #include "player.h"
 #include "enemy.h"
 #include "generateTileSprites.h"
+#include "interactable.h"
 
 class MapHandler {
 	private:
@@ -25,4 +27,5 @@ class MapHandler {
 	void tickAndRender( );
 	void changeFloor( bool trueisdown );
 
+	std::vector<Interactable*> getInteractables();	//returns all the interactables on the current floor -devon
 };

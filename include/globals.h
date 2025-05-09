@@ -19,7 +19,6 @@ namespace Settings
 	extern const Vector2 TILE_DIMENSIONS;
 	extern const int ENEMY_COUNT;
 	inline const int NUM_OF_FLOORS = 4;
-	
 }
 
 namespace Controls
@@ -57,12 +56,8 @@ namespace Controls
 	}
 
 	//-- Interaction
-	inline bool ladderUp( )
+	inline bool interact()
 	{
-		return IsKeyPressed( KEY_RIGHT_BRACKET );
-	}
-	inline bool ladderDown( )
-	{
-		return IsKeyPressed( KEY_LEFT_BRACKET );
+		return IsKeyPressed(KEY_E);
 	}
 }

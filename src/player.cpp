@@ -1,7 +1,7 @@
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * noeRouge
 * Player class
-* Ben A, Kaleb, Reese, Ethan, Thomas, Adam
+* Ben A, Kaleb, Reese, Ethan, Thomas, Adam, Devon
 * Inherits from Character class.
 * Inherits sprite functionality from Sprite class.
 * Inherits character functionality from Character class.
@@ -9,6 +9,7 @@
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 
 #include <iostream>
+#include <cmath>
 #include "player.h"
 #include "object.h"
 #include "customCamera.h"
@@ -16,9 +17,9 @@
 #include "enemy.h"
 #include "audio.h"
 #include "globals.h"
+#include "maphandler.h"
 
-
-
+extern MapHandler* mapHandler;
 extern CustomCamera mainCamera;   //Camera view of the map
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -67,17 +68,24 @@ void Player::onTick( const std::vector<Rectangle> colliders )
 		PlaySound( sfx[ "walkLeft.wav" ] );
 		walkTimer = 0.0f;
 	}
-	//**Reese** added player attack, outputs "ATTACKING" to console when space is pressed
-	if ( Controls::attack( ) )  // player attacks when space is pressed
-	{
-		//this->attack( enemies ); // Attack with a range of 50 and damage of 10
-	}
-	if ( Controls::defend( ) ) // player defends when left shift is pressed
-	{
-		//this->defend( enemies ); // Defend against enemy attacks
-	}
 
-	
+	keyPressAllowed = !keyPressAllowed;	//this value changes every tick so that raylib only recognizes the keypresses once
+	if (keyPressAllowed)
+	{
+		//**Reese** added player attack, outputs "ATTACKING" to console when space is pressed
+		if ( Controls::attack( ) )  // player attacks when space is pressed
+		{
+			//this->attack( enemies ); // Attack with a range of 50 and damage of 10
+		}
+		if ( Controls::defend( ) ) // player defends when left shift is pressed
+		{
+			//this->defend( enemies ); // Defend against enemy attacks
+		}
+		if ( Controls::interact( ) ) //  Try to interact with nearest interactable object -devon
+		{
+			interactWithNearest();
+		}
+	}
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -245,5 +253,36 @@ void Player::dodge( )
 	if ( dodgeCooldown > 0 )
 	{
 		dodgeCooldown--; //Decriments dodgeCooldown each frame
+	}
+}
+
+/*---------------------------------------------------------------------------------------------------------------------------------------
+* void interactWithNearest()
+* Devon Johnson
+* @brief : Interacts with the nearest Interactable if there is one in range
+* @param : none
+* @return : none
+----------------------------------------------------------------------------------------------------------------------------------------*/
+void Player::interactWithNearest()
+{
+	Interactable* closestInteractable = NULL;
+	int distToClosest = INT_MAX;
+
+	//get closest interactable
+	float dist;
+	for (Interactable* i : mapHandler->getInteractables())
+	{
+		dist = Vector2Distance(i->getPos(), getPosition());
+		if (dist < distToClosest)
+		{
+			distToClosest = dist;
+			closestInteractable = i;
+		}
+	}
+
+	//check if the closest interactable is in range
+	if (distToClosest < INTERACTION_RANGE)
+	{
+		closestInteractable->interact();
 	}
 }
