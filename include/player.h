@@ -29,7 +29,7 @@ private:
    int health;                                   //Player health
    int dodgeCooldown;                            //Cooldown length of dodge ability
    float walkTimer;                              //Time between steps
-   SheetSprite sprite;                           //Set of 9 sprites for the player
+   SheetSprite sprite;                           //Set of 4 sprites for the player
    Animation animation = Animation( 4, 0.15 );   //Players movement animation
 
 public:

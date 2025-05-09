@@ -12,6 +12,17 @@
 
 #pragma once
 #include "character.h"
+#include <raylib.h>
+#include <iostream>
+#include <cmath>
+#include <raymath.h>
+#include <vector>
+#include "globals.h"
+#include "object.h"
+#include "audio.h"
+#include <animation.h>
+#include "sheetSprite.h"
+#include <customCamera.h>
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * @brief : Struct to hold various stat-related properties of an enemy
@@ -31,6 +42,8 @@ class Enemy : public Character
 	public:
 	int world_position[ 2 ];                                             //Make this public for accessibility  
 	Stats stats;                                                         //Struct holding the enemy's stats 
+	SheetSprite sprite;                           //Set of 9 sprites for the enemy
+	Animation animation = Animation( 4, 0.15 );   //Enemy's movement animation
 
 	Enemy( int id, Vector2 position, Stats stats );                          //Parameterized Class constructor.
 

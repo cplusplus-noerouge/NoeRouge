@@ -9,25 +9,17 @@
 * - Add AI behavior?
 * - Include more interaction with player?
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-
-#include <raylib.h>
-#include <iostream>
-#include <cmath>
-#include <raymath.h>
-#include <vector>
-#include "globals.h"
-#include "object.h"
-#include "character.h"
 #include "enemy.h"
-#include "audio.h"
 
 using namespace std;
+
+extern CustomCamera mainCamera;   //Camera view of the map
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * @brief : Parameterized Class constructor, initializes the enemy's ID, stats, and position in the world.
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 Enemy::Enemy( int id, Vector2 position, Stats stats )
-	: Character( id, position ), // Call Character constructor
+	: Character( id, position ),   //Call Character constructor
 	stats( stats )
 {
 	this->setId( id );
@@ -42,16 +34,16 @@ Enemy::Enemy( int id, Vector2 position, Stats stats )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Enemy::onTick( const std::vector<Rectangle> collidables )
 {
-	//Update movement direction (likely handled by inherited Character method)
+	   //Update movement direction (likely handled by inherited Character method)
 	updateDirection( _position );
 
-	//Calculate velocity based on direction and frame time
+	   //Calculate velocity based on direction and frame time
 	velocity = Vector2Scale( direction, Settings::PLAYER_SPEED * GetFrameTime( ) );
 
-	//Update position by adding velocity
+	   //Update position by adding velocity
 	_position = Vector2Add( _position, velocity );
 
-	//Check and resolve collisions with game world objects
+	   //Check and resolve collisions with game world objects
 	updateCollisions( collidables );
 }
 
@@ -89,10 +81,24 @@ void Enemy::updateDirection( Vector2 target )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Enemy::onRender( )
 {
-	//Draw the enemy as a red rectangle
-	DrawRectangle( _position.x, _position.y, 100, 100, RED );
+	   //Animating the enemy
+	animation.onTick( );
+	   //Freezing the animation at frame 1 if the player isn't moving
+	   //WARNING! This logic will need to be revised when implementing other animations that aren't just for walking.
+	if ( Vector2Equals( direction, { 0 , 0 } ) )
+	{
+		animation.reset( );
+	}
+	sprite.setTexture( "alienAWalk" + std::to_string( animation.getFrame( ) ) );
 
-	//Draw the enemy's health above the rectangle
+	   //Setting the position referenced on the sheet based on the direction the plaer is facing
+	sprite.setSourceRect( { 16 + ( direction.x * 16 ), 16 + ( direction.y * 16 ), 16, 16 } );
+
+
+	sprite.update( _position, _position.y );
+	mainCamera.addToBuffer( &sprite );
+
+	   //Draw the enemy's health above the rectangle
 	DrawText( TextFormat( "HP: %d", stats.health ), _position.x, _position.y, 35, BLACK );
 }
 
@@ -104,7 +110,7 @@ void Enemy::onRender( )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Enemy::takeDamage( int damage )
 {
-	//Reduce health by damage amount, and ensures it doesn't go below zero
+	   //Reduce health by damage amount, and ensures it doesn't go below zero
 	stats.health -= damage;
 	stats.health = ( int ) Clamp( stats.health, 0, stats.health );
 
@@ -116,10 +122,10 @@ void Enemy::takeDamage( int damage )
 	else if ( stats.health <= 0 )
 	{
 		PlaySound( sfx[ "hitHurt (3).wav" ] );
-		//Reset health to initial value (could be defined in Stats struct), Assuming initial health is 3
+		   //Reset health to initial value (could be defined in Stats struct), Assuming initial health is 3
 		stats.health = 3;
 
-		//Reset position to some default value
+		   //Reset position to some default value
 		_position.x = 100;
 		_position.y = 100;
 		std::cout << "Enemy is dead!" << std::endl;
@@ -140,7 +146,7 @@ bool Enemy::checkCollision( Vector2 playerPos, float attackRange ) const
 	float dy = playerPos.y - _position.x;
 	float distance = sqrt( dx * dx + dy * dy );
 
-	//Returns true if the distance is less than the attack range
+	   //Returns true if the distance is less than the attack range
 	return distance < attackRange;
 }
 
@@ -155,9 +161,9 @@ bool Enemy::checkCollision( Vector2 playerPos, float attackRange ) const
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 Enemy* ObjectHandler::createEnemy( Vector2 position )
 {
-	Stats enemyStats = { 3, 1, 25, 5 }; // stats: hp, damage, range, speed
-	Enemy* newEnemy = new Enemy( nextId++, position, enemyStats );
-	allObjects[ newEnemy->getId( ) ] = newEnemy; // Add <id, object*> to the map
+	Stats enemyStats = { 3, 1, 25, 5 };                              //stats: hp, damage, range, speed
+	Enemy* newEnemy = new Enemy( nextId++, position, enemyStats );   
+	allObjects[ newEnemy->getId( ) ] = newEnemy;                     //Add <id, object*> to the map
 	this->numberOfObjects++;
 	return newEnemy;
 

@@ -88,18 +88,18 @@ void Player::onTick( const std::vector<Rectangle> colliders )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Player::onRender( )
 {
-	mainCamera.setPosition( _position ); // Updating the camera position should be moved to its own class or function later on
-	// Animating the player
+	mainCamera.setPosition( _position );   //Updating the camera position should be moved to its own class or function later on
+	   //Animating the player
 	animation.onTick( );
-	// Freezing the animation at frame 1 if the player isn't moving
-	// WARNING! This logic will need to be revised when implementing other animations that aren't just for walking.
+	   //Freezing the animation at frame 1 if the player isn't moving
+	   //WARNING! This logic will need to be revised when implementing other animations that aren't just for walking.
 	if ( Vector2Equals( direction, { 0 , 0 } ) )
 	{
 		animation.reset( );
 	}
 	sprite.setTexture( "playerWalk" + std::to_string( animation.getFrame( ) ) );
 
-	// Setting the position referenced on the sheet based on the direction the plaer is facing
+	   //Setting the position referenced on the sheet based on the direction the plaer is facing
 	if ( direction.x < 0 )
 	{
 		sprite.setSourceRect( { 0, 0, 16, 16 } );
@@ -130,10 +130,7 @@ void Player::onRender( )
 void Player::attack( std::vector<Enemy*>& enemies )
 {
 	if ( Controls::attack() )
-
-	{  // Attack with SPACE
-	  // BeginDrawing( );  // Ensure you're inside a drawing context
-
+	{  
 		for ( Enemy* enemy : enemies )
 		{
 			if ( enemy->checkCollision( _position, attackRange ) )
@@ -142,12 +139,12 @@ void Player::attack( std::vector<Enemy*>& enemies )
 				PlaySound( sfx[ "laserShoot.wav" ] );
 				enemy->takeDamage( attackDamage );
 
-				//// Calculate the position to display the hit effect
+				   //Calculate the position to display the hit effect
 				Vector2 enemyPosition = enemy->getPosition( );
-				Vector2 position = { enemyPosition.x - 20, enemyPosition.y - 20 }; // Adjust as needed for centering text
-				// Set the font size and color for the hit effect
-				// Display hit effect
-			  // Vector2 position = enemy->getPosition( );
+				Vector2 position = { enemyPosition.x - 20, enemyPosition.y - 20 };   //Adjust as needed for centering text
+				   //Set the font size and color for the hit effect
+				   //Display hit effect
+			      //Vector2 position = enemy->getPosition( );
 				DrawText( "HIT!", position.x + 30, position.y + 30, 30, RAYWHITE );
 			}
 		}
@@ -213,8 +210,8 @@ void Player::takeDamage( int damage, bool& playerDefeated )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 class Player* ObjectHandler::createPlayer( Vector2 position )
 {
-	class Player* Player = new class Player( 0, position); //id for player is always 0
-	allObjects[ Player->getId( ) ] = Player; //add <id, object*> to the map
+	class Player* Player = new class Player( 0, position);   //id for player is always 0
+	allObjects[ Player->getId( ) ] = Player;                 //add <id, object*> to the map
 	this->numberOfObjects++;
 	return Player;
 }
