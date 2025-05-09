@@ -86,3 +86,20 @@ std::vector<Interactable*> MapHandler::getInteractables()
 
 	return interactables;
 }
+
+// returns all the enemies on the current floor -devon
+std::vector<Enemy*> MapHandler::getEnemies()
+{
+	std::vector<Enemy*> enemies;
+	Enemy* casted;
+
+	std::map<int, GameObject*> objs = getCurrentFloor()->getObjHandler()->allObjects;
+	for (auto it = objs.begin(); it != objs.end(); ++it)
+	{
+		casted = dynamic_cast<Enemy*>(it->second);
+		if (casted)
+			enemies.push_back(casted);
+	}
+
+	return enemies;
+}

@@ -28,4 +28,5 @@ class MapHandler {
 	void changeFloor( bool trueisdown );
 
 	std::vector<Interactable*> getInteractables();	//returns all the interactables on the current floor -devon
+	std::vector<Enemy*> getEnemies();	    //returns all the enemies on the current floor -devon
 };
