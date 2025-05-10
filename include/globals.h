@@ -15,6 +15,7 @@ namespace Settings
 
 	//-- Gameplay
 	extern const int PLAYER_SPEED;
+	extern const int ENEMY_SPEED;
 	extern const float TILE_SIZE;
 	extern const Vector2 TILE_DIMENSIONS;
 	extern const int ENEMY_COUNT;

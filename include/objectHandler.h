@@ -31,6 +31,7 @@ class ObjectHandler
 
    void tickAll( const std::vector<Rectangle> collidables );
    void renderAll( );
+   //void enemyKilled( Enemy* enemy );
 
    void transferObject( int objId, ObjectHandler& newHandler );
    class GameObject* getObject( int id );
