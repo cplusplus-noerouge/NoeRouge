@@ -34,7 +34,9 @@ private:
    SheetSprite sprite;                           //Set of 4 sprites for the player
    Animation animation = Animation( 4, 0.15 );   //Players movement animation
    bool keyPressAllowed;                         //Quick fix for the issue where two attack/interact/etc are called per keypress -devon
-
+   bool isInvincible = false;                    //Tracks if the player is invincible-KF
+   float invincibilityTimer = 0.0f;              //Timer for invincibility frames-KF
+   const float invincibilityDuration = 0.7f;     //Duration of invincibility in seconds-KF
    void interactWithNearest();                   //Interacts with the nearest Interactable if there is one in range -devon
 
 public:
@@ -50,7 +52,17 @@ public:
        walkTimer = 0.0f;
        keyPressAllowed = true;
     }
-    
+
+    /*-----------------------------------------------------------------------------------------------------------------------------------
+     * @brief : Accesors for Invicibility Frame
+    ------------------------------------------------------------------------------------------------------------------------------------*/
+    void setInvincible( bool invincible );
+    void updateInvincibility( ); 
+    bool getIsInvincible( ) const
+    {
+       return isInvincible;
+    }
+
     void updateDirection( ) override;                               //Sets the movement direction of the character based on control input.
     void onTick(const std::vector<Rectangle> colliders) override;   //Updates the state of the player during a single frame.
     void onRender( ) override;                                      //Renders the player on screen.

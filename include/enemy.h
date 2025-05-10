@@ -38,7 +38,7 @@ struct Stats
 class Enemy : public Character
 {
 	private:
-
+	bool damageBlocked = false; // Tracks if damage is blocked
 	public:
 	int world_position[ 2 ];                                             //Make this public for accessibility  
 	Stats stats;                                                         //Struct holding the enemy's stats 
@@ -68,4 +68,7 @@ class Enemy : public Character
 	* @return int : The current heatlh of the enemy.
 	---------------------------------------------------------------------------------------------------------------------------------------*/
 	int getHealth( ) const { return stats.health; }
+
+	void setDamageBlocked( bool blocked ){ damageBlocked = blocked;}
+	bool isDamageBlocked( ) const { return damageBlocked;}
 };

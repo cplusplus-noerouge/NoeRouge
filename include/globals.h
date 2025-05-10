@@ -48,11 +48,11 @@ namespace Controls
 	}
 	inline bool defend( )
 	{
-		return IsKeyDown( KEY_LEFT_SHIFT );
+		return IsKeyDown( KEY_K );
 	}
 	inline bool dodge( )
 	{
-		return IsKeyDown( KEY_LEFT_SHIFT );
+		return IsKeyDown( KEY_J );
 	}
 
 	//-- Interaction

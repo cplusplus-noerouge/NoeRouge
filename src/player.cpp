@@ -173,20 +173,49 @@ void Player::attack( std::vector<Enemy*>& enemies )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Player::defend( std::vector<Enemy*>& enemies )
 {
-
-	if ( Controls::defend() )
+	if ( IsKeyDown( KEY_K ) )
 	{
-		BeginDrawing( );  // remove ( leftover code) 
+		if ( !isInvincible )
+		{
+			setInvincible( true );
+		}
 		for ( Enemy* enemy : enemies )
 		{
 			if ( enemy->checkCollision( _position, attackRange ) )
 			{
-				//stop player movement
-				//stop incoming damage from enemy 
+				enemy->setDamageBlocked( true );
 			}
 		}
 		std::cout << "Defending against enemy attack!";
-		EndDrawing( );
+	}
+	else
+	{
+		for ( Enemy* enemy : enemies )
+		{
+			enemy->setDamageBlocked( false ); // Reset damage block
+		}
+	}
+}
+// Sets the invincibility state and resets the timer if invincible
+void Player::setInvincible( bool invincible )
+{
+	isInvincible = invincible;
+	if ( invincible )
+	{
+		invincibilityTimer = invincibilityDuration; // Reset the timer
+	}
+}
+// Updates the invincibility timer and disables invincibility when the timer expires
+void Player::updateInvincibility( )
+{
+	if ( isInvincible )
+	{
+		invincibilityTimer -= GetFrameTime( ); // Decrease timer by frame time
+		if ( invincibilityTimer <= 0.0f )
+		{
+			isInvincible = false; // Disable invincibility
+			invincibilityTimer = 0.0f;
+		}
 	}
 }
 /*---------------------------------------------------------------------------------------------------------------------------------------
