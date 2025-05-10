@@ -183,18 +183,13 @@ void Enemy::attackPlayer( Player* player )
 	if (stats.health <= 0 ) return;
 
 	// distance check
-	Vector2 pPos = player->getPosition( );
-	float dx = pPos.x - _position.x;
-	float dy = pPos.y - _position.y;
-	float dist = std::sqrt( dx * dx + dy * dy );
+	if ( checkCollision( player->getPosition( ), stats.attackRange ) )
+	{
+		player->takeDamage( stats.attackDamage );
+	}
 
 	//cooldown
 	timeSinceLastAttack += GetFrameTime( );
 	if ( timeSinceLastAttack < attackInterval ) return;
 	timeSinceLastAttack = 0.f;
-
-	if ( dist <= stats.attackRange )
-	{
-		player->takeDamage( stats.attackDamage );
-	}
 }
