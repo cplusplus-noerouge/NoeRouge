@@ -4,6 +4,10 @@
 #include "maphandler.h"
 
 
+Sprite winScreen = Sprite( "Placeholder slash particle.png", Vector2 { 0, 0 }, 200000 );       //TEMPORARY sprite/texture for player win display, both need actual sprite
+Sprite loseScreen = Sprite( "Placeholder block tile.png", Vector2 { 0, 0 }, 200000 );      //TEMPORARY sprite/texture for game over display
+
+
 MapHandler::MapHandler( )
 {
 	_floorMap = generateFloors( );
@@ -72,9 +76,6 @@ void MapHandler::changeFloor( bool trueisup )
 	{
 		Floor* floorNext = _floorMap[ nextFloor ];
 		ObjectHandler* handlerNext = floorNext->getObjHandler( );
-
-		//float distanceToUpLadder = Vector2Distance( _currentFloor->getLadderUpLocation( ), player->getPosition( ) ); //not needed anymore
-		//float distanceToDownLadder = Vector2Distance( _currentFloor->getLadderDownLocation( ), player->getPosition( ) );
 		
 		if ( trueisup ) //&& distanceToUpLadder < Settings::TILE_SIZE 
 		{
@@ -129,4 +130,25 @@ std::vector<Enemy*> MapHandler::getEnemies()
 	}
 
 	return enemies;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------
+* endGame() displays a game over/win screen
+* - Andrew
+* param bool win: whether or not the win condition has been met
+* this function can only be reached by either of the win or lose conditions, or both, being true,
+*    so only one needs to be checked
+* return: sets gameEnd to true after displaying game over screen
+---------------------------------------------------------------------------------------------------------------------*/
+bool MapHandler::endGame( bool win )
+{
+	if ( win )
+	{
+		winScreen.render( Vector2 { 0,0 } );
+	}
+	else
+	{
+		loseScreen.render( Vector2 { 0,0 } );
+	}
+	return true;
 }

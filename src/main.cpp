@@ -26,14 +26,10 @@ ScreenHandler screenHandler = ScreenHandler( );
 // IMPORTANT! These are different versions of the camera with different zoom levels, uncomment the one you want.
 CustomCamera mainCamera = CustomCamera( Vector2 { 320.0f, 180.0f }, 4.0f );
 //CustomCamera mainCamera = CustomCamera( Vector2 { 640.0f, 360.0f }, 2.0f );
-CustomCamera mainCamera = CustomCamera( Vector2 { 1280, 720.0f }, 1.0f );
-Sprite winScreen = Sprite("Placeholder slash particle.png", Vector2 { 0, 0 }, 200000);       //TEMPORARY sprite/texture for player win display, both need actual sprite
-Sprite loseScreen = Sprite("Placeholder block tile.png", Vector2 { 0, 0 }, 200000);      //TEMPORARY sprite/texture for game over display
 //CustomCamera mainCamera = CustomCamera( Vector2 { 1280, 720.0f }, 1.0f );
 
 MapHandler* mapHandler;
 
-void endGame(bool gameWin);                                  //ends the game if the player wins or loses, temporary data types and names, to be updated
 std::unordered_map<std::string, Texture2D> textureMap = {};
 
 int main( )
@@ -82,18 +78,17 @@ int main( )
         screenHandler.renderAll( );
 
         musicPlayer.onTick();
-    }
         
         //procedure for ending the game, either upon clearing the last floor or the player being defeated   -Andrew
         if ((gameWin || playerDefeated) && !gameEnd)
         {
-            endGame(gameWin);
+            mapHandler->endGame(gameWin);
         }
 
         //check if the player presses the key to close the game from end screen after the game is over     -Andrew
         if (gameEnd)
         {
-            if (IsKeyPressed(KEY_SPACEBAR))
+            if (IsKeyPressed(KEY_SPACE))
             {
                 closeWindow = true;
             }
@@ -133,15 +128,15 @@ int main( )
 *    so only one needs to be checked
 * return: sets gameEnd to true after displaying game over screen
 ---------------------------------------------------------------------------------------------------------------------*/
-void endGame(bool win)
-{
-    if (win)
-    {
-        winScreen.render(Vector2{ 0,0 });
-    }
-    else
-    {
-        loseScreen.render(Vector2{ 0,0 });
-    }
-    gameEnd = true;
-}
+//void endGame(bool win)
+//{
+//    if (win)
+//    {
+//        winScreen.render(Vector2{ 0,0 });
+//    }
+//    else
+//    {
+//        loseScreen.render(Vector2{ 0,0 });
+//    }
+//    gameEnd = true;
+//}
