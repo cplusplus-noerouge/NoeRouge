@@ -124,15 +124,12 @@ void Enemy::takeDamage( int damage )
 		DrawText( "HIT!", static_cast< int >( screenPos.x - 20 ), static_cast< int >( screenPos.y - 20 ), 30, RAYWHITE );
 		DrawText( TextFormat( "HP: %d", stats.health ), static_cast< int >( _position.x ), static_cast< int >( _position.y - 30 ), 25, BLACK );
 		PlaySound( sfx[ "hitHurt (3).wav" ] );
-
 		std::cout << "Enemy health is now: " << stats.health << std::endl;
 	}
 	else
 	{
 		// Enemy is dead, reset or respawn
 		std::cout << "Enemy defeated!" << std::endl;
-		PlaySound( sfx[ "hitHurt (3).wav" ] );
-
 		// Reset health (respawn)
 		stats.health = 3;
 		std::cout << "Enemy respawned with " << stats.health << " health!" << std::endl;

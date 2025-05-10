@@ -142,12 +142,12 @@ void Player::onRender( )
 void Player::attack( std::vector<Enemy*>& enemies )
 {
 	if ( Controls::attack( ) )
-	{
+	{  std::cout << "ATTACKING" << std::endl;
 		for ( Enemy* enemy : enemies )
 		{
 			if ( enemy->checkCollision( _position, attackRange ) )
 			{
-				std::cout << "ATTACKING" << std::endl;
+				
 				PlaySound( sfx[ "laserShoot.wav" ] );
 				Vector2 enemyPosition = enemy->getNearestPosition( );
 				enemy->takeDamage( attackDamage );
