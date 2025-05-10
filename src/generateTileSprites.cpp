@@ -105,12 +105,6 @@ std::vector<Sprite> generateTileSprites( char data[ WIDTH ][ HEIGHT ] )
 			{
 				tileSprites.push_back( Sprite( "hole", { ( float ) x * 16, ( float ) y * 16 }, y * 16 - 999 ) );
 			}
-			else if (data[x][y] == DECOR) // - devon
-			{
-				// Determining the tile to reference on the sprite sheet
-				Vector2 sheetOffset = { 0, 0 };
-				tileSprites.push_back(SheetSprite("floor", { sheetOffset.x, sheetOffset.y, 16, 16 }, { (float)x * 16, (float)y * 16 }, y * 16 - 999));
-			}
 		}
 	}
 
