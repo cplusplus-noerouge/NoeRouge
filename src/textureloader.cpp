@@ -67,6 +67,12 @@ void loadAllTextures( )
 	loadSingleTexture( "wallA", filePath + "wallSheetA.png" );
 	loadSingleTexture( "wallB", filePath + "wallSheetB.png" );
 	loadSingleTexture( "wallC", filePath + "wallSheetC.png" );
+	loadSingleTexture( "window1", filePath + "window1.png" );
+	loadSingleTexture( "window2", filePath + "window2.png");
+	loadSingleTexture( "window3", filePath + "window3.png");
+	loadSingleTexture( "wallPanel1", filePath + "wallPanel1.png");
+	loadSingleTexture( "wallPanel2", filePath + "wallPanel2.png");
+	loadSingleTexture( "wallPanel3", filePath + "wallPanel3.png");
 
 	   // Item textures
 	filePath = "../../../assets/graphics/items/";

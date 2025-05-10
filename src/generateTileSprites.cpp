@@ -8,6 +8,19 @@ extern const int WIDTH;
 extern const int HEIGHT;
 
 /*---------------------------------------------
+* @brief: Gets the name of a random wall decor texture
+*   - devon
+* @param: None
+* @return: The name of a wall decor texture
+*/
+std::string getRandomWallDecor()
+{
+	std::string options[] = {"window1","window2","window3","wallPanel1","wallPanel2","wallPanel3"};
+	std::string texture;
+	int index = GetRandomValue(1, 5);
+	return options[index];
+}
+/*---------------------------------------------
 * @brief: Assigns a sprite to every visible tile
 * @param: *floor = A pointer the the current floor the player is on
 * @return: A vector of the sprites created
@@ -67,6 +80,13 @@ std::vector<Sprite> generateTileSprites( char data[ WIDTH ][ HEIGHT ] )
 					}
 
 					tileSprites.push_back( SheetSprite( "wallA", { sheetOffsetX, 0, 16, 16 }, { ( float ) x * 16, ( float ) y * 16 }, y * 16 ) );
+
+						// Add a decoration to some walls - devon
+					if ( rand() % 2 )
+					{
+						std::string texture = getRandomWallDecor();
+						tileSprites.push_back(Sprite(texture, { (float)x * 16, (float)y * 16 }, y * 16 + 1));
+					}
 				}
 			}
 			else if ( data[ x ][ y ] == '@' )
@@ -84,6 +104,12 @@ std::vector<Sprite> generateTileSprites( char data[ WIDTH ][ HEIGHT ] )
 			else if ( data[ x ][ y ] == '>' )
 			{
 				tileSprites.push_back( Sprite( "hole", { ( float ) x * 16, ( float ) y * 16 }, y * 16 - 999 ) );
+			}
+			else if (data[x][y] == DECOR) // - devon
+			{
+				// Determining the tile to reference on the sprite sheet
+				Vector2 sheetOffset = { 0, 0 };
+				tileSprites.push_back(SheetSprite("floor", { sheetOffset.x, sheetOffset.y, 16, 16 }, { (float)x * 16, (float)y * 16 }, y * 16 - 999));
 			}
 		}
 	}

@@ -20,6 +20,7 @@ const int MINSIZE = 10;                 //minimum for each partition/BSP leaf's 
 const int TILE_SIZE = Settings::TILE_SIZE;               //The x & y size of each tile in the game world in pixels
 
 const char WALL = '#';                  //char to represent walls
+const char DECOR = 'd';                  //char to represent decorations (collide like walls, random decor sprites)
 const char FLOOR = '.';                 //char to represent floors
 const char LADDER_UP = '<';             //ladder to the above floor
 const char LADDER_DOWN = '>';           //ladder to the below floor
