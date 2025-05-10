@@ -42,7 +42,7 @@ public:
     /*-----------------------------------------------------------------------------------------------------------------------------------
      * @brief : Parameterized Class constructor.
     ------------------------------------------------------------------------------------------------------------------------------------*/
-    Player(int id, Vector2 position) 
+    Player(int id, Vector2 position)
        : Character(id, position), attackRange(50.0f), attackDamage( 1 ), health( 5 ), dodgeCooldown( 0 )
     { 
        Animation animation = Animation( 4, 0.1 );
