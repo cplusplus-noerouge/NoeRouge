@@ -27,7 +27,34 @@ std::map<int, Floor*> MapHandler::generateFloors( )
 
 //-- During Gameplay
 
-void MapHandler::tickAndRender( ){}
+void MapHandler::tickAndRender( )
+{
+	std::vector<Rectangle> boundaries;
+	std::vector<Enemy*> enemies = getEnemies( );
+	std::vector<Interactable*> interactables = getInteractables( );
+	std::vector<Rectangle> walls = _currentFloor->getWalls( );
+
+	
+	for ( Enemy* enemy : enemies )
+	{
+		boundaries.push_back( { enemy->getPosition( ).x, enemy->getPosition( ).y, Settings::TILE_SIZE, Settings::TILE_SIZE } );
+	}
+	
+
+	Door* casted;
+	for ( auto it = interactables.begin( ); it != interactables.end( ); ++it )
+	{
+		casted = dynamic_cast< Door* >( *it );
+		if ( casted && casted->getIsClosed( ) == true )
+			boundaries.push_back( { casted->getPos( ).x, casted->getPos( ).y, Settings::TILE_SIZE, Settings::TILE_SIZE } );
+	}
+
+
+	boundaries.insert( boundaries.end( ), walls.begin( ), walls.end( ) );
+
+	_currentFloor->getObjHandler( )->tickAll( boundaries );
+	_currentFloor->getObjHandler( )->renderAll( );
+}
 
 void MapHandler::changeFloor( bool trueisup )
 {
