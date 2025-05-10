@@ -109,34 +109,3 @@ int main( )
 
     return 0;
 }
-
-/*------------------------------------------------------------------------------------------------------------------
-* changeFloor() changes the players current floor.
-* - devon
-* param vector<Sprite>& wallSprites: sprites of the walls. edited by this function
-* param Floor* floors[NUM_OF_FLOORS]: array of all the floors in the game
-* param int& floorOn: the index of the floor the player is currently on. edited by this function
-* param int changeVal: the amount by which the floor index is changed. exe -1 is down a floor, and 1 is up a floor
-* return: the data in wallSprites and floorOn is altered
-------------------------------------------------------------------------------------------------------------------*/
-
-/*---------------------------------------------------------------------------------------------------------------------
-* endGame() displays a game over/win screen
-* - Andrew
-* param bool win: whether or not the win condition has been met
-* this function can only be reached by either of the win or lose conditions, or both, being true, 
-*    so only one needs to be checked
-* return: sets gameEnd to true after displaying game over screen
----------------------------------------------------------------------------------------------------------------------*/
-//void endGame(bool win)
-//{
-//    if (win)
-//    {
-//        winScreen.render(Vector2{ 0,0 });
-//    }
-//    else
-//    {
-//        loseScreen.render(Vector2{ 0,0 });
-//    }
-//    gameEnd = true;
-//}
