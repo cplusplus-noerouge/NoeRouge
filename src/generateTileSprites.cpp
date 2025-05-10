@@ -8,19 +8,6 @@ extern const int WIDTH;
 extern const int HEIGHT;
 
 /*---------------------------------------------
-* @brief: Gets the name of a random wall decor texture
-*   - devon
-* @param: None
-* @return: The name of a wall decor texture
-*/
-std::string getRandomWallDecor()
-{
-	std::string options[] = {"window1","window2","window3","wallPanel1","wallPanel2","wallPanel3"};
-	std::string texture;
-	int index = GetRandomValue(1, 5);
-	return options[index];
-}
-/*---------------------------------------------
 * @brief: Assigns a sprite to every visible tile
 * @param: *floor = A pointer the the current floor the player is on
 * @return: A vector of the sprites created
@@ -109,4 +96,18 @@ std::vector<Sprite> generateTileSprites( char data[ WIDTH ][ HEIGHT ] )
 	}
 
 	return tileSprites;
+}
+
+/*---------------------------------------------
+* @brief: Gets the name of a random wall decor texture
+*   - devon
+* @param: None
+* @return: The name of a wall decor texture
+*/
+std::string getRandomWallDecor()
+{
+	std::string options[] = { "window1","window2","window3","wallPanel1","wallPanel2","wallPanel3" };
+	std::string texture;
+	int index = GetRandomValue(1, 5);
+	return options[index];
 }
