@@ -226,7 +226,7 @@ void Player::updateInvincibility( )
 * @param bool &playerDefeated : reference to a bool value, if player has been defeated or not.
 * @return : none
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-void Player::takeDamage( int damage, bool& playerDefeated )
+void Player::takeDamage( int damage )
 {
 	PlaySound( sfx[ "playerDamaged.mp3" ] );
 
@@ -235,7 +235,6 @@ void Player::takeDamage( int damage, bool& playerDefeated )
 	if ( health <= 0 )
 	{
 		std::cout << "Player defeated!" << std::endl;
-		playerDefeated = true;
 	}
 }
 

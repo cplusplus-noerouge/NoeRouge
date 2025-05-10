@@ -68,7 +68,7 @@ public:
     void onRender( ) override;                                      //Renders the player on screen.
     void attack( std::vector<Enemy*>& enemies );                    //Attacks enemy objects if within range and key is pressed.
     void defend( std::vector<Enemy*>& enemies );                    //Allows the player to defend against enemy attacks.
-    void takeDamage( int damage, bool& playerDefeated );            //Decrements player health based off enemy damage and checks for player death.
+    void takeDamage( int damage );                                  //Decrements player health based off enemy damage and checks for player death.
     void dodge();                                                   //Increases players speed by 1.4 times for 1 second when input and cools down for another 2 seconds
 };
 

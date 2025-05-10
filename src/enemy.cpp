@@ -10,6 +10,7 @@
 * - Include more interaction with player?
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 #include "enemy.h"
+#include "character.h"
 
 using namespace std;
 
@@ -166,5 +167,34 @@ Enemy* ObjectHandler::createEnemy( Vector2 position )
 	allObjects[ newEnemy->getId( ) ] = newEnemy;                     //Add <id, object*> to the map
 	this->numberOfObjects++;
 	return newEnemy;
+}
 
+/*---------------------------------------------------------------------------------------------------------------------------------------
+* attackPlayer( )
+* Kaleb Flowers
+* @brief :  
+* @param Vector2 position :  
+*
+----------------------------------------------------------------------------------------------------------------------------------------*/
+
+void Enemy::attackPlayer( Player* player )
+{
+	// make sure both are alive
+	if (stats.health <= 0 ) return;
+
+	// distance check
+	Vector2 pPos = player->getPosition( );
+	float dx = pPos.x - _position.x;
+	float dy = pPos.y - _position.y;
+	float dist = std::sqrt( dx * dx + dy * dy );
+
+	//cooldown
+	timeSinceLastAttack += GetFrameTime( );
+	if ( timeSinceLastAttack < attackInterval ) return;
+	timeSinceLastAttack = 0.f;
+
+	if ( dist <= stats.attackRange )
+	{
+		player->takeDamage( stats.attackDamage );
+	}
 }

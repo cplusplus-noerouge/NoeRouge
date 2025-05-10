@@ -21,10 +21,10 @@ class Character : public GameObject
 
 	protected:
 
-	Vector2 _position;                    //Character's map position
+	Vector2 _position;                   //Character's map position
 	Vector2 direction;                   //Character's direction
 	Vector2 velocity;                    //Character's velocity
-	Vector2 _target;                      //Position of target.
+	Vector2 _target;                     //Position of target.
 
 	public:
 
