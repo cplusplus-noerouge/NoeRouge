@@ -40,6 +40,11 @@ int main( )
     //  Audio
     InitAudioDevice();
     MusicPlayer musicPlayer = MusicPlayer();
+    musicPlayer.setVolume( 0.5f );
+    bool playerDefeated = false;                             //manages whether or not the player has been defeated
+    bool gameWin = false;                                    //manages whether or not the player has won the game
+    bool gameEnd = false;                                    //manages whether or not either game over/win scenario has been checked and the respective screen is up
+    bool closeWindow = false;                                //lcv
 
     mapHandler = new MapHandler;
     Floor* currentFloor = mapHandler->getCurrentFloor( );
@@ -49,7 +54,7 @@ int main( )
 
     StaticSprite background = StaticSprite( "spaceBackground", { 320, 180 }, -9999999 );
 
-    while (!WindowShouldClose())
+    while (!WindowShouldClose() && !closeWindow)
     { 
        float dT = GetFrameTime( );
 
@@ -61,6 +66,7 @@ int main( )
         mapHandler->tickAndRender( );
 
         tileSprites = currentFloor->getTileSprites( );
+      
 
         for ( int i = 0; i < tileSprites.size( ); i++ )
         {
@@ -72,52 +78,34 @@ int main( )
         screenHandler.renderAll( );
 
         musicPlayer.onTick();
+        
+        //procedure for ending the game, either upon clearing the last floor or the player being defeated   -Andrew
+        if ((gameWin || playerDefeated) && !gameEnd)
+        {
+            mapHandler->endGame(gameWin);
+        }
+
+        //check if the player presses the key to close the game from end screen after the game is over     -Andrew
+        if (gameEnd)
+        {
+            if (IsKeyPressed(KEY_SPACE))
+            {
+                closeWindow = true;
+            }
+        }
+
+        //temporary checks for win and lose conditions
+        if (IsKeyPressed(KEY_X))
+        {
+            gameWin = true;
+        }
+        if (IsKeyPressed(KEY_Z))
+        {
+            playerDefeated = true;
+        }
     }
 
     CloseAudioDevice();
 
     return 0;
 }
-
-/*------------------------------------------------------------------------------------------------------------------
-* changeFloor() changes the players current floor.
-* - devon
-* param vector<Sprite>& wallSprites: sprites of the walls. edited by this function
-* param Floor* floors[NUM_OF_FLOORS]: array of all the floors in the game
-* param int& floorOn: the index of the floor the player is currently on. edited by this function
-* param int changeVal: the amount by which the floor index is changed. exe -1 is down a floor, and 1 is up a floor
-* return: the data in wallSprites and floorOn is altered
-------------------------------------------------------------------------------------------------------------------*/
-//void changeFloor(std::vector<Sprite>& tileSprites, Floor* floors[Settings::NUM_OF_FLOORS], int& floorOn, int changeVal)
-//{
-//    //check that the new floor exists
-//    if (floorOn + changeVal < 0 || floorOn + changeVal >= Settings::NUM_OF_FLOORS)
-//    {
-//        std::cout << "\nTried to change floors from " << floorOn << " to " << floorOn + changeVal
-//                  << " but didn't because floor " << floorOn + changeVal << " doesn't exist.";
-//        return;
-//    }
-//
-//    //transfer player to new object handler
-//    ObjectHandler* oldHandler = floors[floorOn]->getObjHandler();
-//    floorOn+= changeVal;
-//    ObjectHandler* newHandler = floors[floorOn]->getObjHandler();
-//    oldHandler->transferObject(0, *newHandler); //player id is always 0
-//
-//    //set player location to the new floors ladder
-//    Player* player = dynamic_cast<Player*>(newHandler->getObject(0));
-//    if (changeVal < 0) //going down, move player position to ladderup
-//    {
-//        Vector2 ladderPosition = floors[floorOn]->getLadderUpLocation();
-//        player->setPosition(ladderPosition);
-//    }
-//    if (changeVal > 0) //going up, move player position to ladderdown
-//    {
-//        Vector2 ladderPosition = floors[floorOn]->getLadderDownLocation();
-//        player->setPosition(ladderPosition);
-//    }
-//
-//    //make new tile sprites
-//    tileSprites = generateTileSprites( floors[ floorOn ] );
-//    std::cout << "\n Moved from floor " << floorOn - changeVal << " to " << floorOn;
-//}
