@@ -18,3 +18,11 @@
 * @return: A vector of the sprites created
 */
 std::vector<Sprite> generateTileSprites( char data[ WIDTH ][ HEIGHT ] );
+
+/*---------------------------------------------
+* @brief: Gets the name of a random wall decor texture
+*   - devon
+* @param: None
+* @return: The name of a wall decor texture
+*/
+std::string getRandomWallDecor();
