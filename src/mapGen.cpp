@@ -38,14 +38,13 @@ bool BspNode::split()
     if (splitHorizontally)
     {
         left = new BspNode(x, y, width, split);
-        right = new BspNode(x, y + split - 1, width, height - split);
+        right = new BspNode(x, y + split , width, height - split);
     }
     else
     {
         left = new BspNode(x, y, split, height);
-        right = new BspNode(x + split - 1, y, width - split, height);
+        right = new BspNode(x + split , y, width - split, height);
     }
-    //added split - 1 for make edges around the map
     return true;                          // Return true indicating successful split
 }
 
@@ -372,6 +371,16 @@ void Floor::generateMapData()
     {
         makeRoomContainer(*leaf, data);
         makeRandRoomShape(*leaf, data);
+    }
+
+    //make sure the bottom and left edges are walls
+    for (int x = 0; x < WIDTH; x++)
+    {
+        data[x][HEIGHT - 1] = WALL;
+    }
+    for (int y = 0; y < HEIGHT; y++)
+    {
+        data[WIDTH - 1][y] = WALL;
     }
 
     //Create hallways and doors
