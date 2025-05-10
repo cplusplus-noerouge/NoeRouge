@@ -34,7 +34,9 @@ private:
    SheetSprite sprite;                           //Set of 4 sprites for the player
    Animation animation = Animation( 4, 0.15 );   //Players movement animation
    bool keyPressAllowed;                         //Quick fix for the issue where two attack/interact/etc are called per keypress -devon
-
+   bool isInvincible = false;                    //Tracks if the player is invincible-KF
+   float invincibilityTimer = 0.0f;              //Timer for invincibility frames-KF
+   const float invincibilityDuration = 0.7f;     //Duration of invincibility in seconds-KF
    void interactWithNearest();                   //Interacts with the nearest Interactable if there is one in range -devon
 
 public:
@@ -42,7 +44,7 @@ public:
     /*-----------------------------------------------------------------------------------------------------------------------------------
      * @brief : Parameterized Class constructor.
     ------------------------------------------------------------------------------------------------------------------------------------*/
-    Player(int id, Vector2 position) 
+    Player(int id, Vector2 position)
        : Character(id, position), attackRange(50.0f), attackDamage( 1 ), health( 5 ), dodgeCooldown( 0 )
     { 
        Animation animation = Animation( 4, 0.1 );
@@ -50,13 +52,23 @@ public:
        walkTimer = 0.0f;
        keyPressAllowed = true;
     }
-    
+
+    /*-----------------------------------------------------------------------------------------------------------------------------------
+     * @brief : Accesors for Invicibility Frame
+    ------------------------------------------------------------------------------------------------------------------------------------*/
+    void setInvincible( bool invincible );
+    void updateInvincibility( ); 
+    bool getIsInvincible( ) const
+    {
+       return isInvincible;
+    }
+
     void updateDirection( ) override;                               //Sets the movement direction of the character based on control input.
     void onTick(const std::vector<Rectangle> colliders) override;   //Updates the state of the player during a single frame.
     void onRender( ) override;                                      //Renders the player on screen.
     void attack( std::vector<Enemy*>& enemies );                    //Attacks enemy objects if within range and key is pressed.
     void defend( std::vector<Enemy*>& enemies );                    //Allows the player to defend against enemy attacks.
-    void takeDamage( int damage, bool& playerDefeated );            //Decrements player health based off enemy damage and checks for player death.
+    void takeDamage( int damage );                                  //Decrements player health based off enemy damage and checks for player death.
     void dodge();                                                   //Increases players speed by 1.4 times for 1 second when input and cools down for another 2 seconds
 };
 

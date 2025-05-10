@@ -85,14 +85,14 @@ int main( )
             mapHandler->endGame(gameWin);
         }
 
-        //check if the player presses the key to close the game from end screen after the game is over     -Andrew
-        if (gameEnd)
-        {
-            if (IsKeyPressed(KEY_SPACE))
-            {
-                closeWindow = true;
-            }
-        }
+        ////check if the player presses the key to close the game from end screen after the game is over     -Andrew
+        //if (gameEnd)
+        //{
+        //    if (IsKeyPressed(KEY_SPACE))
+        //    {
+        //        closeWindow = true;
+        //    }
+        //}
 
         //temporary checks for win and lose conditions
         if (IsKeyPressed(KEY_X))

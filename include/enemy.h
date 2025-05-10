@@ -23,6 +23,7 @@
 #include <animation.h>
 #include "sheetSprite.h"
 #include <customCamera.h>
+#include "player.h"
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * @brief : Struct to hold various stat-related properties of an enemy
@@ -38,7 +39,7 @@ struct Stats
 class Enemy : public Character
 {
 	private:
-
+	bool damageBlocked = false; // Tracks if damage is blocked
 	public:
 	int world_position[ 2 ];                                             //Make this public for accessibility  
 	Stats stats;                                                         //Struct holding the enemy's stats 
@@ -52,6 +53,11 @@ class Enemy : public Character
 	void onRender( );                                                    //Renders the enemy on screen.
 	void takeDamage( int damage );                                       //Reduces health when damage is taken, accounting for defense.
 	bool checkCollision( Vector2 playerPos, float attackRange ) const;   //Checks if the player's position is within attack range of the enemy.   
+	void setDamageBlocked( bool blocked ) { damageBlocked = blocked; }
+	bool isDamageBlocked( ) const { return damageBlocked; }
+	void attackPlayer( Player* player );
+	float timeSinceLastAttack = 0.f;
+	float attackInterval = 1.0f; // one attack per second
 
 	/*--------------------------------------------------------------------------------------------------------------------------------------
 	* getPosition( )
@@ -68,4 +74,5 @@ class Enemy : public Character
 	* @return int : The current heatlh of the enemy.
 	---------------------------------------------------------------------------------------------------------------------------------------*/
 	int getHealth( ) const { return stats.health; }
+
 };

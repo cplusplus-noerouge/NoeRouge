@@ -21,6 +21,7 @@ class ObjectHandler
 
    ObjectHandler( )
    {
+      this->nextId = 0;
       this->numberOfObjects = 0;
    }
    ~ObjectHandler( )

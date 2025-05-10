@@ -65,9 +65,13 @@ void Player::onTick( const std::vector<Rectangle> colliders )
 
 	if ( walkTimer > WALK_TIMER_MAX && ( direction.x != 0 || direction.y != 0 ) )
 	{
-		PlaySound( sfx[ "walkLeft.wav" ] );
+		( sfx[ "walkLeft.wav" ] );
 		walkTimer = 0.0f;
 	}
+
+	//Get current floors objhandler.
+	//Parse through it and make a subset of enemies, created after ladders and doors.
+	std::vector<Enemy*> enemies = mapHandler->getEnemies( );
 
 	keyPressAllowed = !keyPressAllowed;	//this value changes every tick so that raylib only recognizes the keypresses once
 	if (keyPressAllowed)
@@ -75,11 +79,11 @@ void Player::onTick( const std::vector<Rectangle> colliders )
 		//**Reese** added player attack, outputs "ATTACKING" to console when space is pressed
 		if ( Controls::attack( ) )  // player attacks when space is pressed
 		{
-			//this->attack( enemies ); // Attack with a range of 50 and damage of 10
+			this->attack( enemies ); // Attack with a range of 50 and damage of 10
 		}
 		if ( Controls::defend( ) ) // player defends when left shift is pressed
 		{
-			//this->defend( enemies ); // Defend against enemy attacks
+			this->defend( enemies ); // Defend against enemy attacks
 		}
 		if ( Controls::interact( ) ) //  Try to interact with nearest interactable object -devon
 		{
@@ -169,22 +173,54 @@ void Player::attack( std::vector<Enemy*>& enemies )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Player::defend( std::vector<Enemy*>& enemies )
 {
-
 	if ( Controls::defend() )
 	{
-		BeginDrawing( );  // remove ( leftover code) 
+		if ( !isInvincible )
+		{
+			setInvincible( true );
+		}
 		for ( Enemy* enemy : enemies )
 		{
 			if ( enemy->checkCollision( _position, attackRange ) )
 			{
-				//stop player movement
-				//stop incoming damage from enemy 
+				enemy->setDamageBlocked( true );
 			}
 		}
 		std::cout << "Defending against enemy attack!";
-		EndDrawing( );
+	}
+	else
+	{
+		for ( Enemy* enemy : enemies )
+		{
+			enemy->setDamageBlocked( false ); // Reset damage block
+		}
 	}
 }
+
+// Sets the invincibility state and resets the timer if invincible
+void Player::setInvincible( bool invincible )
+{
+	isInvincible = invincible;
+	if ( invincible )
+	{
+		invincibilityTimer = invincibilityDuration; // Reset the timer
+	}
+}
+
+// Updates the invincibility timer and disables invincibility when the timer expires
+void Player::updateInvincibility( )
+{
+	if ( isInvincible )
+	{
+		invincibilityTimer -= GetFrameTime( ); // Decrease timer by frame time
+		if ( invincibilityTimer <= 0.0f )
+		{
+			isInvincible = false; // Disable invincibility
+			invincibilityTimer = 0.0f;
+		}
+	}
+}
+
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * takeDamage( )
 * Ethan Sheffield, Ben Aguilon
@@ -193,7 +229,7 @@ void Player::defend( std::vector<Enemy*>& enemies )
 * @param bool &playerDefeated : reference to a bool value, if player has been defeated or not.
 * @return : none
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-void Player::takeDamage( int damage, bool& playerDefeated )
+void Player::takeDamage( int damage )
 {
 	PlaySound( sfx[ "playerDamaged.mp3" ] );
 
@@ -202,10 +238,8 @@ void Player::takeDamage( int damage, bool& playerDefeated )
 	if ( health <= 0 )
 	{
 		std::cout << "Player defeated!" << std::endl;
-		playerDefeated = true;
 	}
 }
-
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * createPlayer( )
