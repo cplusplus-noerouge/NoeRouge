@@ -57,8 +57,9 @@ int main( )
        currentFloor->getObjHandler( )->renderAll( );
 
         currentFloor = mapHandler->getCurrentFloor( );
-        currentFloor->getObjHandler( )->tickAll( currentFloor->getWalls( ) );
-        currentFloor->getObjHandler( )->renderAll( );
+        
+        mapHandler->tickAndRender( );
+
         tileSprites = currentFloor->getTileSprites( );
 
         for ( int i = 0; i < tileSprites.size( ); i++ )
