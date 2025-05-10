@@ -32,7 +32,7 @@ Interactable::Interactable(Vector2 pos, std::string texture)
 
 void Interactable::onRender( )
 {
-	sprite.update(position, position.y);
+	sprite.update(position, 0);
 	mainCamera.addToBuffer(&sprite);
 }
 
