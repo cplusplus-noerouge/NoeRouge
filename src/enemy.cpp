@@ -5,9 +5,7 @@
 * The enemy class is a child class of Character that represents the enemy characters that populate the map.
 *
 * * TO-DO :
-* - Add attack functionality?
-* - Add AI behavior?
-* - Include more interaction with player?
+* - implement enemyKilled in objectHandler
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 #include "enemy.h"
 #include "character.h"
@@ -41,7 +39,9 @@ void Enemy::onTick( const std::vector<Rectangle> collidables )
 	Player* player = dynamic_cast< Player* >( obj );
 
 	_target = player->getPosition( );
-	moveToTarget( _target, 60.0, collidables );
+	//moveToTarget( _target, 60.0, collidables );
+
+	//updateDirection( _target );
 
 	attackPlayer( player );
 
@@ -138,14 +138,7 @@ void Enemy::takeDamage( int damage )
 	else
 	{
 		PlaySound( sfx[ "hitHurt (3).wav" ] );
-		//Reset health to initial value (could be defined in Stats struct), Assuming initial health is 3
-		stats.health = 3;
-
-		//Reset position to some default value
-		_position.x = 100;
-		_position.y = 100;
-		std::cout << "Enemy is dead!" << std::endl;
-		std::cout << "Enemy respawned!" << std::endl;
+		//mapHandler->getCurrentFloor( )->getObjHandler( )->enemyKilled( this ); //not implemented
 	}
 }
 
@@ -158,8 +151,8 @@ void Enemy::takeDamage( int damage )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 bool Enemy::checkCollision( Vector2 playerPos, float attackRange ) const
 {
-	float dx = playerPos.x - _position.y;
-	float dy = playerPos.y - _position.x;
+	float dx = playerPos.x - _position.x;
+	float dy = playerPos.y - _position.y;
 	float distance = sqrt( dx * dx + dy * dy );
 
 	//Returns true if the distance is less than the attack range
@@ -177,7 +170,7 @@ bool Enemy::checkCollision( Vector2 playerPos, float attackRange ) const
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 Enemy* ObjectHandler::createEnemy( Vector2 position )
 {
-	Stats enemyStats = { 3, 1, 50, 50 };                              //stats: hp, damage, range, speed
+	Stats enemyStats = { 3, 1, 16, 50 };                              //stats: hp, damage, range, speed
 	Enemy* newEnemy = new Enemy( nextId++, position, enemyStats );
 	allObjects[ newEnemy->getId( ) ] = newEnemy;                     //Add <id, object*> to the map
 	this->numberOfObjects++;

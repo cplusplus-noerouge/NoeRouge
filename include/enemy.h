@@ -81,14 +81,6 @@ class Enemy : public Character
 	float attackInterval = 1.0f; // one attack per second
 
 	/*--------------------------------------------------------------------------------------------------------------------------------------
-	* getPosition( )
-	* @brief : Getter for the enemy's position.
-	* @param : none
-	* @return Vector2 : The current position of the enemy.
-	---------------------------------------------------------------------------------------------------------------------------------------*/
-	//Vector2 getPosition( ) const { return position; }
-
-	/*--------------------------------------------------------------------------------------------------------------------------------------
 	* getHealth( )
 	* @brief : Getter for the enemy's health.
 	* @param : none
