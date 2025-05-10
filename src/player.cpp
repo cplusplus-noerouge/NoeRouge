@@ -151,34 +151,6 @@ void Player::attack( std::vector<Enemy*>& enemies )
 				PlaySound( sfx[ "laserShoot.wav" ] );
 				Vector2 enemyPosition = enemy->getNearestPosition( );
 				enemy->takeDamage( attackDamage );
-
-				
-
-				//Calculate the position to display the hit effect
-				//Vector2 enemyPosition = enemy->getNearestPosition( );
-				//locate nearest enemy
-				//Vector2 enemyPosition = { enemy->getPosition( ).x - 20, enemy->getPosition( ).y - 20 };   //Adjust as needed for centering textVector2 enemyPosition = { enemy->getPosition( ).x - 20, enemy->getPosition( ).y - 20 };   //Adjust as needed for centering text
-				//if closest enemy take damage
-
-				//Vector2 position = { static_cast< int >( enemyPosition.x ) - 20, static_cast< int >( enemyPosition.y ) - 20 };   //Adjust as needed for centering text
-				//if ( enemy->checkCollision( enemy->getNearestPosition( ), attackRange ) )
-				//{
-				//	enemy->takeDamage( attackDamage );
-				//	DrawText( "HIT!", static_cast< int >( position.x ), static_cast< int >( position.y ), 30, RAYWHITE );
-				//	// Fix the problematic line in the `attack` method of the `Player` class.  
-				//	// Replace the incorrect usage of `enemy->onRender()` with the correct position of the enemy.  
-				//	// The `DrawText` function expects integer coordinates, so we use the enemy's position.  
-
-
-		 //}
-		 //	//Set the font size and color for the hit effect
-		 //	//Display hit effect
-		 //	//Vector2 position = enemy->getPosition( );
-//        {
-		  //	/*enemy->takeDamage( attackDamage );
-		  //	DrawText( "HIT!", static_cast< int >( enemyPosition.x ), static_cast< int >( enemyPosition.y ), 30, RAYWHITE );
-		  //	std::cout << "Enemy taken damage!" << std::endl;*/
-		  //}
 			}
 		}
 	}

@@ -39,8 +39,8 @@ int main( )
     screenHandler.cameras.push_back( &mainCamera );
     //  Audio
     InitAudioDevice();
-    //MusicPlayer musicPlayer = MusicPlayer();
-    //musicPlayer.setVolume( 0.5f );
+    MusicPlayer musicPlayer = MusicPlayer();
+    musicPlayer.setVolume( 0.5f );
     bool playerDefeated = false;                             //manages whether or not the player has been defeated
     bool gameWin = false;                                    //manages whether or not the player has won the game
     bool gameEnd = false;                                    //manages whether or not either game over/win scenario has been checked and the respective screen is up
@@ -78,7 +78,7 @@ int main( )
         screenHandler.renderAll( );
 
 
-       // musicPlayer.onTick();
+       musicPlayer.onTick();
       
 
         //temporary checks for win and lose conditions
