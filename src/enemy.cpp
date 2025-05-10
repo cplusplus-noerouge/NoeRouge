@@ -37,16 +37,16 @@ Enemy::Enemy( int id, Vector2 position, Stats stats )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Enemy::onTick( const std::vector<Rectangle> collidables )
 {
-	//GameObject* obj = mapHandler->getCurrentFloor( )->getObjHandler( )->allObjects[ 0 ];
-	//Player* player = dynamic_cast< Player* >( obj );
+	GameObject* obj = mapHandler->getCurrentFloor( )->getObjHandler( )->allObjects[ 0 ];
+	Player* player = dynamic_cast< Player* >( obj );
 
-	//this->moveToTarget( player->getPosition( ), 30.0, collidables );
+	_target = player->getPosition( );
+	moveToTarget( _target, 60.0, collidables );
 
-	//Update movement direction (likely handled by inherited Character method)
-	updateDirection( _position );
+	attackPlayer( player );
 
 	//Calculate velocity based on direction and frame time
-	velocity = Vector2Scale( direction, Settings::ENEMY_SPEED * GetFrameTime( ) );
+	velocity = Vector2Scale( Vector2Normalize( direction ), stats.speed * GetFrameTime( ) );
 
 	//Update position by adding velocity
 	_position = Vector2Add( _position, velocity );
@@ -65,13 +65,13 @@ void Enemy::updateDirection( Vector2 target )
 {
 	if ( target.x > _position.x )
 	{
-		direction.x = -1;
+		direction.x = 1;
 	}
 	else if ( target.x < _position.x )
 	{
-		direction.x = 1;
+		direction.x = -1;
 	}
-	if ( target.y < _position.y )
+	if ( target.y > _position.y )
 	{
 		direction.y = 1;
 	}
@@ -177,7 +177,7 @@ bool Enemy::checkCollision( Vector2 playerPos, float attackRange ) const
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 Enemy* ObjectHandler::createEnemy( Vector2 position )
 {
-	Stats enemyStats = { 3, 1, 25, 5 };                              //stats: hp, damage, range, speed
+	Stats enemyStats = { 3, 1, 50, 50 };                              //stats: hp, damage, range, speed
 	Enemy* newEnemy = new Enemy( nextId++, position, enemyStats );
 	allObjects[ newEnemy->getId( ) ] = newEnemy;                     //Add <id, object*> to the map
 	this->numberOfObjects++;

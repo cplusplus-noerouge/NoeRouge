@@ -52,9 +52,9 @@ class Character : public GameObject
 	Vector2 getPosition( );                                                               //Getter for the character's position.
 	void setPosition( Vector2 newPos );                                                   //Setter for the character's position.
 
-	void moveToTarget( Vector2 target, float distanceMaintained, std::vector<Rectangle> colliders );  //Moves character to the target's position but maintain a set distance.
+	void moveToTarget( Vector2 _target, float distanceMaintained, std::vector<Rectangle> colliders );  //Moves character to the target's position but maintain a set distance.
 	Ray relationToTarget( Vector2 _target );                                              //Calculates the line of sight from the character's position to the target.
-	bool updateLOS( const std::vector<Rectangle> colliders, Vector2 _targetPos );         //Updates relation to target and creates line of sight by checking for collisions.
+	bool updateLOS( const std::vector<Rectangle> colliders, Vector2 _target );            //Updates relation to target and creates line of sight by checking for collisions.
 	float getTargetDistance( );                                                           //Calculates the distance between the character and a target.
 
 	~Character( )                                                                         //Destructor
