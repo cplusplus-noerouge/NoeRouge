@@ -173,7 +173,7 @@ void Player::attack( std::vector<Enemy*>& enemies )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Player::defend( std::vector<Enemy*>& enemies )
 {
-	if ( IsKeyDown( KEY_K ) )
+	if ( Controls::defend() )
 	{
 		if ( !isInvincible )
 		{
@@ -196,6 +196,7 @@ void Player::defend( std::vector<Enemy*>& enemies )
 		}
 	}
 }
+
 // Sets the invincibility state and resets the timer if invincible
 void Player::setInvincible( bool invincible )
 {
@@ -205,6 +206,7 @@ void Player::setInvincible( bool invincible )
 		invincibilityTimer = invincibilityDuration; // Reset the timer
 	}
 }
+
 // Updates the invincibility timer and disables invincibility when the timer expires
 void Player::updateInvincibility( )
 {
@@ -218,6 +220,7 @@ void Player::updateInvincibility( )
 		}
 	}
 }
+
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * takeDamage( )
 * Ethan Sheffield, Ben Aguilon
@@ -237,7 +240,6 @@ void Player::takeDamage( int damage )
 		std::cout << "Player defeated!" << std::endl;
 	}
 }
-
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * createPlayer( )
