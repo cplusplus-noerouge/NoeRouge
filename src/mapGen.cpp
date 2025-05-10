@@ -6,6 +6,7 @@ Devon, Irene, Evan, Ben S, possible others,
 #include <iostream>
 #include <vector>
 #include <list>
+#include <generateTileSprites.h>
 
 //PARITIONS =============================================================================================================================
 // Class representing a node in the BSP tree
@@ -125,7 +126,6 @@ void printPartitions( BspNode* node, std::vector<std::vector<char>>& map )
 }
 
 //ROOMS==========================================================================================================================
-//i don't want to take credit for this stupid function. unfortunately it's obvious who wrote it
 int randRange( int minVal, int maxVal )
 {
    return rand( ) % ( maxVal + 1 - minVal ) + minVal;
@@ -210,7 +210,7 @@ void makeCircleRoom( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )
    }
 }
 
-//a function that was just for testing and should be deleted but first it needs to be removed from the doors code -devon
+//originally just for testing but now is needed for the doors code - devon
 //Fill partition with DEBUGPARTITION
 void makeRoomContainer(BspNode& p, char(&map)[WIDTH][HEIGHT])
 {
@@ -266,7 +266,7 @@ void makeBlobRoom( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )
 */
 
 /*--------------------------------------------------------------------------------------------
-* makeRandRoomShape() calls two room making functions that overlap into one room
+* makeRandRoomShape() calls one or two room making functions that overlap into one room
 * - devon, ben
 * param BspNode& p: the partition to put the room
 * param char&map[][]: pass by ref to the array of map data
@@ -275,7 +275,8 @@ void makeBlobRoom( BspNode& p, char( &map )[ WIDTH ][ HEIGHT ] )
 void makeRandRoomShape(BspNode& p, char(&map)[WIDTH][HEIGHT])
 {
    //anyone feel free to remove the for loop if 2 overlapping room shapes isn't working
-   for ( int i = 0; i < 2; i++ )
+   int overlapCount = (std::rand() % 2) + 1;
+   for ( int i = 0; i < overlapCount; i++ )
    {
       int randomNumber = std::rand( ) % 2;
       switch ( randomNumber )
@@ -290,15 +291,72 @@ void makeRandRoomShape(BspNode& p, char(&map)[WIDTH][HEIGHT])
    }
 }
 
-//FLOOR================================================================================================================================
-/*--------------------------------------------------------------------------------------------
-* Floor() constructor. all the generation for the floor happens here
+/*---------------------------------------------------------------------------------------------------------------
+* cullDoorIfBad() is a helper function for cullBadDoors(). it erases doors if they aren't sandwiched between walls
 * - devon
---------------------------------------------------------------------------------------------*/
-Floor::Floor()
+* param char&map[][]: pass by ref to the array of map data
+* return: none, alters the data in char&map[][]
+---------------------------------------------------------------------------------------------------------------*/
+void cullDoorIfBad(char(&map)[WIDTH][HEIGHT], int x, int y)
 {
-    walls = std::vector<Rectangle>();
-    std::list<BspNode*> leaves = rootNode->getAllLeafNodes();           //all the leaf nodes/partitions
+    char left = map[x - 1][y];
+    char right = map[x + 1][y];
+    char above = map[x][y - 1];
+    char below = map[x][y + 1];
+
+    bool goodDoorX = left != FLOOR && right != FLOOR;
+    bool goodDoorY = above != FLOOR && below != FLOOR;
+
+    if (!(goodDoorX || goodDoorY))
+    {
+        map[x][y] = FLOOR;
+
+        //check for doors to the left or above that were mistakenly skipped when map[x,y] was a door
+        if (left == DOOR)
+            cullDoorIfBad(map, x - 1, y);
+        if (above == DOOR)
+            cullDoorIfBad(map, x, y - 1);
+    }
+}
+
+/*---------------------------------------------------------------------------------------------------------------
+* cullBadDoors() replaces doors that aren't sandwiched between walls (aka bad doors) with floors
+* - devon
+* param char&map[][]: pass by ref to the array of map data
+* return: none, alters the data in char&map[][]
+---------------------------------------------------------------------------------------------------------------*/
+void cullBadDoors(char(&map)[WIDTH][HEIGHT])
+{
+    bool inBoundsX, inBoundsY, goodDoorY, goodDoorX;
+
+    for (int y = 0; y < HEIGHT; y++)
+    {
+        for (int x = 0; x < WIDTH; x++)
+        {
+            if (map[x][y] != DOOR) //skip non-door tiles
+                continue;
+
+            inBoundsX = (x != 0) && (x != WIDTH - 1);
+            inBoundsY = (y != 0) && (y != HEIGHT - 1);
+            if (!inBoundsX || !inBoundsY) //skip edge tiles
+                continue;
+
+            //for all non-edge door tiles:
+            cullDoorIfBad(map, x, y);
+        }
+    }
+}
+
+//FLOOR================================================================================================================================
+/*------------------------------------------------------------------------------------------------------------------
+* Floor::generateMapData() generates the floors and walls, and determines spawn locations for ladders and doors
+* params: none
+* return: none (modifies leafPartitions, walls and data[][] members)
+* - devon, evan, someone else I think?
+------------------------------------------------------------------------------------------------------------------*/
+void Floor::generateMapData()
+{
+    leafPartitions = rootNode->getAllLeafNodes();           //all the leaf nodes/partitions
 
     //fill in walls everywhere
     for (int y = 0; y < HEIGHT; y++)
@@ -310,15 +368,33 @@ Floor::Floor()
     }
 
     //carve the rooms
-    for (BspNode* leaf : leaves)
+    for (BspNode* leaf : leafPartitions)
     {
         makeRoomContainer(*leaf, data);
         makeRandRoomShape(*leaf, data);
     }
 
-    Hallways hallways(rootNode, *this);         //Create hallways
+    //Create hallways and doors
+    Hallways hallways(rootNode, *this);
+    cullBadDoors(data);
 
-    //make the walls into rectangles
+    //create ladders between floors. could be changed to guarantee they are a certain distance apart or something
+    BspNode* ladderUpNode = leafPartitions.front();
+    int ladderUpX = ladderUpNode->roomCenterPointXCoordinate;
+    int ladderUpY = ladderUpNode->roomCenterPointYCoordinate;
+
+    data[ladderUpX][ladderUpY] = LADDER_UP;
+    ladderUpLocation = scaleToTile( ladderUpX, ladderUpY );
+
+    BspNode* ladderDownNode = leafPartitions.back();
+    int ladderDownX = ladderDownNode->roomCenterPointXCoordinate;
+    int ladderDownY = ladderDownNode->roomCenterPointYCoordinate;
+
+    data[ladderDownX][ladderDownY] = LADDER_DOWN;
+    ladderDownLocation = scaleToTile( ladderDownX, ladderDownY );
+
+    //make the walls into rectangles that can be rendered
+    walls = std::vector<Rectangle>();
     for (int y = 0; y < HEIGHT; y++)
     {
         for (int x = 0; x < WIDTH; x++)
@@ -330,25 +406,22 @@ Floor::Floor()
             }
         }
     }
+}
+/*-----------------------------------------------------------------------------------------------------------------------
+* Floor::generateObjects() creates the objects on the floor: ladders, doors, enemies, and anything added in the future
+* params: none
+* return: none (adds new entities to objHandler)
+* - devon, ben
+-----------------------------------------------------------------------------------------------------------------------*/
+void Floor::generateObjects()
+{
+    //make the object handler
+    objHandler = new ObjectHandler;
 
-    objHandler = new ObjectHandler;             //make the object handler
-
-    //create ladders between floors. could be changed to guarantee they are a certain distance apart or something
-    BspNode* ladderUpNode = leaves.front();
-    ladderUpX = ladderUpNode->roomCenterPointXCoordinate;
-    ladderUpY = ladderUpNode->roomCenterPointYCoordinate;
-
-    data[ladderUpX][ladderUpY] = LADDER_UP;
-
-    BspNode* ladderDownNode = leaves.back();
-    ladderDownX = ladderDownNode->roomCenterPointXCoordinate;
-    ladderDownY = ladderDownNode->roomCenterPointYCoordinate;
-
-    data[ladderDownX][ladderDownY] = LADDER_DOWN;
 
     //make the ladder objects
-    objHandler->createLadder(getLadderUpLocation( ), 1);
-    objHandler->createLadder( getLadderDownLocation( ), -1);
+    objHandler->createLadder(getLadderUpLocation(), true);
+    objHandler->createLadder(getLadderDownLocation(), false);
 
     //make the door objects
     for (int y = 0; y < HEIGHT; y++)
@@ -357,27 +430,40 @@ Floor::Floor()
         {
             if (data[x][y] == DOOR)
             {
-                objHandler->createDoor({(float)x * TILE_SIZE,(float)y * TILE_SIZE });
+               objHandler->createDoor( scaleToTile( x, y ) );
             }
         }
     }
 
-/*--------------------------------------------------------------------------------------------
-* Enemy spawning happens here, yup I just undid two hours of work trying to git push, idk I'll talk about it on Monday
-* - Ben
---------------------------------------------------------------------------------------------*/
-    for ( BspNode* enemy : leaves )
+    // Enemy spawning happens here, yup I just undid two hours of work trying to git push, idk I'll talk about it on Monday
+    // - Ben
+    for (BspNode* enemy : leafPartitions)
     {  //the rand( ) % enemyX + 2 could be anything i just choose a small number close to the center
-       int enemyX = enemy->roomCenterPointXCoordinate;
-       enemyX = rand( ) % enemyX + 2;
+        int enemyX = enemy->roomCenterPointXCoordinate;
+        enemyX = rand() % enemyX + 2;
 
-       int enemyY = enemy->roomCenterPointYCoordinate;
-       enemyY = rand( ) % enemyY + 2;
+        int enemyY = enemy->roomCenterPointYCoordinate;
+        enemyY = rand() % enemyY + 2;
 
-       data[ enemyX ][ enemyY ] = ENEMY;
+        if (data[enemyX][enemyY] == FLOOR)
+            data[enemyX][enemyY] = ENEMY;
+
+        //create an enemy object.
+        Vector2 EnemyPos = scaleToTile( enemyX, enemyY );
+        objHandler->createEnemy( EnemyPos );
     }
+}
+/*------------------------------------------------------------------------------------------------------
+* Floor() constructor. all the generation for everything on the floor (except the player) is called here
+* - devon
+------------------------------------------------------------------------------------------------------*/
+Floor::Floor()
+{
+    generateMapData();
+    generateObjects();
+    _tileSprites = generateTileSprites( data );
 
-    //prints the floor in the console. this is for debugging so we can see the stuff that doesn't have graphics yet like doors and ladders
+    //prints the floor in the console. this is for debugging so we can see the stuff that doesn't have graphics yet
     for (int y = 0; y < HEIGHT; y++)
     {
         for (int x = 0; x < WIDTH; x++)
@@ -388,19 +474,24 @@ Floor::Floor()
     }
 }
 
-/*
+//void Floor::setTileSprites( std::vector<Sprite> tileSprites )
+//{
+//   _tileSprites = tileSprites;
+//}
+
+/*------------------------------------------------------------
 returns the ladder up and ladder down location as a vector2
 returns the location as pixels
 parameters - none
-*/
+------------------------------------------------------------*/
 Vector2 Floor::getLadderUpLocation()
 {
-    return { (float)ladderUpX * TILE_SIZE, (float)ladderUpY * TILE_SIZE };
+   return ladderUpLocation;
 }
 
 Vector2 Floor::getLadderDownLocation( )
 {
-   return { ( float ) ladderDownX * TILE_SIZE, ( float ) ladderDownY * TILE_SIZE };
+   return ladderDownLocation;
 }
 Vector2 Floor::getEnemySpawn( )
 {
@@ -412,7 +503,7 @@ Vector2 Floor::getEnemySpawn( )
          if ( data[ x ][ y ] == FLOOR )
 
          {
-            return { ( float ) x * TILE_SIZE, ( float ) y * TILE_SIZE };
+            return scaleToTile( x, y );
          }
       }
    }

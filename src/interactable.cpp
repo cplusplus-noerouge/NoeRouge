@@ -1,9 +1,17 @@
+/*
+Interactable: an object with a position and an "interact" method that the player can optionally call when nearby
+Ladder: interactable that changes the player's floor
+Door: interactable that changes its own state, open or closed
+- devon
+*/
 #include <iostream>
 #include "interactable.h"
 #include "sprite.h"
 #include "customCamera.h"
+#include "mapHandler.h"
 
 extern CustomCamera mainCamera;
+extern MapHandler* mapHandler;
 
 //Interactable ==========================================
 Interactable::Interactable( )
@@ -30,32 +38,24 @@ void Interactable::onRender( )
 
 void Interactable::onTick( const std::vector<Rectangle> collidables )
 {
-	//TODO (or probably its best to do this in the player's tick actually)
-	/*
-	* check for nearby player.
-	  if player is within interaction range (TBD, prob a const),
-			make a UI bubble thing telling the player they can press E (or whatever the interact key is)
-			to do whatever the interaction is.
-			then make it so the player can actually press E to call interact(), but it only activates the nearest interactable
-				so maybe it's best that the player is checking for interactables, not the interactables checking for the player
-	*/
+	//do nothing
 }
 
 //Ladder ==========================================
 Ladder::Ladder( )
 {
-	floorChange = 0;
+	isLadderUp = false;
 }
 
-Ladder::Ladder( Vector2 pos, int floorChange):
+Ladder::Ladder( Vector2 pos, bool isLadderUp):
 	Interactable( pos )
 {
-	this->floorChange = floorChange;
-	if (floorChange > 0)
+	this->isLadderUp = isLadderUp;
+	if (isLadderUp)
 	{
 		sprite = Sprite( "ladderUp", pos, pos.y );
 	}
-	else if (floorChange < 0)
+	else
 	{
 		sprite = Sprite("ladderDown", pos, pos.y);
 	}
@@ -63,7 +63,8 @@ Ladder::Ladder( Vector2 pos, int floorChange):
 
 void Ladder::interact( )
 {
-	std::cout << "ladder interacted";
+	//std::cout << "interacted ladder is up -> " << isLadderUp << "\n";
+	mapHandler->changeFloor(isLadderUp);
 }
 
 void Ladder::onRender( )
@@ -72,9 +73,10 @@ void Ladder::onRender( )
 	mainCamera.addToBuffer( &sprite );
 }
 
-Ladder* ObjectHandler::createLadder( Vector2 position, int floorChange )
+//creates a new ladder in 'this' object handler
+Ladder* ObjectHandler::createLadder( Vector2 position, bool isLadderUp)
 {
-	Ladder* ladder = new Ladder( position, floorChange);
+	Ladder* ladder = new Ladder( position, isLadderUp);
 	allObjects[ ladder->getId( ) ] = ladder; //add <id, object*> to the map
 	this->numberOfObjects++;
 	return ladder;
@@ -95,9 +97,19 @@ Door::Door(Vector2 pos) :
 void Door::interact()
 {
 	isClosed = !isClosed;
-	//TODO change sprite. also needs to be some way for it to be added and removed from collidables
+
+	if (isClosed)
+	{
+		sprite.setTexture(closedTexture);
+	}
+	else
+	{
+		sprite.setTexture(openTexture);
+	}
+	//TODO add/remove from collidables
 }
 
+//creates a new ladder in 'this' object handler
 Door* ObjectHandler::createDoor(Vector2 position)
 {
 	Door* door = new Door(position);

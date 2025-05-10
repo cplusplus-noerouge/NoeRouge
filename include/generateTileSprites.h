@@ -9,6 +9,7 @@
 #include "raylib.h"
 #include "sprite.h"
 #include "sheetSprite.h"
+#include "staticSprite.h"
 #include "mapGen.h"
 
 /*---------------------------------------------
@@ -16,4 +17,4 @@
 * @param: *floor = A pointer the the current floor the player is on
 * @return: A vector of the sprites created
 */
-std::vector<Sprite> generateTileSprites( Floor* floor );
+std::vector<Sprite> generateTileSprites( char data[ WIDTH ][ HEIGHT ] );

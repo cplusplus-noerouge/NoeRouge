@@ -9,6 +9,7 @@
 #include "raymath.h"
 #include <iostream>
 
+// To be commented by Evan
 class BaseSprite
 {
 	protected:

@@ -4,16 +4,20 @@
 #pragma once
 
 #include <raylib.h>
+#include <raymath.h>
 #include <list>
 #include <vector>
 #include <random>
+#include "objecthandler.h"
 #include "object.h"
+#include "globals.h"
+#include "sprite.h"
 
 const int WIDTH = 70;                   //width/columns/maximum x of each floor in tiles
 const int HEIGHT = 30;                  //height/rows/maximum y of each floor in tiles
 const int MINSIZE = 10;                 //minimum for each partition/BSP leaf's width and height
 
-const int TILE_SIZE = 16;               //The x & y size of each tile in the game world in pixels
+const int TILE_SIZE = Settings::TILE_SIZE;               //The x & y size of each tile in the game world in pixels
 
 const char WALL = '#';                  //char to represent walls
 const char FLOOR = '.';                 //char to represent floors
@@ -71,20 +75,21 @@ void makeRandRoomShape(BspNode& p, char(&map)[WIDTH][HEIGHT]);
 class Floor 
 {
 private:
-
+    std::list<BspNode*> leafPartitions;
     std::vector<Rectangle> walls;
-    int ladderUpX;
-    int ladderUpY;
-    int ladderDownX;
-    int ladderDownY;
+    Vector2 ladderUpLocation;
+    Vector2 ladderDownLocation;
+    
+    ObjectHandler* objHandler;    //contains all the objects on the floor
 
-    ObjectHandler* objHandler; //contains all the objects on the floor
+    void generateMapData();       //generates data[][], intended to be called by Floor::Floor()
+    void generateObjects();       //populates objectHandler, intended to be called by Floor::Floor()
 
 public:
 
     char data[WIDTH][HEIGHT];                                   //TODO make this private with accessor or something like that
     BspNode* rootNode = generateBspTree();                      //generate the partitions
-
+    std::vector<Sprite> _tileSprites;
     Floor();
 
     BspNode* getMapRootNode()
@@ -97,6 +102,12 @@ public:
         return walls;
     }
 
+    /*void setTileSprites( std::vector<Sprite> tileSprites );*/
+    std::vector<Sprite> getTileSprites( )
+    {
+       return _tileSprites;
+    }
+
     ObjectHandler* getObjHandler()
     {
         return objHandler;
@@ -104,8 +115,12 @@ public:
 
     Vector2 getLadderUpLocation();
     Vector2 getLadderDownLocation();
-    Vector2 getPlayerSpawn();
     Vector2 getEnemySpawn( );
+
+    Vector2 scaleToTile(int x, int y ) //scales up the coordinates of items on the data array to tiles.
+    {
+       return Vector2Multiply( { ( float ) x,( float ) y }, Settings::TILE_DIMENSIONS );
+    }
 };
 
 //HALLWAYS================================================================================================================================

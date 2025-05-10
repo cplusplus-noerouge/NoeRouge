@@ -56,15 +56,14 @@ void Sprite::updateRectangles( )
 
 	if ( rotation == 0 )
 	{
-		boundingRect = { destinationRect.x + pivotOffset.x, destinationRect.y + pivotOffset.y,
+		boundingRect = { destinationRect.x - destinationRect.width / 2, destinationRect.y - destinationRect.height / 2,
 			destinationRect.width, destinationRect.height };
 	}
 	else
 	{
 		// safeSize = (longside/2)^2 + 1 | Represents the max width and height that could result from rotating the texture
 		float safeSize = sqrt( 2 * pow( ( std::max( destinationRect.width, destinationRect.height ) / 2 ), 2 ) ) + 1;
-		boundingRect = { position.x + pivotOffset.x - safeSize, position.y + pivotOffset.y - safeSize,
-			safeSize * 2, safeSize * 2 };
+		boundingRect = { position.x - safeSize, pivotOffset.y - safeSize, safeSize * 2, safeSize * 2 };
 	}
 }
 
