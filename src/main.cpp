@@ -39,8 +39,8 @@ int main( )
     screenHandler.cameras.push_back( &mainCamera );
     //  Audio
     InitAudioDevice();
-    MusicPlayer musicPlayer = MusicPlayer();
-    musicPlayer.setVolume( 0.5f );
+    //MusicPlayer musicPlayer = MusicPlayer();
+    //musicPlayer.setVolume( 0.5f );
     bool playerDefeated = false;                             //manages whether or not the player has been defeated
     bool gameWin = false;                                    //manages whether or not the player has won the game
     bool gameEnd = false;                                    //manages whether or not either game over/win scenario has been checked and the respective screen is up
@@ -77,22 +77,9 @@ int main( )
 
         screenHandler.renderAll( );
 
-        musicPlayer.onTick();
-        
-        //procedure for ending the game, either upon clearing the last floor or the player being defeated   -Andrew
-        if ((gameWin || playerDefeated) && !gameEnd)
-        {
-            mapHandler->endGame(gameWin);
-        }
 
-        ////check if the player presses the key to close the game from end screen after the game is over     -Andrew
-        //if (gameEnd)
-        //{
-        //    if (IsKeyPressed(KEY_SPACE))
-        //    {
-        //        closeWindow = true;
-        //    }
-        //}
+       // musicPlayer.onTick();
+      
 
         //temporary checks for win and lose conditions
         if (IsKeyPressed(KEY_X))

@@ -11,7 +11,9 @@
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 
 #pragma once
-#include "character.h"
+#include "character.h" 
+
+#include "enemy.h" 
 #include <raylib.h>
 #include <iostream>
 #include <cmath>
@@ -40,7 +42,26 @@ class Enemy : public Character
 	private:
 
 	public:
-	int world_position[ 2 ];                                             //Make this public for accessibility  
+	                                             //Make this public for accessibility  
+    /*---------------------------------------------------------------------------------------------------------------------------------------  
+    * getNearestPosition( )  
+    * @brief : Calculates and returns the nearest position of the enemy relative to the player.  
+    * @param : none  
+    * @return Vector2 : The nearest position of the enemy.  
+    ----------------------------------------------------------------------------------------------------------------------------------------*/  
+   // Vector2 getNearestPosition( ) const;
+    
+
+    /*---------------------------------------------------------------------------------------------------------------------------------------  
+    * getNearestPosition( )  
+    * @brief : Calculates and returns the nearest position of the enemy relative to the player.  
+    * @param : none  
+    * @return Vector2 : The nearest position of the enemy.  
+    ----------------------------------------------------------------------------------------------------------------------------------------*/  
+    Vector2 Enemy::getNearestPosition( ) const  
+    {  
+       return _position; // Assuming _position is the current position of the enemy from the Character class.  
+    }
 	Stats stats;                                                         //Struct holding the enemy's stats 
 	SheetSprite sprite;                           //Set of 9 sprites for the enemy
 	Animation animation = Animation( 4, 0.15 );   //Enemy's movement animation

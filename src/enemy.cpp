@@ -98,38 +98,44 @@ void Enemy::onRender( )
 	sprite.update( _position, _position.y );
 	mainCamera.addToBuffer( &sprite );
 
-	   //Draw the enemy's health above the rectangle
-	DrawText( TextFormat( "HP: %d", stats.health ), _position.x, _position.y, 35, BLACK );
+	 
 }
+
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * takeDamage( )
+* Reese. Edens
 * @brief : Reduces health when damage is taken, accounting for defense.
 * @param int damage : amount of incoming damage to decrement from health
 * @return : none
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Enemy::takeDamage( int damage )
 {
-	   //Reduce health by damage amount, and ensures it doesn't go below zero
+	// Reduce health
 	stats.health -= damage;
-	stats.health = ( int ) Clamp( stats.health, 0, stats.health );
+
+	// Clamp health to minimum 0
+	stats.health = ( int ) Clamp( stats.health, 0, 3 ); // Clamp between 0 and max HP (e.g. 3)
 
 	if ( stats.health > 0 )
 	{
-		cout << "Enemy took " << damage << " damage!" << endl;
-		cout << "Enemy health is now: " << stats.health << endl;
-	}
-	else if ( stats.health <= 0 )
-	{
+		// Still alive, show hit and current HP
+		Vector2 screenPos = getNearestPosition();
+		DrawText( "HIT!", static_cast< int >( screenPos.x - 20 ), static_cast< int >( screenPos.y - 20 ), 30, RAYWHITE );
+		DrawText( TextFormat( "HP: %d", stats.health ), static_cast< int >( _position.x ), static_cast< int >( _position.y - 30 ), 25, BLACK );
 		PlaySound( sfx[ "hitHurt (3).wav" ] );
-		   //Reset health to initial value (could be defined in Stats struct), Assuming initial health is 3
-		stats.health = 3;
 
-		   //Reset position to some default value
-		_position.x = 100;
-		_position.y = 100;
-		std::cout << "Enemy is dead!" << std::endl;
-		std::cout << "Enemy respawned!" << std::endl;
+		std::cout << "Enemy health is now: " << stats.health << std::endl;
+	}
+	else
+	{
+		// Enemy is dead, reset or respawn
+		std::cout << "Enemy defeated!" << std::endl;
+		PlaySound( sfx[ "hitHurt (3).wav" ] );
+
+		// Reset health (respawn)
+		stats.health = 3;
+		std::cout << "Enemy respawned with " << stats.health << " health!" << std::endl;
 	}
 }
 

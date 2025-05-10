@@ -34,7 +34,6 @@ private:
    SheetSprite sprite;                           //Set of 4 sprites for the player
    Animation animation = Animation( 4, 0.15 );   //Players movement animation
    bool keyPressAllowed;                         //Quick fix for the issue where two attack/interact/etc are called per keypress -devon
-
    void interactWithNearest();                   //Interacts with the nearest Interactable if there is one in range -devon
 
 public:
@@ -43,7 +42,7 @@ public:
      * @brief : Parameterized Class constructor.
     ------------------------------------------------------------------------------------------------------------------------------------*/
     Player(int id, Vector2 position)
-       : Character(id, position), attackRange(50.0f), attackDamage( 1 ), health( 5 ), dodgeCooldown( 0 )
+       : Character(id, position), attackRange(35.0f), attackDamage( 1 ), health( 5 ), dodgeCooldown( 0 )
     { 
        Animation animation = Animation( 4, 0.1 );
        sprite = SheetSprite( "playerWalk1", { 16, 0, 16, 16 }, position, position.y );
