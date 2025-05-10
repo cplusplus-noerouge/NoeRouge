@@ -83,7 +83,7 @@ void Character::updateDirection( Vector2 target )
 	{
 		direction.y = 1;
 	}
-	else if ( target.y < _position.y )
+	else if ( target.y > _position.y )
 	{
 		direction.y = -1;
 	}

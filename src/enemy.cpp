@@ -14,6 +14,7 @@
 
 using namespace std;
 
+extern MapHandler* mapHandler;
 extern CustomCamera mainCamera;   //Camera view of the map
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -35,16 +36,21 @@ Enemy::Enemy( int id, Vector2 position, Stats stats )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Enemy::onTick( const std::vector<Rectangle> collidables )
 {
-	   //Update movement direction (likely handled by inherited Character method)
+	//GameObject* obj = mapHandler->getCurrentFloor( )->getObjHandler( )->allObjects[ 0 ];
+	//Player* player = dynamic_cast< Player* >( obj );
+
+	//this->moveToTarget( player->getPosition( ), 30.0, collidables );
+
+	//Update movement direction (likely handled by inherited Character method)
 	updateDirection( _position );
 
-	   //Calculate velocity based on direction and frame time
-	velocity = Vector2Scale( direction, Settings::PLAYER_SPEED * GetFrameTime( ) );
+	//Calculate velocity based on direction and frame time
+	velocity = Vector2Scale( direction, Settings::ENEMY_SPEED * GetFrameTime( ) );
 
-	   //Update position by adding velocity
+	//Update position by adding velocity
 	_position = Vector2Add( _position, velocity );
 
-	   //Check and resolve collisions with game world objects
+	//Check and resolve collisions with game world objects
 	updateCollisions( collidables );
 }
 
@@ -82,24 +88,25 @@ void Enemy::updateDirection( Vector2 target )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Enemy::onRender( )
 {
-	   //Animating the enemy
+	//Animating the enemy
 	animation.onTick( );
-	   //Freezing the animation at frame 1 if the player isn't moving
-	   //WARNING! This logic will need to be revised when implementing other animations that aren't just for walking.
+	//Freezing the animation at frame 1 if the player isn't moving
+	//WARNING! This logic will need to be revised when implementing other animations that aren't just for walking.
 	if ( Vector2Equals( direction, { 0 , 0 } ) )
 	{
 		animation.reset( );
 	}
 	sprite.setTexture( "alienAWalk" + std::to_string( animation.getFrame( ) ) );
 
-	   //Setting the position referenced on the sheet based on the direction the plaer is facing
+	//Setting the position referenced on the sheet based on the direction the plaer is facing
 	sprite.setSourceRect( { 16 + ( direction.x * 16 ), 16 + ( direction.y * 16 ), 16, 16 } );
 
 
 	sprite.update( _position, _position.y );
 	mainCamera.addToBuffer( &sprite );
 
-	 
+	//Draw the enemy's health above the rectangle
+	DrawText( TextFormat( "HP: %d", stats.health ), _position.x, _position.y, 35, BLACK );
 }
 
 
@@ -112,7 +119,7 @@ void Enemy::onRender( )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Enemy::takeDamage( int damage )
 {
-	// Reduce health
+	//Reduce health by damage amount, and ensures it doesn't go below zero
 	stats.health -= damage;
 
 	// Clamp health to minimum 0
@@ -129,11 +136,15 @@ void Enemy::takeDamage( int damage )
 	}
 	else
 	{
-		// Enemy is dead, reset or respawn
-		std::cout << "Enemy defeated!" << std::endl;
-		// Reset health (respawn)
+		PlaySound( sfx[ "hitHurt (3).wav" ] );
+		//Reset health to initial value (could be defined in Stats struct), Assuming initial health is 3
 		stats.health = 3;
-		std::cout << "Enemy respawned with " << stats.health << " health!" << std::endl;
+
+		//Reset position to some default value
+		_position.x = 100;
+		_position.y = 100;
+		std::cout << "Enemy is dead!" << std::endl;
+		std::cout << "Enemy respawned!" << std::endl;
 	}
 }
 
@@ -150,7 +161,7 @@ bool Enemy::checkCollision( Vector2 playerPos, float attackRange ) const
 	float dy = playerPos.y - _position.x;
 	float distance = sqrt( dx * dx + dy * dy );
 
-	   //Returns true if the distance is less than the attack range
+	//Returns true if the distance is less than the attack range
 	return distance < attackRange;
 }
 
@@ -166,7 +177,7 @@ bool Enemy::checkCollision( Vector2 playerPos, float attackRange ) const
 Enemy* ObjectHandler::createEnemy( Vector2 position )
 {
 	Stats enemyStats = { 3, 1, 25, 5 };                              //stats: hp, damage, range, speed
-	Enemy* newEnemy = new Enemy( nextId++, position, enemyStats );   
+	Enemy* newEnemy = new Enemy( nextId++, position, enemyStats );
 	allObjects[ newEnemy->getId( ) ] = newEnemy;                     //Add <id, object*> to the map
 	this->numberOfObjects++;
 	return newEnemy;

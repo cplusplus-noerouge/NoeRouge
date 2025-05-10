@@ -22,7 +22,7 @@ int HALF_SIZE = Settings::TILE_SIZE / 2;
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Character::moveToTarget( Vector2 target, float distanceMaintained, std::vector<Rectangle> colliders )
 {
-	if ( Character::updateLOS( colliders ) && Character::getTargetDistance( ) > distanceMaintained )
+	if ( Character::updateLOS( colliders, target ) && Character::getTargetDistance( ) > distanceMaintained )
 	{
 		updateDirection( target );
 	}
@@ -34,10 +34,10 @@ void Character::moveToTarget( Vector2 target, float distanceMaintained, std::vec
 * @param : none
 * @return Ray : The line of sight from the character's position to the target.
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-Ray Character::relationToTarget( )
+Ray Character::relationToTarget( Vector2 _targetPos )
 {
 	Vector2 pos = _position;
-	Vector2 tar = _target;
+	Vector2 tar = _targetPos;
 	Vector3 direction = Vector3Normalize( { tar.x - _position.x, tar.y - _position.y, 0 } );
 	Ray lineOfSight = { { pos.x, pos.y, 0 }, direction };
 	return lineOfSight;
@@ -49,9 +49,9 @@ Ray Character::relationToTarget( )
 * @param vector<Rectangle> colliders : The collection of collidables to check for character collision.
 * @return bool : True if the line of sight is obstructed, false otherwise.
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-bool Character::updateLOS( std::vector<Rectangle> colliders )
+bool Character::updateLOS( std::vector<Rectangle> colliders, Vector2 _targetPos )
 {
-	Ray LOS = relationToTarget( );
+	Ray LOS = relationToTarget( _targetPos );
 	BoundingBox closestCollision = { { 0, 0, 0 },{ 0, 0, 0 } };
 	float closestDistance = LONG_MAX;
 	for ( Rectangle wall : colliders )
