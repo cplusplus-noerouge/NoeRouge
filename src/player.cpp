@@ -141,28 +141,21 @@ void Player::onRender( )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Player::attack( std::vector<Enemy*>& enemies )
 {
-	if ( Controls::attack() )
-	{  
+	if ( Controls::attack( ) )
+	{  std::cout << "ATTACKING" << std::endl;
 		for ( Enemy* enemy : enemies )
 		{
 			if ( enemy->checkCollision( _position, attackRange ) )
 			{
-				std::cout << "ATTACKING" << std::endl;
+				
 				PlaySound( sfx[ "laserShoot.wav" ] );
+				Vector2 enemyPosition = enemy->getNearestPosition( );
 				enemy->takeDamage( attackDamage );
-
-				   //Calculate the position to display the hit effect
-				Vector2 enemyPosition = enemy->getPosition( );
-				Vector2 position = { enemyPosition.x - 20, enemyPosition.y - 20 };   //Adjust as needed for centering text
-				   //Set the font size and color for the hit effect
-				   //Display hit effect
-			      //Vector2 position = enemy->getPosition( );
-				DrawText( "HIT!", position.x + 30, position.y + 30, 30, RAYWHITE );
 			}
 		}
-		EndDrawing( );
 	}
 }
+
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * defend()

@@ -77,22 +77,23 @@ int main( )
 
         screenHandler.renderAll( );
 
-        musicPlayer.onTick();
-        
+
+       musicPlayer.onTick();
+
         //procedure for ending the game, either upon clearing the last floor or the player being defeated   -Andrew
         if ((gameWin || playerDefeated) && !gameEnd)
         {
             mapHandler->endGame(gameWin);
         }
 
-        ////check if the player presses the key to close the game from end screen after the game is over     -Andrew
-        //if (gameEnd)
-        //{
-        //    if (IsKeyPressed(KEY_SPACE))
-        //    {
-        //        closeWindow = true;
-        //    }
-        //}
+        //check if the player presses the key to close the game from end screen after the game is over     -Andrew
+        if (gameEnd)
+        {
+            if (IsKeyPressed(KEY_P))
+            {
+                closeWindow = true;
+            }
+        }
 
         //temporary checks for win and lose conditions
         if (IsKeyPressed(KEY_X))

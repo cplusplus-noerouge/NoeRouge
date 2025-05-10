@@ -45,7 +45,7 @@ public:
      * @brief : Parameterized Class constructor.
     ------------------------------------------------------------------------------------------------------------------------------------*/
     Player(int id, Vector2 position)
-       : Character(id, position), attackRange(50.0f), attackDamage( 1 ), health( 5 ), dodgeCooldown( 0 )
+       : Character(id, position), attackRange(25.0f), attackDamage( 1 ), health( 5 ), dodgeCooldown( 0 )
     { 
        Animation animation = Animation( 4, 0.1 );
        sprite = SheetSprite( "playerWalk1", { 16, 0, 16, 16 }, position, position.y );
@@ -54,7 +54,7 @@ public:
     }
 
     /*-----------------------------------------------------------------------------------------------------------------------------------
-     * @brief : Accesors for Invicibility Frame
+     * @brief : Accessors for Invicibility Frame
     ------------------------------------------------------------------------------------------------------------------------------------*/
     void setInvincible( bool invincible );
     void updateInvincibility( ); 
