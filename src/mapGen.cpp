@@ -446,11 +446,13 @@ void Floor::generateObjects()
         enemyY = rand() % enemyY + 2;
 
         if (data[enemyX][enemyY] == FLOOR)
+        {
             data[enemyX][enemyY] = ENEMY;
 
-        //create an enemy object.
-        Vector2 EnemyPos = scaleToTile( enemyX, enemyY );
-        objHandler->createEnemy( EnemyPos );
+            //create an enemy object. - devon
+            Vector2 EnemyPos = scaleToTile(enemyX, enemyY);
+            objHandler->createEnemy(EnemyPos);
+        }
     }
 }
 /*------------------------------------------------------------------------------------------------------
