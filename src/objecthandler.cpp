@@ -4,7 +4,7 @@
 
 GameObject* ObjectHandler::createObject( )
 {
-   GameObject* newObject = new GameObject( nextId++ );
+   GameObject* newObject = new GameObject( );
    allObjects[ newObject->getId( ) ] = newObject; //add <id, object*> to the map
    this->numberOfObjects++;
    return newObject;
