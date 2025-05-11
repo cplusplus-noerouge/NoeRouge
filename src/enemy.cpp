@@ -154,7 +154,7 @@ void Enemy::takeDamage( int damage )
 	else
 	{
 		PlaySound( sfx[ "dead.wav" ] );
-		// mapHandler->getCurrentFloor()->getObjHandler()->enemyKilled(this);
+		mapHandler->getCurrentFloor()->getObjHandler()->removeObject(getId());
 	}
 }
 

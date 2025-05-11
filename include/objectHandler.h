@@ -31,7 +31,6 @@ class ObjectHandler
 
    void tickAll( const std::vector<Rectangle> collidables );
    void renderAll( );
-   //void enemyKilled( Enemy* enemy );
 
    void transferObject( int objId, ObjectHandler& newHandler );     //transfer an object from this handler to another one
    void removeObject(int objId);                                    //remove the object from the handler
