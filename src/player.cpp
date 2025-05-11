@@ -167,7 +167,7 @@ void Player::attack( std::vector<Enemy*>& enemies )
 void Player::defend( std::vector<Enemy*>& enemies )
 {
 	if ( Controls::defend() )
-	{
+	{ std::cout << "Defending against enemy attack!";
 		if ( !isInvincible )
 		{
 			setInvincible( true );
@@ -179,7 +179,7 @@ void Player::defend( std::vector<Enemy*>& enemies )
 				enemy->setDamageBlocked( true );
 			}
 		}
-		std::cout << "Defending against enemy attack!";
+		
 	}
 	else
 	{
