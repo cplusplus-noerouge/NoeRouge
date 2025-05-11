@@ -427,7 +427,6 @@ void Floor::generateObjects()
     //make the object handler
     objHandler = new ObjectHandler;
 
-
     //make the ladder objects
     objHandler->createLadder(getLadderUpLocation(), true);
     objHandler->createLadder(getLadderDownLocation(), false);
@@ -443,6 +442,12 @@ void Floor::generateObjects()
             }
         }
     }
+
+    //make health pickup object
+    BspNode* hpPickupNode = *std::next(leafPartitions.begin());
+    float hpPickupX = hpPickupNode->roomCenterPointXCoordinate;
+    float hpPickupY = hpPickupNode->roomCenterPointYCoordinate;
+    objHandler->createHpPickup({hpPickupX * TILE_SIZE, hpPickupY * TILE_SIZE });
 
     // Enemy spawning happens here, yup I just undid two hours of work trying to git push, idk I'll talk about it on Monday
     // - Ben

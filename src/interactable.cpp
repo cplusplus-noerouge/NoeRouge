@@ -63,7 +63,6 @@ Ladder::Ladder( Vector2 pos, bool isLadderUp):
 
 void Ladder::interact( )
 {
-	//std::cout << "interacted ladder is up -> " << isLadderUp << "\n";
 	mapHandler->changeFloor(isLadderUp);
 }
 
@@ -109,11 +108,39 @@ void Door::interact()
 	//TODO add/remove from collidables
 }
 
-//creates a new ladder in 'this' object handler
+//creates a new door in 'this' object handler
 Door* ObjectHandler::createDoor(Vector2 position)
 {
 	Door* door = new Door(position);
 	allObjects[door->getId()] = door; //add <id, object*> to the map
 	this->numberOfObjects++;
 	return door;
+}
+
+//Health pickup ==========================================
+HpPickup::HpPickup()
+{
+	//do nothing
+}
+HpPickup::HpPickup(Vector2 pos)
+	:Interactable(pos, "healthPack")
+{
+	//do nothing
+}
+void HpPickup::interact()
+{
+	PlaySound(sfx["itemPickup.mp3"]);
+	mapHandler->getPlayer()->healHp(hpRestored);
+
+	//remove the healthpickup from its object handler, removing it from the game
+	mapHandler->getCurrentFloor()->getObjHandler()->removeObject(getId());
+}
+
+//creates a new hpPickup in 'this' object handler
+HpPickup* ObjectHandler::createHpPickup(Vector2 position)
+{
+	HpPickup* hpPickup = new HpPickup(position);
+	allObjects[hpPickup->getId()] = hpPickup; //add <id, object*> to the map
+	this->numberOfObjects++;
+	return hpPickup;
 }
