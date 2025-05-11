@@ -67,7 +67,7 @@ void GameObject::onRender( )
 // ----- ObjectHandler -----
 
 //class GameObject *ObjectHandler::createObject() {
-//    class GameObject *newObject = new GameObject(nextId++);
+//    class GameObject *newObject = new GameObject(++nextId);
 //    allObjects[newObject->getId()] = newObject; //add <id, object*> to the map
 //    this->numberOfObjects++;
 //    return newObject;

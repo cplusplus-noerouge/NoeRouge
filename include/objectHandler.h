@@ -16,7 +16,7 @@ class ObjectHandler
 
    static int takeNextId( )
    {
-      return nextId++;
+      return ++nextId;
    }
 
    ObjectHandler( )
@@ -33,12 +33,14 @@ class ObjectHandler
    void renderAll( );
    //void enemyKilled( Enemy* enemy );
 
-   void transferObject( int objId, ObjectHandler& newHandler );
+   void transferObject( int objId, ObjectHandler& newHandler );     //transfer an object from this handler to another one
+   void removeObject(int objId);                                    //remove the object from the handler
    class GameObject* getObject( int id );
    class GameObject* createObject( );
 
    class Player* createPlayer( Vector2 position );
    class Enemy* createEnemy( Vector2 position );
    class Ladder* createLadder( Vector2 position, bool isLadderUp);
-   class Door* ObjectHandler::createDoor( Vector2 position );
+   class Door* createDoor( Vector2 position );
+   class HpPickup* createHpPickup(Vector2 position);
 };

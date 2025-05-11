@@ -29,84 +29,114 @@ CustomCamera mainCamera = CustomCamera( Vector2 { 320.0f, 180.0f }, 4.0f );
 //CustomCamera mainCamera = CustomCamera( Vector2 { 1280, 720.0f }, 1.0f );
 
 MapHandler* mapHandler;
+//Shows states for the screen. R.E
+enum GameState {
+   MENU,
+   GAME
+};
+GameState gameState = MENU;
 
 std::unordered_map<std::string, Texture2D> textureMap = {};
 
 int main( )
 {
-    // Setting up graphics
-    loadAllTextures( );
-    screenHandler.cameras.push_back( &mainCamera );
-    //  Audio
-    InitAudioDevice();
-    MusicPlayer musicPlayer = MusicPlayer();
-    musicPlayer.setVolume( 0.5f );
-    bool playerDefeated = false;                             //manages whether or not the player has been defeated
-    bool gameWin = false;                                    //manages whether or not the player has won the game
-    bool gameEnd = false;                                    //manages whether or not either game over/win scenario has been checked and the respective screen is up
-    bool closeWindow = false;                                //lcv
 
-    mapHandler = new MapHandler;
-    Floor* currentFloor = mapHandler->getCurrentFloor( );
-    currentFloor->getObjHandler( )->createPlayer( currentFloor->getLadderDownLocation( ) );
-    std::vector<Sprite> tileSprites = currentFloor->getTileSprites( );
-    
+   // Menu button properties R.E
+   Rectangle startButton = { 540, 600, 200, 50 };
 
-    StaticSprite background = StaticSprite( "spaceBackground", { 320, 180 }, -9999999 );
+   bool playerDefeated = false;
+   bool gameWin = false;
+   bool gameEnd = false;
+   bool closeWindow = false;
+   bool gameStart = false;   //checks if the game has started or not R.E
 
-    while (!WindowShouldClose() && !closeWindow)
-    { 
-       float dT = GetFrameTime( );
+   loadAllTextures( );
+   screenHandler.cameras.push_back( &mainCamera );
 
-       currentFloor->getObjHandler( )->tickAll( currentFloor->getWalls( ) );
-       currentFloor->getObjHandler( )->renderAll( );
+   MusicPlayer musicPlayer;
+   StaticSprite background( "spaceBackground", { 320, 180 }, -9999999 );
 
-        currentFloor = mapHandler->getCurrentFloor( );
+   std::vector<Sprite> tileSprites;
+
+   while ( !WindowShouldClose( ) && !closeWindow )
+   {
+      if ( gameState == MENU )   //STATE ONE FOR GAME R.E
+      {
+         BeginDrawing( );
+         ClearBackground( BLACK );
+         DrawTexturePro(                   // Creates image, as well as places it over hte title screen
+            textureMap[ "planetTitle" ],
+            Rectangle { 0, 0, ( float ) textureMap[ "planetTitle" ].width, ( float ) textureMap[ "planetTitle" ].height },
+            Rectangle { 0, 0, 1280, 720 },  // Destination = full window
+            Vector2 { 0, 0 },
+            0.0f,
+            WHITE
+         );
         
-        mapHandler->tickAndRender( );
+         DrawRectangleRec( startButton, DARKPURPLE );
+         DrawText( "START", startButton.x + 45, startButton.y + 10, 30, RAYWHITE );
 
-        tileSprites = currentFloor->getTileSprites( );
-      
+         if ( IsMouseButtonPressed( MOUSE_LEFT_BUTTON ) && CheckCollisionPointRec( GetMousePosition( ), startButton ) )
+         {
+            gameState = GAME;
+         }
 
-        for ( int i = 0; i < tileSprites.size( ); i++ )
-        {
-           mainCamera.addToBuffer( &tileSprites[ i ] );
-        }
+         EndDrawing( );
+      }
+      else if ( gameState == GAME )  //STATE TO START AND SHOW THE GAME R.E
+      {
+         if ( !gameStart )
+         {
+            InitAudioDevice( );
+            musicPlayer.setVolume( 0.5f );
 
-        mainCamera.addToBuffer( &background );
+            mapHandler = new MapHandler;
+           
+            mapHandler->getCurrentFloor( )->getObjHandler( )->createPlayer( mapHandler->getCurrentFloor( )->getLadderDownLocation( ) );
+            tileSprites = mapHandler->getCurrentFloor( )->getTileSprites( );
 
-        screenHandler.renderAll( );
+            gameStart = true;
+         }
 
+         float dT = GetFrameTime( );
 
-       musicPlayer.onTick();
+         mapHandler->tickAndRender( );
 
-        //procedure for ending the game, either upon clearing the last floor or the player being defeated   -Andrew
-        if ((gameWin || playerDefeated) && !gameEnd)
-        {
-            mapHandler->endGame(gameWin);
-        }
+         for ( auto& tile : tileSprites )
+         {
+            mainCamera.addToBuffer( &tile );
+         }
 
-        //check if the player presses the key to close the game from end screen after the game is over     -Andrew
-        if (gameEnd)
-        {
-            if (IsKeyPressed(KEY_P))
+         mainCamera.addToBuffer( &background );
+
+         screenHandler.renderAll( ); // <- this already wraps Begin/EndDrawing()
+
+         musicPlayer.onTick( );
+
+         //procedure for ending the game, either upon clearing the last floor or the player being defeated   -Andrew
+         if ( ( gameWin || playerDefeated ) && !gameEnd )
+         {
+            mapHandler->endGame( gameWin );
+            gameEnd = true;
+         }
+
+         //check if the player presses the key to close the game from end screen after the game is over     -Andrew
+         if ( gameEnd )
+         {
+            if ( IsKeyPressed( KEY_P ) )
             {
-                closeWindow = true;
+               closeWindow = true;
             }
-        }
+         }
+         if ( IsKeyPressed( KEY_X ) ) gameWin = true;
+         if ( IsKeyPressed( KEY_Z ) ) playerDefeated = true;
+      }
 
-        //temporary checks for win and lose conditions
-        if (IsKeyPressed(KEY_X))
-        {
-            gameWin = true;
-        }
-        if (IsKeyPressed(KEY_Z))
-        {
-            playerDefeated = true;
-        }
-    }
+   }
 
-    CloseAudioDevice();
-
-    return 0;
+   CloseAudioDevice( );
+   CloseWindow( );
+   return 0;
 }
+
+          
