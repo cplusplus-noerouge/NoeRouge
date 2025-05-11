@@ -55,9 +55,9 @@ int main( )
    loadAllTextures( );
    screenHandler.cameras.push_back( &mainCamera );
 
-   MusicPlayer musicPlayer;
    StaticSprite background( "spaceBackground", { 320, 180 }, -9999999 );
    InitAudioDevice( );
+   MusicPlayer musicPlayer;
    musicPlayer.setVolume( 0.5f );
 
 
