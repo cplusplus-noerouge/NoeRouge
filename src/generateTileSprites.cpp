@@ -78,8 +78,8 @@ std::vector<Sprite> generateTileSprites( char data[ WIDTH ][ HEIGHT ] )
 			}
 			else if ( data[ x ][ y ] == '@' )
 			{
-				// If the tile below exists and is a wall
-				if ( y + 1 < HEIGHT && ( data[ x ][ y + 1 ] == '#' || data[ x ][ y + 1 ] == '*' ) )
+				// If the tile below exists and is a wall or door
+				if ( y + 1 < HEIGHT && ( data[ x ][ y + 1 ] == '#' || data[ x ][ y + 1 ] == '*' || data[x][y + 1] == '@') )
 				{
 					tileSprites.push_back( Sprite( "doorBaseH", { ( float ) x * 16, ( float ) y * 16 }, y * 16 - 999 ) );
 				}
