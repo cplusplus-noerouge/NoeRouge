@@ -89,6 +89,11 @@ void loadAllTextures( )
 	loadSingleTexture( "gameOverOverlay", filePath + "gameOverOverlay.png" );
 	loadSingleTexture( "winOverlay", filePath + "WinOverlay.png" );
 
+	// UI textures
+	filePath = "../../../assets/graphics/ui/";
+	loadSingleTexture("fullHeart", filePath + "fullHeart.png");
+	loadSingleTexture("emptyHeart", filePath + "emptyHeart.png");
+
 	//these are temporary because I'm not sure how the door graphics are supposed to be used - devon
 	loadSingleTexture("doorOpen", "../../../assets/graphics/doorOpen.png");
 	loadSingleTexture("doorClosed", "../../../assets/graphics/doorClosed.png");

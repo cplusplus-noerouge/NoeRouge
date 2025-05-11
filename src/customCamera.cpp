@@ -7,7 +7,12 @@
 #include "raymath.h"
 #include "vector"
 #include "baseSprite.h"
+#include "staticSprite.h"
+#include "globals.h"
+#include "maphandler.h"
 #include "customCamera.h"
+
+extern MapHandler* mapHandler;
 
 CustomCamera::CustomCamera( Vector2 position, Vector2 resolution, float renderScale )
 {
@@ -84,8 +89,35 @@ void CustomCamera::prepareRender( )
 	{
 		sprite->render( realPosition );
 	}
+
+	prepareUI(); //-devon
+
 	buffer.clear( );
 	EndTextureMode( );
+}
+
+/*--------------------------------------------------
+* @brief: gets UI sprites ready to render, used by prepareRender -devon
+*/
+void CustomCamera::prepareUI()
+{
+	int hp = mapHandler->getPlayer()->getHealth();
+	int spacing = 3 * Settings::TILE_SIZE / 4;
+
+	// Render full hearts
+	for (int i = 1; i <= hp; i++)
+	{
+		float locationX = spacing * i;
+		BaseSprite* hpSprite = new StaticSprite("fullHeart", { locationX,Settings::TILE_SIZE / 2 }, 100);
+		hpSprite->render(realPosition);
+	}
+	// Render empty hearts
+	for (int i = hp + 1; i <= mapHandler->getPlayer()->maxHp; i++)
+	{
+		float locationX = spacing * i;
+		BaseSprite* hpSprite = new StaticSprite("emptyHeart", { locationX,Settings::TILE_SIZE / 2 }, 100);
+		hpSprite->render(realPosition);
+	}
 }
 
 /*--------------------------------------------------

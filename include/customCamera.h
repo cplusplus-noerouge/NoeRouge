@@ -27,6 +27,12 @@ class CustomCamera
 	float renderScale;   // How much the renderTexture is scaled up when drawing to the screen
 	
 	Rectangle viewRectangle;   // The rectangle representation of the bounds of the camera's view in the game world
+
+	/*---------------------------------------------------------------------------------------------------------
+	* @brief: gets UI sprites ready to render, used by prepareRender -devon
+	*/
+	void prepareUI();
+
 	public:
 	CustomCamera( Vector2 position = { 0, 0 }, Vector2 resolution = { DEFAULT_CAM_WIDTH, DEFAULT_CAM_HEIGHT }, float renderScale = 1.0f );
 
