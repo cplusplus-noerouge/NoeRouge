@@ -98,6 +98,9 @@ void CustomCamera::prepareRender( )
 
 /*--------------------------------------------------
 * @brief: gets UI sprites ready to render, used by prepareRender -devon
+* Notes for the future: Best practice would have been creating a UI class and using extremely high layer values to sidestep 
+* the layer sorting vs tacking them onto the end of the camera's render function. 
+* Additionally, the spacing of the hearts probably shouldn't be tied to the tile size.
 */
 void CustomCamera::prepareUI()
 {
