@@ -73,22 +73,18 @@ void Player::onTick( const std::vector<Rectangle> colliders )
 	//Parse through it and make a subset of enemies, created after ladders and doors.
 	std::vector<Enemy*> enemies = mapHandler->getEnemies( );
 
-	keyPressAllowed = !keyPressAllowed;	//this value changes every tick so that raylib only recognizes the keypresses once
-	if (keyPressAllowed)
+	//**Reese** added player attack, outputs "ATTACKING" to console when space is pressed
+	if ( Controls::attack( ) )  // player attacks when space is pressed
 	{
-		//**Reese** added player attack, outputs "ATTACKING" to console when space is pressed
-		if ( Controls::attack( ) )  // player attacks when space is pressed
-		{
-			this->attack( enemies ); // Attack with a range of 50 and damage of 10
-		}
-		if ( Controls::defend( ) ) // player defends when left shift is pressed
-		{
-			this->defend( enemies ); // Defend against enemy attacks
-		}
-		if ( Controls::interact( ) ) //  Try to interact with nearest interactable object -devon
-		{
-			interactWithNearest();
-		}
+		this->attack( enemies ); // Attack with a range of 50 and damage of 10
+	}
+	if ( Controls::defend( ) ) // player defends when left shift is pressed
+	{
+		this->defend( enemies ); // Defend against enemy attacks
+	}
+	if ( Controls::interact( ) ) //  Try to interact with nearest interactable object -devon
+	{
+		interactWithNearest();
 	}
 }
 

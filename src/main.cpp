@@ -91,18 +91,15 @@ int main( )
             musicPlayer.setVolume( 0.5f );
 
             mapHandler = new MapHandler;
-            Floor* currentFloor = mapHandler->getCurrentFloor( );
+           
             currentFloor->getObjHandler( )->createPlayer( currentFloor->getLadderDownLocation( ) );
-            tileSprites = currentFloor->getTileSprites( );
+            tileSprites = mapHandler->getCurrentFloor( )->currentFloor->getTileSprites( );
 
             gameStart = true;
          }
 
          float dT = GetFrameTime( );
-         Floor* currentFloor = mapHandler->getCurrentFloor( );
 
-         currentFloor->getObjHandler( )->tickAll( currentFloor->getWalls( ) );
-         currentFloor->getObjHandler( )->renderAll( );
          mapHandler->tickAndRender( );
 
          for ( auto& tile : tileSprites )

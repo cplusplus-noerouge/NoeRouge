@@ -33,7 +33,6 @@ private:
    float walkTimer;                              //Time between steps
    SheetSprite sprite;                           //Set of 4 sprites for the player
    Animation animation = Animation( 4, 0.15 );   //Players movement animation
-   bool keyPressAllowed;                         //Quick fix for the issue where two attack/interact/etc are called per keypress -devon
    bool isInvincible = false;                    //Tracks if the player is invincible-KF
    float invincibilityTimer = 0.0f;              //Timer for invincibility frames-KF
    const float invincibilityDuration = 0.7f;     //Duration of invincibility in seconds-KF
@@ -50,7 +49,6 @@ public:
        Animation animation = Animation( 4, 0.1 );
        sprite = SheetSprite( "playerWalk1", { 16, 0, 16, 16 }, position, position.y );
        walkTimer = 0.0f;
-       keyPressAllowed = true;
     }
 
     /*-----------------------------------------------------------------------------------------------------------------------------------
