@@ -45,6 +45,15 @@ void Enemy::onTick( const std::vector<Rectangle> collidables )
 
 	attackPlayer( player );
 
+	if ( hitDisplayTimer > 0 )
+	{
+		hitDisplayTimer -= GetFrameTime( );
+		if ( hitDisplayTimer <= 0 )
+		{
+			wasHit = false;
+		}
+	}
+
 	//Calculate velocity based on direction and frame time
 	velocity = Vector2Scale( Vector2Normalize( direction ), stats.speed * GetFrameTime( ) );
 
@@ -81,35 +90,43 @@ void Enemy::updateDirection( Vector2 target )
 	}
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------
-* onRender( )
-* @brief : Renders the enemy on screen.
-* @param : none
-* @return : none
-----------------------------------------------------------------------------------------------------------------------------------------*/
-void Enemy::onRender( )
+/*---------------------------------------------------------------------------------------------------------------------------------------  
+* onRender( )  
+* Group Effort  
+* @brief : Renders the enemy on screen.  
+* @param : none  
+* @return : none  
+----------------------------------------------------------------------------------------------------------------------------------------*/  
+void Enemy::onRender( )  
 {
-	//Animating the enemy
 	animation.onTick( );
-	//Freezing the animation at frame 1 if the player isn't moving
-	//WARNING! This logic will need to be revised when implementing other animations that aren't just for walking.
-	if ( Vector2Equals( direction, { 0 , 0 } ) )
-	{
-		animation.reset( );
-	}
+	if ( Vector2Equals( direction, { 0 , 0 } ) ) animation.reset( );
 	sprite.setTexture( "alienAWalk" + std::to_string( animation.getFrame( ) ) );
-
-	//Setting the position referenced on the sheet based on the direction the plaer is facing
 	sprite.setSourceRect( { 16 + ( direction.x * 16 ), 16 + ( direction.y * 16 ), 16, 16 } );
-
-
 	sprite.update( _position, _position.y );
 	mainCamera.addToBuffer( &sprite );
 
-	//Draw the enemy's health above the rectangle
-	DrawText( TextFormat( "HP: %d", stats.health ), _position.x, _position.y, 35, BLACK );
-}
+	// Calculate the width of the health bar relative to the enemy's max health
+	float hpBarWidth = 50.0f; // Set the width of the health bar
+	float hpBarCurrentWidth = hpBarWidth * ( float ) stats.health / stats.health; // Scale width based on current health
 
+	Vector2 screenPos = Vector2Subtract( _position, mainCamera.getPosition( ) );
+	
+	// Draw the background of the HP bar (gray)
+	DrawRectangle( hpBarPosition.x, hpBarPosition.y, hpBarWidth, 5, GRAY );
+
+	// Draw the HP bar (green, red if health is low)
+	Color barColor = ( stats.health > stats.health * 0.2f ) ? GREEN : RED;
+	DrawRectangle( hpBarPosition.x, hpBarPosition.y, hpBarCurrentWidth, 5, barColor );
+	// Always draw HP
+	DrawText( TextFormat( "HP: %d", stats.health ), screenPos.x - 10, screenPos.y - 30, 15, RED );
+
+	// If recently hit, draw "HIT!"
+	if ( wasHit )
+	{
+		DrawText( "HIT!", screenPos.x - 20, screenPos.y - 50, 30, RAYWHITE );
+	}
+}
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * takeDamage( )
@@ -126,19 +143,18 @@ void Enemy::takeDamage( int damage )
 	// Clamp health to minimum 0
 	stats.health = ( int ) Clamp( stats.health, 0, 3 ); // Clamp between 0 and max HP (e.g. 3)
 
+
 	if ( stats.health > 0 )
 	{
-		// Still alive, show hit and current HP
-		Vector2 screenPos = getNearestPosition();
-		DrawText( "HIT!", static_cast< int >( screenPos.x - 20 ), static_cast< int >( screenPos.y - 20 ), 30, RAYWHITE );
-		DrawText( TextFormat( "HP: %d", stats.health ), static_cast< int >( _position.x ), static_cast< int >( _position.y - 30 ), 25, BLACK );
+		wasHit = true;
+		hitDisplayTimer = 0.5f; // show hit for 0.5 seconds
 		PlaySound( sfx[ "hitHurt (3).wav" ] );
 		std::cout << "Enemy health is now: " << stats.health << std::endl;
 	}
 	else
 	{
-		PlaySound( sfx[ "hitHurt (3).wav" ] );
-		//mapHandler->getCurrentFloor( )->getObjHandler( )->enemyKilled( this ); //not implemented
+		PlaySound( sfx[ "dead.wav" ] );
+		// mapHandler->getCurrentFloor()->getObjHandler()->enemyKilled(this);
 	}
 }
 
@@ -169,7 +185,6 @@ bool Enemy::checkCollision( Vector2 playerPos, float attackRange ) const
 * @return Enemy* : Pointer to the created Enemy object.
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 Enemy* ObjectHandler::createEnemy( Vector2 position )
-{
 	Stats enemyStats = { 3, 1, 16, 50 };                              //stats: hp, damage, range, speed
 	Enemy* newEnemy = new Enemy( ++nextId, position, enemyStats );
 	allObjects[ newEnemy->getId( ) ] = newEnemy;                     //Add <id, object*> to the map
@@ -189,15 +204,21 @@ void Enemy::attackPlayer( Player* player )
 {
 	// make sure both are alive
 	if (stats.health <= 0 ) return;
-
+       //cooldown
+	timeSinceLastAttack += GetFrameTime( );
+	if ( timeSinceLastAttack < attackInterval ) return;
+	timeSinceLastAttack = 0.f;
 	// distance check
 	if ( checkCollision( player->getPosition( ), stats.attackRange ) )
 	{
 		player->takeDamage( stats.attackDamage );
 	}
+	else
+	{
+		// move towards player
+		updateDirection( player->getPosition( ) );
+		velocity = Vector2Scale( Vector2Normalize( direction ), stats.speed * GetFrameTime( ) );
+		_position = Vector2Add( _position, velocity );
 
-	//cooldown
-	timeSinceLastAttack += GetFrameTime( );
-	if ( timeSinceLastAttack < attackInterval ) return;
-	timeSinceLastAttack = 0.f;
+	}
 }

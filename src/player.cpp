@@ -106,7 +106,8 @@ void Player::onRender( )
 		animation.reset( );
 	}
 	sprite.setTexture( "playerWalk" + std::to_string( animation.getFrame( ) ) );
-
+	//show text on screen when player attacks
+	DrawText( "ATTACKING", _position.x,_position.y,20,RAYWHITE);
 	   //Setting the position referenced on the sheet based on the direction the plaer is facing
 	if ( direction.x < 0 )
 	{
@@ -147,6 +148,7 @@ void Player::attack( std::vector<Enemy*>& enemies )
 				PlaySound( sfx[ "laserShoot.wav" ] );
 				Vector2 enemyPosition = enemy->getNearestPosition( );
 				enemy->takeDamage( attackDamage );
+				DrawText( "HIT!", _position.x, _position.y - 20, 20, RAYWHITE );
 			}
 		}
 	}
