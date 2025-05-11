@@ -55,6 +55,9 @@ int main( )
 
    MusicPlayer musicPlayer;
    StaticSprite background( "spaceBackground", { 320, 180 }, -9999999 );
+   InitAudioDevice( );
+   musicPlayer.setVolume( 0.5f );
+
 
    std::vector<Sprite> tileSprites;
 
@@ -87,9 +90,7 @@ int main( )
       {
          if ( !gameStart )
          {
-            InitAudioDevice( );
-            musicPlayer.setVolume( 0.5f );
-
+            
             mapHandler = new MapHandler;
            
             mapHandler->getCurrentFloor( )->getObjHandler( )->createPlayer( mapHandler->getCurrentFloor( )->getLadderDownLocation( ) );

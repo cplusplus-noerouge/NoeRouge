@@ -41,4 +41,6 @@ class ObjectHandler
    class Enemy* createEnemy( Vector2 position );
    class Ladder* createLadder( Vector2 position, bool isLadderUp);
    class Door* ObjectHandler::createDoor( Vector2 position );
+
+
 };

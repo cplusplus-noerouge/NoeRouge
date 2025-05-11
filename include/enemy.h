@@ -79,6 +79,9 @@ class Enemy : public Character
 	void attackPlayer( Player* player );
 	float timeSinceLastAttack = 0.f;
 	float attackInterval = 1.0f; // one attack per second
+	bool wasHit = false;  
+	float hitDisplayTimer = 0.0f;
+	Vector2 hpBarPosition = Vector2Subtract( _position, { 25.0f, 20.0f } );
 
 	/*--------------------------------------------------------------------------------------------------------------------------------------
 	* getHealth( )
