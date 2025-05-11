@@ -56,18 +56,9 @@ int main( )
 
     while (!WindowShouldClose() && !closeWindow)
     { 
-       float dT = GetFrameTime( );
+       mapHandler->tickAndRender();
 
-       currentFloor->getObjHandler( )->tickAll( currentFloor->getWalls( ) );
-       currentFloor->getObjHandler( )->renderAll( );
-
-        currentFloor = mapHandler->getCurrentFloor( );
-        
-        mapHandler->tickAndRender( );
-
-        tileSprites = currentFloor->getTileSprites( );
-      
-
+        tileSprites = mapHandler->getCurrentFloor()->getTileSprites( );
         for ( int i = 0; i < tileSprites.size( ); i++ )
         {
            mainCamera.addToBuffer( &tileSprites[ i ] );
