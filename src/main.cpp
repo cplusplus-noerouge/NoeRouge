@@ -92,8 +92,8 @@ int main( )
 
             mapHandler = new MapHandler;
            
-            currentFloor->getObjHandler( )->createPlayer( currentFloor->getLadderDownLocation( ) );
-            tileSprites = mapHandler->getCurrentFloor( )->currentFloor->getTileSprites( );
+            mapHandler->getCurrentFloor( )->getObjHandler( )->createPlayer( mapHandler->getCurrentFloor( )->getLadderDownLocation( ) );
+            tileSprites = mapHandler->getCurrentFloor( )->getTileSprites( );
 
             gameStart = true;
          }
