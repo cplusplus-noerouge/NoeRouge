@@ -231,6 +231,19 @@ void Player::takeDamage( int damage )
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
+* healHp( )
+* Devon Johnson
+* @brief : Increases player hp, up to the maximum value
+* @param int healAmount : amount to increase hp by
+* @return : none
+----------------------------------------------------------------------------------------------------------------------------------------*/
+void Player::healHp(int healAmount)
+{
+	health = std::min(maxHp, health + healAmount);
+	std::cout << "Player healed "<<healAmount<<" hp";
+}
+
+/*---------------------------------------------------------------------------------------------------------------------------------------
 * createPlayer( )
 * Ben Aguilon
 * @brief : Object creation function defined in ObjectHandler.

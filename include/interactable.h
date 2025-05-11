@@ -82,3 +82,19 @@ public:
 		this->isClosed = isClosed;
 	}
 };
+
+/*
+a thing that the player can pick up to restore hp
+- devon
+*/
+class HpPickup : public Interactable
+{
+private:
+	static const int hpRestored = 1;
+
+public:
+	HpPickup();
+	HpPickup(Vector2 pos);
+
+	void interact();
+};
