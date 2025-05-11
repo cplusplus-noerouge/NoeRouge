@@ -55,6 +55,7 @@ void loadAllTextures( )
 
 	   // Tile textures
 	filePath = "../../../assets/graphics/tiles/";
+	loadSingleTexture( "creditImage", filePath + "creditImage.png" );
    loadSingleTexture( "planetTitle", filePath + "greenPlanetBackGround.png" );
 	loadSingleTexture( "spaceBackground", filePath + "spaceBackground.png" );
 	loadSingleTexture( "ladderDown", filePath + "ladderDown.png" );

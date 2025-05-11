@@ -32,7 +32,8 @@ MapHandler* mapHandler;
 //Shows states for the screen. R.E
 enum GameState {
    MENU,
-   GAME
+   GAME,
+   CREDITS
 };
 GameState gameState = MENU;
 
@@ -43,6 +44,7 @@ int main( )
 
    // Menu button properties R.E
    Rectangle startButton = { 540, 600, 200, 50 };
+   Rectangle creditButton = { 950, 600, 100, 30 };
 
    bool playerDefeated = false;
    bool gameWin = false;
@@ -68,31 +70,39 @@ int main( )
          BeginDrawing( );
          ClearBackground( BLACK );
          DrawTexturePro(                   // Creates image, as well as places it over hte title screen
-            textureMap[ "planetTitle" ],
-            Rectangle { 0, 0, ( float ) textureMap[ "planetTitle" ].width, ( float ) textureMap[ "planetTitle" ].height },
-            Rectangle { 0, 0, 1280, 720 },  // Destination = full window
-            Vector2 { 0, 0 },
-            0.0f,
-            WHITE
+                         textureMap[ "planetTitle" ],
+                         Rectangle { 0, 0, ( float ) textureMap[ "planetTitle" ].width, ( float ) textureMap[ "planetTitle" ].height },
+                         Rectangle { 0, 0, 1280, 720 },  // Destination = full window
+                         Vector2 { 0, 0 },
+                         0.0f,
+                         WHITE
          );
-        
-         DrawRectangleRec( startButton, DARKPURPLE );
-         DrawText( "START", startButton.x + 45, startButton.y + 10, 30, RAYWHITE );
+
+         DrawRectangleRec( startButton, DARKPURPLE );   //drawing button for game start R.E
+         DrawText( "START", startButton.x + 47, startButton.y + 10, 30, RAYWHITE );
 
          if ( IsMouseButtonPressed( MOUSE_LEFT_BUTTON ) && CheckCollisionPointRec( GetMousePosition( ), startButton ) )
          {
             gameState = GAME;
          }
 
+         DrawRectangleRec( creditButton, DARKPURPLE );    //drawing button for credits R.E
+         DrawText( "CREDITS", creditButton.x+15 , creditButton.y + 10, 15, RAYWHITE );
+
+         if ( IsMouseButtonPressed( MOUSE_LEFT_BUTTON ) && CheckCollisionPointRec( GetMousePosition( ), creditButton ) )
+         {
+            std::cout << "Credits button pressed!" << std::endl;
+            gameState = CREDITS;
+         }
          EndDrawing( );
       }
       else if ( gameState == GAME )  //STATE TO START AND SHOW THE GAME R.E
       {
          if ( !gameStart )
          {
-            
+
             mapHandler = new MapHandler;
-           
+
             mapHandler->getCurrentFloor( )->getObjHandler( )->createPlayer( mapHandler->getCurrentFloor( )->getLadderDownLocation( ) );
             tileSprites = mapHandler->getCurrentFloor( )->getTileSprites( );
 
@@ -132,7 +142,27 @@ int main( )
          if ( IsKeyPressed( KEY_X ) ) gameWin = true;
          if ( IsKeyPressed( KEY_Z ) ) playerDefeated = true;
       }
+      else if ( gameState == CREDITS )  // shows credits page, hit m to retun to home to start the game. R.E
+      {
+         BeginDrawing( );
+         ClearBackground( BLACK );
+         DrawTexturePro(                   // Creates image, as well as places it over hte title screen
+                         textureMap[ "creditImage" ],
+                         Rectangle { 0, 0, ( float ) textureMap[ "creditImage" ].width, ( float ) textureMap[ "creditImage" ].height },
+                         Rectangle { 0, 0, 1280, 720 },  // Destination = full window
+                         Vector2 { 0, 0 },
+                         0.0f,
+                         WHITE
+         );
 
+         DrawText( "Press [M] to return to Main Menu", 420, 620, 27, RAYWHITE );
+
+         if ( IsKeyPressed( KEY_M ) )
+         {
+            gameState = MENU;
+         }
+         EndDrawing( );
+      }
    }
 
    CloseAudioDevice( );
