@@ -104,12 +104,14 @@ int main( )
             mapHandler = new MapHandler;
 
             mapHandler->getCurrentFloor( )->getObjHandler( )->createPlayer( mapHandler->getCurrentFloor( )->getLadderDownLocation( ) );
-            tileSprites = mapHandler->getCurrentFloor( )->getTileSprites( );
+            
 
             gameStart = true;
          }
 
          float dT = GetFrameTime( );
+
+         tileSprites = mapHandler->getCurrentFloor( )->getTileSprites( );
 
          mapHandler->tickAndRender( );
 

@@ -132,6 +132,11 @@ std::vector<Enemy*> MapHandler::getEnemies()
 	return enemies;
 }
 
+// returns a pointer to the player object -devon
+Player* MapHandler::getPlayer() {
+	return static_cast<Player*>(_currentFloor->getObjHandler()->getObject(0));
+}
+
 /*---------------------------------------------------------------------------------------------------------------------
 * endGame() displays a game over/win screen
 * - Andrew

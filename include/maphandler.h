@@ -23,12 +23,12 @@ class MapHandler {
 	MapHandler( );
 
 	Floor* getCurrentFloor( ) { return _currentFloor; }
+	std::vector<Interactable*> getInteractables();	//returns all the interactables on the current floor -devon
+	std::vector<Enemy*> getEnemies();			    //returns all the enemies on the current floor -devon
+	Player* getPlayer();							//get a pointer to the player object -devon
 
 	void tickAndRender( );
 	void changeFloor( bool trueisdown );
-
-	std::vector<Interactable*> getInteractables();	//returns all the interactables on the current floor -devon
-	std::vector<Enemy*> getEnemies();	    //returns all the enemies on the current floor -devon
 
 	bool MapHandler::endGame( bool win ); // - Andrew
 };

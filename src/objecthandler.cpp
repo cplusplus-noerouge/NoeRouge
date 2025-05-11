@@ -4,7 +4,7 @@
 
 GameObject* ObjectHandler::createObject( )
 {
-   GameObject* newObject = new GameObject( nextId++ );
+   GameObject* newObject = new GameObject( );
    allObjects[ newObject->getId( ) ] = newObject; //add <id, object*> to the map
    this->numberOfObjects++;
    return newObject;
@@ -20,7 +20,7 @@ GameObject* ObjectHandler::getObject( int id )
 * - devon
 * param int objId: id of the object being transfered
 * param ObjectHandler &newHandler: the handler the object is being transfered to
-* return: alters data in this and newHandler
+* return: no return, alters data in this and newHandler
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void ObjectHandler::transferObject( int objId, ObjectHandler& newHandler )
 {
@@ -32,6 +32,24 @@ void ObjectHandler::transferObject( int objId, ObjectHandler& newHandler )
    this->numberOfObjects--;
 }
 
+/*---------------------------------------------------------------------------------------------------------------------------------------
+* removeObject() removes an object from the handler
+* - devon
+* param int objId: id of the object being removed
+* return: no return
+----------------------------------------------------------------------------------------------------------------------------------------*/
+void ObjectHandler::removeObject(int objId)
+{
+    allObjects.erase(objId);
+    numberOfObjects--;
+}
+
+/*---------------------------------------------------------------------------------------------------------------------------------------
+* tickAll() ticks all objects in the handler
+* - someone else, devon
+* param: no params
+* return: no return
+----------------------------------------------------------------------------------------------------------------------------------------*/
 void ObjectHandler::tickAll( const std::vector<Rectangle> collidables )
 {
     //this iterator visits all the objects. using a copy because allObjects can be edited by onTick -devon
@@ -42,6 +60,11 @@ void ObjectHandler::tickAll( const std::vector<Rectangle> collidables )
     }
 }
 
+/*---------------------------------------------------------------------------------------------------------------------------------------
+* renderAll() renders all objects in the handler
+* - someone else, devon
+* return: no return
+----------------------------------------------------------------------------------------------------------------------------------------*/
 void ObjectHandler::renderAll( )
 {
    //this iterator visits all the objects

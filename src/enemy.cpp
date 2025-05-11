@@ -185,9 +185,8 @@ bool Enemy::checkCollision( Vector2 playerPos, float attackRange ) const
 * @return Enemy* : Pointer to the created Enemy object.
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 Enemy* ObjectHandler::createEnemy( Vector2 position )
-{
-	Stats enemyStats = { 3, 1, 12, 25 };                              //stats: hp, damage, range, speed
-	Enemy* newEnemy = new Enemy( nextId++, position, enemyStats );
+	Stats enemyStats = { 3, 1, 16, 50 };                              //stats: hp, damage, range, speed
+	Enemy* newEnemy = new Enemy( ++nextId, position, enemyStats );
 	allObjects[ newEnemy->getId( ) ] = newEnemy;                     //Add <id, object*> to the map
 	this->numberOfObjects++;
 	return newEnemy;
