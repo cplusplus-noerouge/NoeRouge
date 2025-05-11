@@ -10,7 +10,7 @@ namespace Settings
 
 	const float TILE_SIZE = 16;               //The x & y size of each tile in the game world in pixels
 	const Vector2 TILE_DIMENSIONS = { TILE_SIZE,TILE_SIZE };
-	const int PLAYER_SPEED = 100;
+	const int PLAYER_SPEED = 120;
 	const int ENEMY_SPEED = 50;
 	const int ENEMY_COUNT = 1;
 	//NUM_OF_FLOORS initialized in the globals.h file due to array requirements.
