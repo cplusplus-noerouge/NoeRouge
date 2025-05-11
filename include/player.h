@@ -28,7 +28,6 @@ class Player : public Character
 private:
    float attackRange;                            //Attack radius
    int attackDamage;                             //Damage per hit
-   const int maxHp = 5;                          //The max value that player hp can be, and the value it starts at
    int health;                                   //Player health
    int dodgeCooldown;                            //Cooldown length of dodge ability
    float walkTimer;                              //Time between steps
@@ -41,6 +40,7 @@ private:
    void interactWithNearest();                   //Interacts with the nearest Interactable if there is one in range -devon
 
 public:
+    const static int maxHp = 5;                          //The max value that player hp can be, and the value it starts at
 
     /*-----------------------------------------------------------------------------------------------------------------------------------
      * @brief : Parameterized Class constructor.
@@ -61,6 +61,11 @@ public:
     bool getIsInvincible( ) const
     {
        return isInvincible;
+    }
+
+    int getHealth()
+    {
+        return health;
     }
 
     void updateDirection( ) override;                               //Sets the movement direction of the character based on control input.
