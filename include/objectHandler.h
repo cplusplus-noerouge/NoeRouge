@@ -16,7 +16,7 @@ class ObjectHandler
 
    static int takeNextId( )
    {
-      return nextId++;
+      return ++nextId;
    }
 
    ObjectHandler( )
