@@ -19,7 +19,7 @@
 #include "globals.h"
 #include "maphandler.h"
 
-extern MapHandler* mapHandler;
+extern MapHandler* mapHandler;    //The game's mapHandler object
 extern CustomCamera mainCamera;   //Camera view of the map
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -30,29 +30,28 @@ extern CustomCamera mainCamera;   //Camera view of the map
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Player::updateDirection( )
 {
-	if ( Controls::moveLeft() )
+	if ( Controls::moveLeft( ) )
 	{
 		direction.x = -1;
 	}
-	else if ( Controls::moveRight() )
+	else if ( Controls::moveRight( ) )
 	{
 		direction.x = 1;
 	}
-	if ( Controls::moveDown() )
+	if ( Controls::moveDown( ) )
 	{
 		direction.y = 1;
 	}
-	else if ( Controls::moveUp() )
+	else if ( Controls::moveUp( ) )
 	{
 		direction.y = -1;
 	}
-
 	dodge( );
 }
 
-
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * onTick( )
+* Reese, Kaleb, Ben A, Devon
 * @brief : Updates the state of the player during a single frame.
 * @param vector<Rectangle> colliders : The collection of collidables to check for character collision.
 * @return : none
@@ -73,49 +72,46 @@ void Player::onTick( const std::vector<Rectangle> colliders )
 		walkTimer = 0.0f;
 	}
 
-	//Get current floors objhandler.
-	//Parse through it and make a subset of enemies, created after ladders and doors.
+	   //Get current floors objhandler.
+	   //Parse through it and make a subset of enemies, created after ladders and doors.
 	std::vector<Enemy*> enemies = mapHandler->getEnemies( );
 
-	//**Reese** added player attack, outputs "ATTACKING" to console when space is pressed
-	if ( Controls::attack( ) )  // player attacks when space is pressed
+	   //**Reese** added player attack, outputs "ATTACKING" to console when space is pressed
+	if ( Controls::attack( ) )    //Player attacks when space is pressed
 	{
-		this->attack( enemies ); // Attack with a range of 50 and damage of 10
+		this->attack( enemies );   //Attack with a range of 50 and damage of 10
 	}
-	if ( Controls::defend( ) ) // player defends when left shift is pressed
+	if ( Controls::defend( ) )    //Player defends when left shift is pressed
 	{
-		this->defend( enemies ); // Defend against enemy attacks
+		this->defend( enemies );   //Defend against enemy attacks
 	}
-	if ( Controls::interact( ) ) //  Try to interact with nearest interactable object -devon
+	if ( Controls::interact( ) )  //Try to interact with nearest interactable object -Devon
 	{
-		interactWithNearest();
+		interactWithNearest( );
 	}
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * onRender( )
+* Kaleb, Reese, Adam
 * @brief : Renders the player on screen.
 * @param : none
 * @return : none
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Player::onRender( )
 {
-	mainCamera.setPosition( _position );   //Updating the camera position should be moved to its own class or function later on
+	mainCamera.setPosition( _position );
 	   //Animating the player
 	animation.onTick( );
-	   //Freezing the animation at frame 1 if the player isn't moving
-	   //WARNING! This logic will need to be revised when implementing other animations that aren't just for walking.
-	/*if ( Vector2Equals( direction, { 0 , 0 } ) )
-	{
-		animation.reset( );
-	}*/
 	if ( isDead )
 	{
-		sprite.setTexture( "playerDead" ); // Optional: static 'dead' texture
-		sprite.setSourceRect( { 0, 0, 16, 16 } ); // Make sure it's valid
+		sprite.setTexture( "playerDead" );          //Optional: static 'dead' texture
+		sprite.setSourceRect( { 0, 0, 16, 16 } );   //Make sure it's valid
 	}
 	else
 	{
+		   //Freezing the animation at frame 1 if the player isn't moving
+         //WARNING! This logic will need to be revised when implementing other animations that aren't just for walking.
 		animation.onTick( );
 		if ( Vector2Equals( direction, { 0, 0 } ) )
 			animation.reset( );
@@ -130,8 +126,8 @@ void Player::onRender( )
 			sprite.setSourceRect( { 48, 0, 16, 16 } );
 	}
 	sprite.setTexture( "playerWalk" + std::to_string( animation.getFrame( ) ) );
-	//show text on screen when player attacks
-	DrawText( "ATTACKING", _position.x,_position.y,20,RAYWHITE);
+	   //Show text on screen when player attacks
+	DrawText( "ATTACKING", _position.x, _position.y, 20, RAYWHITE );
 	   //Setting the position referenced on the sheet based on the direction the plaer is facing
 	if ( direction.x < 0 )
 	{
@@ -156,6 +152,7 @@ void Player::onRender( )
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * attack( )
+* Reese Edens
 * @brief : Updates camera position and updates sprite, renders the character on screen.
 * @param vector<Enemy*>& enemies : The collection of enemies to check for collision with.
 * @return : none
@@ -163,12 +160,13 @@ void Player::onRender( )
 void Player::attack( std::vector<Enemy*>& enemies )
 {
 	if ( Controls::attack( ) )
-	{  std::cout << "ATTACKING" << std::endl;
+	{
+		std::cout << "ATTACKING" << std::endl;
 		for ( Enemy* enemy : enemies )
 		{
 			if ( enemy->checkCollision( _position, attackRange ) )
 			{
-				
+
 				PlaySound( sfx[ "laserShoot.wav" ] );
 				Vector2 enemyPosition = enemy->getNearestPosition( );
 				enemy->takeDamage( attackDamage );
@@ -188,8 +186,9 @@ void Player::attack( std::vector<Enemy*>& enemies )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Player::defend( std::vector<Enemy*>& enemies )
 {
-	if ( Controls::defend() )
-	{ std::cout << "Defending against enemy attack!";
+	if ( Controls::defend( ) )
+	{
+		std::cout << "Defending against enemy attack!";
 		if ( !isInvincible )
 		{
 			setInvincible( true );
@@ -201,18 +200,24 @@ void Player::defend( std::vector<Enemy*>& enemies )
 				enemy->setDamageBlocked( true );
 			}
 		}
-		
+
 	}
 	else
 	{
 		for ( Enemy* enemy : enemies )
 		{
-			enemy->setDamageBlocked( false ); // Reset damage block
+			enemy->setDamageBlocked( false );   //Reset damage block
 		}
 	}
 }
 
-// Sets the invincibility state and resets the timer if invincible
+/*---------------------------------------------------------------------------------------------------------------------------------------
+* setInvincible()
+* Kaleb Flowers
+* @brief : Sets the invincibility state and resets the timer if invincible.
+* @param bool invincible : True if the player is invincible, false if not.
+* @return : none
+----------------------------------------------------------------------------------------------------------------------------------------*/
 void Player::setInvincible( bool invincible )
 {
 	isInvincible = invincible;
@@ -222,15 +227,21 @@ void Player::setInvincible( bool invincible )
 	}
 }
 
-// Updates the invincibility timer and disables invincibility when the timer expires
+/*---------------------------------------------------------------------------------------------------------------------------------------
+* updateInvincibility()
+* Kaleb Flowers
+* @brief : Updates the invincibility timer and disables invincibility when the timer expires.
+* @param : none
+* @return : none
+----------------------------------------------------------------------------------------------------------------------------------------*/
 void Player::updateInvincibility( )
 {
 	if ( isInvincible )
 	{
-		invincibilityTimer -= GetFrameTime( ); // Decrease timer by frame time
+		invincibilityTimer -= GetFrameTime( );   //Decrease timer by frame time
 		if ( invincibilityTimer <= 0.0f )
 		{
-			isInvincible = false; // Disable invincibility
+			isInvincible = false;                 //Disable invincibility
 			invincibilityTimer = 0.0f;
 		}
 	}
@@ -262,14 +273,14 @@ void Player::takeDamage( int damage )
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * healHp( )
 * Devon Johnson
-* @brief : Increases player hp, up to the maximum value
-* @param int healAmount : amount to increase hp by
+* @brief : Heals the player by hp amount, up until the max hp
+* @param int healAmount : Amount to increase hp by.
 * @return : none
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-void Player::healHp(int healAmount)
+void Player::healHp( int healAmount )
 {
-	health = std::min(maxHp, health + healAmount);
-	std::cout << "Player healed "<<healAmount<<" hp";
+	health = std::min( maxHp, health + healAmount );
+	std::cout << "Player healed " << healAmount << " hp";
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -283,7 +294,7 @@ void Player::healHp(int healAmount)
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 class Player* ObjectHandler::createPlayer( Vector2 position )
 {
-	class Player* Player = new class Player( 0, position);   //id for player is always 0
+	class Player* Player = new class Player( 0, position );   //id for player is always 0
 	allObjects[ Player->getId( ) ] = Player;                 //add <id, object*> to the map
 	this->numberOfObjects++;
 	return Player;
@@ -298,23 +309,23 @@ class Player* ObjectHandler::createPlayer( Vector2 position )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Player::dodge( )
 {
-	if ( Controls::dodge() )
+	if ( Controls::dodge( ) )
 	{
 		if ( dodgeCooldown <= 0 )
 		{
-			dodgeCooldown = 3 * GetFPS( ); //Change what dodgeCooldown get set to alter cooldown length, remember it is decrimented each frame.
+			dodgeCooldown = 3 * GetFPS( );   //Change what dodgeCooldown get set to alter cooldown length, remember it is decrimented each frame.
 		}
 	}
 
-	if ( dodgeCooldown > 2 * GetFPS( ) ) // Change lenght of time dodging happens by altering what dodgeCooldown is compared to, lower is longer.
+	if ( dodgeCooldown > 2 * GetFPS( ) )   //Change lenght of time dodging happens by altering what dodgeCooldown is compared to, lower is longer.
 	{
-		direction.x = direction.x * 1.4; //Alter speed of dodging by changing numbers direction is multiplied by, * 1 is base walking speed
+		direction.x = direction.x * 1.4;   //Alter speed of dodging by changing numbers direction is multiplied by, * 1 is base walking speed
 		direction.y = direction.y * 1.4;
 	}
 
 	if ( dodgeCooldown > 0 )
 	{
-		dodgeCooldown--; //Decriments dodgeCooldown each frame
+		dodgeCooldown--;   //Decriments dodgeCooldown each frame
 	}
 }
 
@@ -325,26 +336,26 @@ void Player::dodge( )
 * @param : none
 * @return : none
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-void Player::interactWithNearest()
+void Player::interactWithNearest( )
 {
 	Interactable* closestInteractable = NULL;
 	int distToClosest = INT_MAX;
 
-	//get closest interactable
+	   //Get closest interactable
 	float dist;
-	for (Interactable* i : mapHandler->getInteractables())
+	for ( Interactable* i : mapHandler->getInteractables( ) )
 	{
-		dist = Vector2Distance(i->getPos(), getPosition());
-		if (dist < distToClosest)
+		dist = Vector2Distance( i->getPos( ), getPosition( ) );
+		if ( dist < distToClosest )
 		{
 			distToClosest = dist;
 			closestInteractable = i;
 		}
 	}
 
-	//check if the closest interactable is in range
-	if (distToClosest < INTERACTION_RANGE)
+	   //Check if the closest interactable is in range
+	if ( distToClosest < INTERACTION_RANGE )
 	{
-		closestInteractable->interact();
+		closestInteractable->interact( );
 	}
 }
