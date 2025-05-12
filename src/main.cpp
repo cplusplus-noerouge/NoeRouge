@@ -43,8 +43,8 @@ int main( )
 {
 
    // Menu button properties R.E
-   Rectangle startButton = { 540, 600, 200, 50 };
-   Rectangle creditButton = { 950, 600, 100, 30 };
+   Rectangle startButton = { 430, 420, 380, 70 };  //x coord, y coord, length.x, and height of button
+   Rectangle creditButton = { 520, 500, 200, 30 };
 
    bool playerDefeated = false;
    bool gameWin = false;
@@ -79,7 +79,7 @@ int main( )
          );
 
          DrawRectangleRec( startButton, DARKPURPLE );   //drawing button for game start R.E
-         DrawText( "START", startButton.x + 47, startButton.y + 10, 30, RAYWHITE );
+         DrawText( "<START>", startButton.x + 40, startButton.y + 5,70, RAYWHITE ); // text, x offset, y offset, text size, color
 
          if ( IsMouseButtonPressed( MOUSE_LEFT_BUTTON ) && CheckCollisionPointRec( GetMousePosition( ), startButton ) )
          {
@@ -87,7 +87,7 @@ int main( )
          }
 
          DrawRectangleRec( creditButton, DARKPURPLE );    //drawing button for credits R.E
-         DrawText( "CREDITS", creditButton.x+15 , creditButton.y + 10, 15, RAYWHITE );
+         DrawText( "<CREDITS>", creditButton.x+45 , creditButton.y + 5, 20, RAYWHITE );
 
          if ( IsMouseButtonPressed( MOUSE_LEFT_BUTTON ) && CheckCollisionPointRec( GetMousePosition( ), creditButton ) )
          {
@@ -96,6 +96,7 @@ int main( )
          }
          EndDrawing( );
       }
+
       else if ( gameState == GAME )  //STATE TO START AND SHOW THE GAME R.E
       {
          if ( !gameStart )
@@ -144,6 +145,7 @@ int main( )
          if ( IsKeyPressed( KEY_X ) ) gameWin = true;
          if ( IsKeyPressed( KEY_Z ) ) playerDefeated = true;
       }
+
       else if ( gameState == CREDITS )  // shows credits page, hit m to retun to home to start the game. R.E
       {
          BeginDrawing( );
