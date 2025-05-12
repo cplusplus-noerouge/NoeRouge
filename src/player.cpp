@@ -59,6 +59,10 @@ void Player::updateDirection( )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Player::onTick( const std::vector<Rectangle> colliders )
 {
+	if ( isDead )
+	{
+		return;
+	}
 	Character::onTick( colliders );
 
 	walkTimer += GetFrameTime( );
@@ -101,9 +105,29 @@ void Player::onRender( )
 	animation.onTick( );
 	   //Freezing the animation at frame 1 if the player isn't moving
 	   //WARNING! This logic will need to be revised when implementing other animations that aren't just for walking.
-	if ( Vector2Equals( direction, { 0 , 0 } ) )
+	/*if ( Vector2Equals( direction, { 0 , 0 } ) )
 	{
 		animation.reset( );
+	}*/
+	if ( isDead )
+	{
+		sprite.setTexture( "playerDead" ); // Optional: static 'dead' texture
+		sprite.setSourceRect( { 0, 0, 16, 16 } ); // Make sure it's valid
+	}
+	else
+	{
+		animation.onTick( );
+		if ( Vector2Equals( direction, { 0, 0 } ) )
+			animation.reset( );
+		sprite.setTexture( "playerWalk" + std::to_string( animation.getFrame( ) ) );
+		if ( direction.x < 0 )
+			sprite.setSourceRect( { 0, 0, 16, 16 } );
+		else if ( direction.x > 0 )
+			sprite.setSourceRect( { 32, 0, 16, 16 } );
+		else if ( direction.y >= 0 )
+			sprite.setSourceRect( { 16, 0, 16, 16 } );
+		else
+			sprite.setSourceRect( { 48, 0, 16, 16 } );
 	}
 	sprite.setTexture( "playerWalk" + std::to_string( animation.getFrame( ) ) );
 	//show text on screen when player attacks
@@ -226,9 +250,12 @@ void Player::takeDamage( int damage )
 
 	health -= damage;
 	std::cout << "Player taken damage!";
-	if ( health <= 0 )
+
+	if ( health <= 0 && !isDead )
 	{
+		isDead = true;
 		std::cout << "Player defeated!" << std::endl;
+		mapHandler->endGame( false );
 	}
 }
 
