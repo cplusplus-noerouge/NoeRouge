@@ -1,131 +1,81 @@
+/*---------------------------------------------------------------------------------------------------------------------------------------
+* noeRouge
+* GameObject class
+* John, Ben A, Kaleb, Reese, Ethan
+* The super class for all game objects, includes Character, Player, Enemy, Interactable, Ladder, Door, and HpPickup
+----------------------------------------------------------------------------------------------------------------------------------------*/
 #include "object.h"
 #include "objectHandler.h"
 #include <vector>
 #include "mapGen.h"
 
-class Floor;
-class ObjectHandler;
+class ObjectHandler;   //Forward Declaration for ObjectHandler class
+
 /*---------------------------------------------------------------------------------------------------------------------------------------
-* noeRouge
-* GameObject class
-* John, Ben A, Kaleb, Reese, Ethan
-----------------------------------------------------------------------------------------------------------------------------------------*/\
-
-// ----- GameObject -----
-
+* @brief : Default Constructor
+----------------------------------------------------------------------------------------------------------------------------------------*/
 GameObject::GameObject( )
 {
 	id = ObjectHandler::takeNextId( );
 }
 
+/*---------------------------------------------------------------------------------------------------------------------------------------
+* @brief : Constructor parameterized by an ObjectHandler pointer
+* @param ObjectHandler* handler : A pointer to an ObjectHandler object to be assigned to the created GameObject object
+----------------------------------------------------------------------------------------------------------------------------------------*/
 GameObject::GameObject( ObjectHandler* handler )
 {
    this->id = handler->takeNextId( );
    this->handler = handler;
 }
 
+/*---------------------------------------------------------------------------------------------------------------------------------------
+* @brief : Constructor paramaterized by an ID number
+* @param int id : The id number for the created GameObject object
+----------------------------------------------------------------------------------------------------------------------------------------*/
 GameObject::GameObject( int id )
 {
 	//now that the default constructor gives an id it's prob best to not use this constructor
 	this->id = id;
 }
 
+/*---------------------------------------------------------------------------------------------------------------------------------------
+* @brief : Accessor Methods
+----------------------------------------------------------------------------------------------------------------------------------------*/
 int GameObject::getId( )
 {
 	return this->id;
 }
-
 void GameObject::setId( int id )
 {
 	this->id = id;
 }
-
-
 ObjectHandler* GameObject::getHandler( )
 {
    return this->handler;
 }
-
 void GameObject::setHandler( ObjectHandler* handler )
 {
    this->handler = handler;
 }
 
+/*---------------------------------------------------------------------------------------------------------------------------------------
+* @brief : Updates the state of a game object in a single frame, managed by child classes
+* @param vector<Rectangle> collidables : The collection of collidables to check for GameObject collision.
+* @return : none
+----------------------------------------------------------------------------------------------------------------------------------------*/
 void GameObject::onTick( const std::vector<Rectangle> collidables )
 {
 	printf( "I am a generic object, my id is %d, and I have been ticked\n", this->id );
 	return;
 }
 
+/*---------------------------------------------------------------------------------------------------------------------------------------
+* @brief : Updates the state of a game object in a single frame, managed by child classes
+* @param : Renders a game object on screen, managed by child classes
+* @return : none
+----------------------------------------------------------------------------------------------------------------------------------------*/
 void GameObject::onRender( )
 {
 	return;
 }
-
-
-
-// ----- ObjectHandler -----
-
-//class GameObject *ObjectHandler::createObject() {
-//    class GameObject *newObject = new GameObject(++nextId);
-//    allObjects[newObject->getId()] = newObject; //add <id, object*> to the map
-//    this->numberOfObjects++;
-//    return newObject;
-//}
-//
-//class GameObject *ObjectHandler::getObject(int id) {
-//    return this->allObjects[id];
-//}
-//
-//Floor* ObjectHandler::getFloor( )
-//{
-//   return this->floor;
-//}
-//
-//void ObjectHandler::setFloor( Floor* floor )
-//{
-//   this->floor = floor;
-//}
-//
-///*---------------------------------------------------------------------------------------------------------------------------------------
-//* transferObject() moves an object from this handler to another object handler
-//* - devon
-//* param int objId: id of the object being transfered
-//* param ObjectHandler &newHandler: the handler the object is being transfered to
-//* return: alters data in this and newHandler
-//----------------------------------------------------------------------------------------------------------------------------------------*/
-//void ObjectHandler::transferObject(int objId, ObjectHandler &newHandler)
-//{
-//    //this assumes the object exists in the current handler, if it doesn't it gives an error when ticking
-//    newHandler.allObjects[objId] = this->getObject(objId);
-//    newHandler.numberOfObjects++;
-//
-//    this->allObjects.erase(objId);
-//    this->numberOfObjects--;
-//}
-//
-//void ObjectHandler::tickAll(const std::vector<Rectangle> collidables)
-//{
-//    //this iterator gets all the objects
-//    for (auto it = allObjects.begin(); it != allObjects.end(); ++it)
-//    {
-//        it->second->onTick(collidables);
-//    }
-//}
-//  
-//void ObjectHandler::renderAll()
-//{
-//    //this iterator gets all the objects
-//    for (auto it = allObjects.begin(); it != allObjects.end(); ++it)
-//    {
-//        it->second->onRender();
-//    }
-//}
-//
-//int ObjectHandler::nextId = 1;  //this is shared between all object handlers. starts at 1 bc the player is always 0
-//
-//void ObjectHandler::playerCreate( )
-//{
-//   Vector2 spawn = getFloor( )->getLadderDownLocation( );
-//   Player* player = new Player( spawn, this );
-//}
