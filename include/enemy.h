@@ -7,7 +7,6 @@
 
 #pragma once
 #include "character.h" 
-
 #include "enemy.h" 
 #include <raylib.h>
 #include <iostream>
@@ -43,6 +42,7 @@ class Enemy : public Character
 
 	/*---------------------------------------------------------------------------------------------------------------------------------------
 	* getNearestPosition( )
+	* Reese
 	* @brief : Calculates and returns the nearest position of the enemy relative to the player.
 	* @param : none
 	* @return Vector2 : The nearest position of the enemy.

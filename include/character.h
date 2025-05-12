@@ -16,7 +16,7 @@ class Character : public GameObject
 {
 	private:
 
-	Vector2 _size;                        //Character's rectangle size
+	Vector2 _size;                       //Character's rectangle size
 	
 	protected:
 
@@ -27,8 +27,8 @@ class Character : public GameObject
 
 	public:
 
-	int _speed;                                                                            //Speed of the character in pixels per second.
-	bool isDead = false;                                                              
+	int _speed;                                                                           //Speed of the character in pixels per second.
+	bool isDead = false;                                                                  //True if the Character is dead, false if not.
   
 	Character( int id, Vector2 position, Vector2 target);                                 //Parameterized Class constructor, including target.
 	Character( int id, Vector2 position);                                                 //Parameterized Class constructor.

@@ -15,7 +15,6 @@
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * @brief : Parameterized Class constructor.
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-
 Character::Character( int id, Vector2 position ) : _target( { 0,0 } )
 {
 	this->setId( id );
@@ -45,19 +44,19 @@ Rectangle Character::bounds( )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 void Character::updateDirection( )
 {
-	if ( Controls::moveLeft() )
+	if ( Controls::moveLeft( ) )
 	{
 		direction.x = -1;
 	}
-	else if ( Controls::moveDown() )
+	else if ( Controls::moveDown( ) )
 	{
 		direction.x = 1;
 	}
-	if ( Controls::moveRight() )
+	if ( Controls::moveRight( ) )
 	{
 		direction.y = 1;
 	}
-	else if ( Controls::moveUp() )
+	else if ( Controls::moveUp( ) )
 	{
 		direction.y = -1;
 	}
@@ -115,12 +114,12 @@ void Character::onTick( const std::vector<Rectangle> collidables )
 
 	updateDirection( );
 
-	//direction is multiplied by speed, which makes velocity
-	//speed is multiplied by the time between frames, which forces speed to be the same regardless of framerate.
+	   //direction is multiplied by speed, which makes velocity
+	   //speed is multiplied by the time between frames, which forces speed to be the same regardless of framerate.
 	velocity = Vector2Scale( Vector2Normalize( direction ), _speed * GetFrameTime( ) );
 
-	//collisions must be done before velocity is added to position so that the character does not go past a wall before collisions are checked, but that is
-	//only necessary for very high movement speed
+	   //collisions must be done before velocity is added to position so that the character does not go past a wall before collisions are checked, but that is
+	   //only necessary for very high movement speed
 	updateCollisions( collidables );
 
 	_position = Vector2Add( _position, velocity );
@@ -220,7 +219,6 @@ Vector2 Character::getPosition( )
 * @param Vector2 newPos : The new position to be assigned to the character.
 * @return : none
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-
 void Character::setPosition( Vector2 newPos )
 {
 	_position = newPos;
