@@ -130,7 +130,7 @@ void Enemy::onRender( )
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * takeDamage( )
-* Reese. Edens
+* Reese. Edens, Kaleb Flowers
 * @brief : Reduces health when damage is taken, accounting for defense.
 * @param int damage : amount of incoming damage to decrement from health
 * @return : none
@@ -143,7 +143,6 @@ void Enemy::takeDamage( int damage )
 	// Clamp health to minimum 0
 	stats.health = ( int ) Clamp( stats.health, 0, 3 ); // Clamp between 0 and max HP (e.g. 3)
 
-
 	if ( stats.health > 0 )
 	{
 		wasHit = true;
@@ -154,7 +153,7 @@ void Enemy::takeDamage( int damage )
 	else
 	{
 		PlaySound( sfx[ "dead.wav" ] );
-		// mapHandler->getCurrentFloor()->getObjHandler()->enemyKilled(this);
+		isDead = true;
 	}
 }
 
@@ -196,28 +195,26 @@ Enemy* ObjectHandler::createEnemy( Vector2 position )
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * attackPlayer( )
 * Kaleb Flowers
-* @brief :  
-* @param Vector2 position :  
+* @brief :  Handles enemy behavior when engaging the player.
+* @param :  Player* player : A pointer to the player object being attacked.
 *
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 
 void Enemy::attackPlayer( Player* player )
-{
-	// make sure both are alive
-	if (stats.health <= 0 ) return;
-       //cooldown
-	timeSinceLastAttack += GetFrameTime( );
+{                                                   
+	if (stats.health <= 0 ) return;                                // make sure both are alive
+      
+	timeSinceLastAttack += GetFrameTime( );                        //cooldown
 	if ( timeSinceLastAttack < attackInterval ) return;
 	timeSinceLastAttack = 0.f;
-	// distance check
+	                                                               // distance check
 	if ( checkCollision( player->getPosition( ), stats.attackRange ) )
 	{
 		player->takeDamage( stats.attackDamage );
 	}
 	else
 	{
-		// move towards player
-		updateDirection( player->getPosition( ) );
+		updateDirection( player->getPosition( ) );                 // move towards player
 		velocity = Vector2Scale( Vector2Normalize( direction ), stats.speed * GetFrameTime( ) );
 		_position = Vector2Add( _position, velocity );
 

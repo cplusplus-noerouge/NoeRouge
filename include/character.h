@@ -14,11 +14,10 @@ class Objecthandler;
 
 class Character : public GameObject
 {
-
-   private:
+	private:
 
 	Vector2 _size;                        //Character's rectangle size
-
+	
 	protected:
 
 	Vector2 _position;                   //Character's map position
@@ -29,7 +28,7 @@ class Character : public GameObject
 	public:
 
 	int _speed;                                                                            //Speed of the character in pixels per second.
-  
+	bool isDead = false;                                                              
   
 	Character( int id, Vector2 position, Vector2 target);                                 //Parameterized Class constructor, including target.
 	Character( int id, Vector2 position);                                                 //Parameterized Class constructor.
