@@ -96,7 +96,6 @@ Door::Door(Vector2 pos) :
 void Door::interact()
 {
 	isClosed = !isClosed;
-	std::cout << "Door interact at " << position.x << " " << position.y << std::endl;
 
 	if ( isClosed )
 	{
@@ -115,7 +114,6 @@ void Door::interact()
 		{
 			if ( Vector2Distance( this->getPos( ), casted->getPos( ) ) < ( Settings::TILE_SIZE * 2.1f ) ) //I picked 2.1 at random.
 			{
-				std::cout << "Collision detected with " << casted;
 				if ( isClosed )
 				{
 					casted->isClosed = true;
