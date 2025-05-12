@@ -1,7 +1,7 @@
 /*----------------------------------------------------------------------------------------------------------------------------------------
 * noeRouge
 * npcLogic class
-* Matthew
+* Matthew, Ethan
 * The npcLogic class is used implement enemy AI procedures such as Line of Sight and Move to Target
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -14,8 +14,9 @@ int HALF_SIZE = Settings::TILE_SIZE / 2;
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * moveToTarget( )
+* Matthew, Ethan
 * @brief : Moves character to the target's position but maintain a set distance.
-* @param Vector 2 target : Target's map position.
+* @param Vector2 target : Target's map position.
 * @param float distanceMaintained : The set distance the character maintains from the target.
 * @param : vector<Rectangle> colliders : The collection of collidables to check for character collision.
 * @return : none
@@ -30,6 +31,7 @@ void Character::moveToTarget( Vector2 target, float distanceMaintained, std::vec
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * relationToTarget( )
+* Matthew, Ethan
 * @brief : Calculates the line of sight from the character's position to the target.
 * @param : none
 * @return Ray : The line of sight from the character's position to the target.
@@ -44,6 +46,7 @@ Ray Character::relationToTarget( Vector2 target )
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
 * updateLOS( )
+* Matthew, Ethan
 * @brief : Updates relation to target and creates line of sight by checking for collisions.
 * @param vector<Rectangle> colliders : The collection of collidables to check for character collision.
 * @return bool : True if the line of sight is obstructed, false otherwise.
