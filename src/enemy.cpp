@@ -25,6 +25,7 @@ Enemy::Enemy( int id, Vector2 position, Stats stats )
 {
 	this->setId( id );
 	_position = position;
+	attackInterval = 0.5f;
 }
 
 /*---------------------------------------------------------------------------------------------------------------------------------------
@@ -201,7 +202,8 @@ Enemy* ObjectHandler::createEnemy( Vector2 position )
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 
 void Enemy::attackPlayer( Player* player )
-{                                                   
+{              
+	if ( player->isDead ) return;
 	if (stats.health <= 0 ) return;                                // make sure both are alive
       
 	timeSinceLastAttack += GetFrameTime( );                        //cooldown
@@ -210,6 +212,7 @@ void Enemy::attackPlayer( Player* player )
 	                                                               // distance check
 	if ( checkCollision( player->getPosition( ), stats.attackRange ) )
 	{
+		std::cout << "Enemy attacking player\n";
 		player->takeDamage( stats.attackDamage );
 	}
 	else
