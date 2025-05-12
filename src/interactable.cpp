@@ -96,16 +96,40 @@ Door::Door(Vector2 pos) :
 void Door::interact()
 {
 	isClosed = !isClosed;
+	std::cout << "Door interact at " << position.x << " " << position.y << std::endl;
 
-	if (isClosed)
+	if ( isClosed )
 	{
-		sprite.setTexture(closedTexture);
+		sprite.setTexture( closedTexture );
 	}
 	else
 	{
-		sprite.setTexture(openTexture);
+		sprite.setTexture( openTexture );
 	}
-	//TODO add/remove from collidables
+
+	std::vector<Interactable*> interacts = mapHandler->getInteractables( );
+	for ( auto it = interacts.begin( ); it != interacts.end( ); ++it )
+	{
+		Door* casted = dynamic_cast< Door* >( *it );
+		if ( casted && ( casted->getId( ) != this->getId( ) ) )
+		{
+			if ( Vector2Distance( this->getPos( ), casted->getPos( ) ) < ( Settings::TILE_SIZE * 2.1f ) ) //I picked 2.1 at random.
+			{
+				std::cout << "Collision detected with " << casted;
+				if ( isClosed )
+				{
+					casted->isClosed = true;
+					casted->sprite.setTexture( closedTexture );
+				}
+				else
+				{
+					casted->isClosed = false;
+					casted->sprite.setTexture( openTexture );
+				}
+			}
+		}
+			
+	}
 }
 
 //creates a new door in 'this' object handler
