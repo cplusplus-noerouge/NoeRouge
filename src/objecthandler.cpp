@@ -73,5 +73,52 @@ void ObjectHandler::renderAll( )
       it->second->onRender( );
    }
 }
+/*---------------------------------------------------------------------------------------------------------------------------------------
+ * cleanupDeadEnemies()
+ * Kaleb Flowers
+ * @brief  Loops through allObjects and deletes any enemies flagged with isDead = true.
+ *         Called after tickAll() to avoid deleting objects mid-frame.
+ ---------------------------------------------------------------------------------------------------------------------------------------*/
+
+void ObjectHandler::enemyKilled( Enemy* enemy )
+{
+   int id = enemy->getId( );
+
+   if ( allObjects.count( id ) )
+   {
+      delete allObjects[ id ];         // Free memory
+      allObjects.erase( id );          // Remove from map
+      numberOfObjects--;
+   }
+}
+/*----------------------------------------------------------------------------------------------------------------------------------------
+ * cleanupDeadEnemies()
+ * Kaleb Flowers
+ * @brief  Deletes enemies flagged as 'isDead' after the frame logic has completed.
+ *         Prevents memory leaks and avoids crashing from use-after-free.
+ * @return void
+ --------------------------------------------------------------------------------------------------------------------------------------*/
+
+void ObjectHandler::cleanupDeadEnemies()
+{
+    std::vector<int> toDelete;
+
+    for (auto& [id, obj] : allObjects)
+    {
+        Enemy* enemy = dynamic_cast<Enemy*>(obj);
+        if (enemy && enemy->isDead)
+        {
+            toDelete.push_back(id);
+        }
+    }
+
+    for (int id : toDelete)
+    {
+        delete allObjects[id];
+        allObjects.erase(id);
+        numberOfObjects--;
+    }
+}
+
 
 int ObjectHandler::nextId = 1;  //this is shared between all object handlers. starts at 1 bc the player is always 0

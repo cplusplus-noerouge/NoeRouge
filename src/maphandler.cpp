@@ -38,12 +38,12 @@ void MapHandler::tickAndRender( )
 	std::vector<Interactable*> interactables = getInteractables( );
 	std::vector<Rectangle> walls = _currentFloor->getWalls( );
 
-	
+
 	for ( Enemy* enemy : enemies )
 	{
 		boundaries.push_back( { enemy->getPosition( ).x, enemy->getPosition( ).y, Settings::TILE_SIZE, Settings::TILE_SIZE } );
 	}
-	
+
 
 	Door* casted;
 	for ( auto it = interactables.begin( ); it != interactables.end( ); ++it )
@@ -55,9 +55,10 @@ void MapHandler::tickAndRender( )
 
 
 	boundaries.insert( boundaries.end( ), walls.begin( ), walls.end( ) );
-
-	_currentFloor->getObjHandler( )->tickAll( boundaries );
-	_currentFloor->getObjHandler( )->renderAll( );
+	auto* handler = _currentFloor->getObjHandler( );     //handles obj handler path.      
+	handler->tickAll( boundaries );
+	handler->cleanupDeadEnemies( );                      //cleanup enemies
+	handler->renderAll( );              
 }
 
 void MapHandler::changeFloor( bool trueisup )
