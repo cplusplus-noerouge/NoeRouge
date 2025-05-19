@@ -1,32 +1,41 @@
-#include "audio.h"
-#include <raylib.h>
-#include <raymath.h>
-#include "globals.h"
+/* noeRouge - audio.cpp
+*  Worked on by: Ben Aguilon */
+
+#include "audio.h"		//The .h file for this class		
+#include "globals.h"	//Class that handles global variables
+#include <raylib.h>		//Library with animation, rendering, interactive, and sound tools
+#include <raymath.h>	//Library for  Math functions to work with Vector2, Vector3, Matrix and Quaternions
 
 std::map<std::string, Sound> sfx = {};
 
-/*
----------------------------------------------------------------------------------------------------
-* By: Ben Aguilon
-* Decription: Loads all music within "music" folder and adds them to list.  
-* Params: autoplay, to optionally immediately start the music player once instantiated.
-* Returns: None.
----------------------------------------------------------------------------------------------------
-*/
+/*-------------------------------------------------------------------------------------------------
+*  The MusicPlayer class is a class to handle the functions needed to play audio
+-------------------------------------------------------------------------------------------------*/
+
+	/*---------------------------------------------------------------------------------------------
+	* MusicPlayer(bool autoplay)
+	* ---------------------------------------------------------------------------------------------
+	* @names:  Ben Aguilon
+	* @brief:  Loads all music within "music" folder and adds them to list.  
+	* @param:  autoplay - to optionally immediately start the music player once instantiated.
+	* @return: none
+	---------------------------------------------------------------------------------------------*/
 MusicPlayer::MusicPlayer(bool autoplay)
 {
 	songs = {};
 	paused = true;
 	currentSongIndex = 0;
+	std::string fullPath;	//path to music directory in local system 
+	std::string fileName;	//string to hold the music directory path 
 
 	for (const auto& entry : std::filesystem::directory_iterator( Settings::ASSETS_SFX ))
 	{
-		std::string fullPath = entry.path().string();
+		fullPath = entry.path().string();
 
 		std::filesystem::path filePath(fullPath);
-		std::string filename = filePath.filename().string();
-		sfx.insert({ filename, LoadSound(fullPath.c_str()) });
-		SetSoundVolume(sfx[filename], Settings::VOLUME_SFX );
+		fileName = filePath.filename().string();
+		sfx.insert({ fileName, LoadSound(fullPath.c_str()) });
+		SetSoundVolume(sfx[fileName], Settings::VOLUME_SFX );
 	}
 
 	for (const auto& entry : std::filesystem::directory_iterator( Settings::ASSETS_MUSIC ))
@@ -44,14 +53,14 @@ MusicPlayer::MusicPlayer(bool autoplay)
 	}
 }
 
-/*
----------------------------------------------------------------------------------------------------
-* By: Ben Aguilon
-* Decription: Uses range for loop to unload all music streams.
-* Params: None.
-* Returns: None.
----------------------------------------------------------------------------------------------------
-*/
+	/*---------------------------------------------------------------------------------------------
+	* ~MusicPlayer( )
+	* ---------------------------------------------------------------------------------------------
+	* @names:  Ben Aguilon
+	* @brief:  Uses range for loop to unload all music streams
+	* @param:  none
+	* @return: none
+	---------------------------------------------------------------------------------------------*/
 MusicPlayer::~MusicPlayer( )
 {
 	for ( auto& song: songs )
@@ -65,16 +74,16 @@ MusicPlayer::~MusicPlayer( )
 	}
 }
 
-/*
----------------------------------------------------------------------------------------------------
-* By: Ben Aguilon
-* Decription: Checks if current song is finished and next song is played if so.
-* Once last song is played, it loops and plays the first song w/ modulus operator.
-* If paused, it immediately returns.
-* Params: None.
-* Returns: None.
----------------------------------------------------------------------------------------------------
-*/
+	/*---------------------------------------------------------------------------------------------
+	* onTick()
+	* ---------------------------------------------------------------------------------------------
+	* @names:  Ben Aguilon
+	* @brief:  Checks if current song is finished and next song is played if so.
+	*		   Once last song is played, it loops and plays the first song w/ modulus operator.
+	*		   If paused, it immediately returns.
+	* @param:  none
+	* @return: none
+	---------------------------------------------------------------------------------------------*/
 void MusicPlayer::onTick()
 {
 	if ( paused )
@@ -91,27 +100,27 @@ void MusicPlayer::onTick()
 	UpdateMusicStream(songs[currentSongIndex]);
 }
 
-/*
----------------------------------------------------------------------------------------------------
-* By: Ben Aguilon
-* Decription: Toggles if song is paused or not, once unpaused, it continues from where it left off.
-* Params: None.
-* Returns: None.
----------------------------------------------------------------------------------------------------
-*/
+	/*---------------------------------------------------------------------------------------------
+	* togglePause( )
+	* ---------------------------------------------------------------------------------------------
+	* @names:  Ben Aguilon
+	* @brief:  Toggles if song is paused or not, once unpaused, it continues from where it left off
+	* @params: none
+	* @return: none
+	---------------------------------------------------------------------------------------------*/
 void MusicPlayer::togglePause( )
 {
 	paused = !paused;
 }
 
-/*
----------------------------------------------------------------------------------------------------
-* By: Ben Aguilon
-* Decription: Sets the volume of all songs to the given value, clamped between 0.0 and 1.0.
-* Params: volume, a float which determines the volume of all songs.
-* Returns: None.
----------------------------------------------------------------------------------------------------
-*/
+	/*---------------------------------------------------------------------------------------------
+	* setVolume( float volume )
+	* ---------------------------------------------------------------------------------------------
+	* @names:  Ben Aguilon
+	* @brief:  Sets the volume of all songs to the given value, clamped between 0.0 and 1.0
+	* @param:  volume - a float which determines the volume of all songs
+	* @return: none
+	---------------------------------------------------------------------------------------------*/
 void MusicPlayer::setVolume( float volume )
 {
 	volume = Clamp( volume, 0.0f, 1.0f );
@@ -122,15 +131,15 @@ void MusicPlayer::setVolume( float volume )
 	} 
 }
 
-/*
----------------------------------------------------------------------------------------------------
-* By: Ben Aguilon
-* Decription: Stops every song and resets the current song index to 0 and is paused.
-* If autoplay is true, it plays the first song in the list and paused is set to false.
-* Params: autoplay, to optionally immediately start the music from the start.
-* Returns: None.
----------------------------------------------------------------------------------------------------
-*/
+	/*---------------------------------------------------------------------------------------------
+	* reset( bool autoplay )
+	* ---------------------------------------------------------------------------------------------
+	* @names:  Ben Aguilon
+	* @brief:  Stops every song and resets the current song index to 0 and is paused.
+	*		   If autoplay is true, it plays the first song in the list and paused is set to false.
+	* @param:  autoplay - to optionally immediately start the music from the start.
+	* @return: none
+	---------------------------------------------------------------------------------------------*/
 void MusicPlayer::reset( bool autoplay )
 {
 	paused = true;
@@ -147,3 +156,19 @@ void MusicPlayer::reset( bool autoplay )
 		paused = false;
 	}
 }
+
+/*  Changes made during commenting by Evan:
+*
+*	-Edited C-style comments above methods to conform to standards
+*	 as laid out in project commenting documentation
+*
+*	-Added inline comments to #includes
+*
+*	-MusicPlayer Constructor:
+*		
+*		-Declared "fullPath" at the top of the constructor instead of decalaration and initialization
+*		 in the for loop for easier readability and commenting
+*
+*		-Declared "fileName" at the top of the constructor instead of decalaration and initialization
+*		 in the for loop for easier readability and commenting
+*/

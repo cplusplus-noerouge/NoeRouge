@@ -1,48 +1,62 @@
-/*---------------------------------------------------------------------------------------------------------------------------------------
-* noeRouge
-* ObjectHandler class
-* John, Ben A, Kaleb, Reese, Ethan, Devon
-* A class that manages and keeps track of all GameObject objects in the game.
-----------------------------------------------------------------------------------------------------------------------------------------*/
-#pragma once
-#include "object.h"
+/* noeRouge - objectHandler.h
+*  Worked on by: John, Ben A, Kaleb, Reese, Ethan, Devon */
+
+#pragma once	    //only include this .h once
+
+#include "object.h"	//Class that all game objects inherit from
 
 class GameObject;   //Forward declaration for the GameObject class
 class Enemy;        //Forward declaration for the Enemy class
 
+/*-------------------------------------------------------------------------------------------------
+*  The ObjectHandler class manages and keeps track of all GameObject objects in the game
+*------------------------------------------------------------------------------------------------*/
 class ObjectHandler
 {
    private:
 
-   static int nextId;                        //The ID number value for the next added GameObject object
+   static int nextId;       //The ID number value for the next added GameObject object
    
    public:
 
-   int numberOfObjects;                      //Total number of GameObject objects in the ObjectHandler object
-   std::map<int, GameObject* > allObjects;   //A hashmap that stores an ID number with a GameObject pointer
+   int numberOfObjects;     //Total number of GameObject objects in the ObjectHandler object
+   std::map<int, GameObject* > allObjects;   //Hashmap, maps an ID number to a GameObject pointer
 
-   /*---------------------------------------------------------------------------------------------------------------------------------------
-    * takeNextId( )
-    * @brief : Increments nextId and then returns it's value
-    * @param : none
-    * @return : Incremented nextId
-    ----------------------------------------------------------------------------------------------------------------------------------------*/
+        /*-----------------------------------------------------------------------------------------
+        * takeNextId( )
+        * -----------------------------------------------------------------------------------------
+        * @names:  
+        * @brief:  Increments nextId and then returns it's value
+        * @param:  none
+        * @return: int - Incremented nextId
+        *----------------------------------------------------------------------------------------*/
    static int takeNextId( )
    {
       return ++nextId;
    }
-
-  /*---------------------------------------------------------------------------------------------------------------------------------------
-   * @brief : Default Constructor
-   ----------------------------------------------------------------------------------------------------------------------------------------*/
+    
+        /*-----------------------------------------------------------------------------------------
+        * ObjectHandler( )
+        * -----------------------------------------------------------------------------------------
+        * @names:
+        * @brief:  Default Constructor
+        * @param:  none
+        * @return: none
+        *----------------------------------------------------------------------------------------*/
    ObjectHandler( )
    {
       this->nextId = 0;
       this->numberOfObjects = 0;
    }
-   /*---------------------------------------------------------------------------------------------------------------------------------------
-    * @brief : Destructor
-    ----------------------------------------------------------------------------------------------------------------------------------------*/
+   
+        /*-----------------------------------------------------------------------------------------
+        * ~ObjectHandler( ) 
+        * -----------------------------------------------------------------------------------------
+        * @names:
+        * @brief:  Destructor
+        * @param:  none
+        * @return: none
+        *----------------------------------------------------------------------------------------*/
    ~ObjectHandler( )                     
    {
       ;;
@@ -64,3 +78,13 @@ class ObjectHandler
    class Door* createDoor( Vector2 position );                       //Creates a Door object and adds it to allObjects. Defined in interactable.cpp.
    class HpPickup* createHpPickup(Vector2 position);                 //Creates a HpPickup object and adds it to allObjects. Defined in interactable.cpp.
 };
+
+/*  Changes made during commenting by Evan:
+*
+*	-Edited C-style comments above methods to conform to standards
+*	 as laid out in project commenting documentation
+*
+*	-Added inline comments to #includes
+*
+*	-General formatting
+*/

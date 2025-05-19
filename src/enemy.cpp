@@ -1,21 +1,32 @@
-/*---------------------------------------------------------------------------------------------------------------------------------------
-* noeRouge
-* Character class
-* Kaleb Flowers, Reese Edens, Ethan Sheffield
-* The enemy class is a child class of Character that represents the enemy characters that populate the map.
-----------------------------------------------------------------------------------------------------------------------------------------*/
-#include "enemy.h"
-#include "character.h"
-#include "maphandler.h"
+/* noeRouge - enemy.cpp
+*  Worked on by: Kaleb Flowers, Reese Edens, Ethan Sheffield */
+
+#include "enemy.h"			//The .h file for this class
+#include "character.h"		//Class that this class inherits from
+#include "maphandler.h"		//Class that generates the dungeon map and handles the map methods
 
 using namespace std;
 
 extern MapHandler* mapHandler;    //The game's mapHandler object
 extern CustomCamera mainCamera;   //Camera view of the map
 
-/*---------------------------------------------------------------------------------------------------------------------------------------
-* @brief : Parameterized Class constructor, initializes the enemy's ID, stats, and position in the world.
-----------------------------------------------------------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------------------------
+* The enemy class is a child class of Character that represents the enemy
+* characters that populate the map.
+*-------------------------------------------------------------------------------------------------*/
+
+
+	/*---------------------------------------------------------------------------------------------
+	* Enemy( int id, Vector2 position, Stats stats )
+	* ---------------------------------------------------------------------------------------------
+	* @names:
+	* @brief:  Parameterized Class constructor, initializes the enemy's ID, 
+	*		   stats, and position in the world.
+	* @param:  id - id number of character
+	* @param:  position - coordinates where the character will start in the map
+	* @param:  stats - the character specific data
+	* @return: none
+	*--------------------------------------------------------------------------------------------*/
 Enemy::Enemy( int id, Vector2 position, Stats stats )
 	: Character( id, position ),   //Call Character constructor
 	stats( stats )
@@ -25,13 +36,14 @@ Enemy::Enemy( int id, Vector2 position, Stats stats )
 	attackInterval = 0.5f;
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------
-* onTick( )
-* Ethan, Reese, Kaleb
-* @brief : Updates the state of the character during a single frame.
-* @param vector<Rectangle> collidables : The collection of collidables to check for character collision.
-* @return : none
-----------------------------------------------------------------------------------------------------------------------------------------*/
+	/*---------------------------------------------------------------------------------------------
+	* onTick( )
+	* ---------------------------------------------------------------------------------------------
+	* @names:  Ethan, Reese, Kaleb
+	* @brief:  Updates the state of the character during a single frame.
+	* @param:  collidables - The collection of collidables to check for character collision.
+	* @return: none
+	---------------------------------------------------------------------------------------------*/
 void Enemy::onTick( const std::vector<Rectangle> collidables )
 {
 	GameObject* obj = mapHandler->getCurrentFloor( )->getObjHandler( )->allObjects[ 0 ];
@@ -61,12 +73,14 @@ void Enemy::onTick( const std::vector<Rectangle> collidables )
 	updateCollisions( collidables );
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------
-* updateDirection( )
-* @brief : Sets the movement direction of the character based on target position.
-* @param vector<Rectangle> target : The target's map position
-* @return : none
-----------------------------------------------------------------------------------------------------------------------------------------*/
+	/*---------------------------------------------------------------------------------------------
+	* updateDirection( Vector2 target )
+	* ---------------------------------------------------------------------------------------------
+	* @names:
+	* @brief:  Sets the movement direction of the character based on target position.
+	* @param:  target - The target's map position
+	* @return: none
+	*--------------------------------------------------------------------------------------------*/
 void Enemy::updateDirection( Vector2 target )
 {
 	if ( target.x > _position.x )
@@ -87,13 +101,14 @@ void Enemy::updateDirection( Vector2 target )
 	}
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------
-* onRender( )
-* Group Effort
-* @brief : Renders the enemy on screen.
-* @param : none
-* @return : none
-----------------------------------------------------------------------------------------------------------------------------------------*/
+	/*---------------------------------------------------------------------------------------------
+	* onRender( )
+	* ---------------------------------------------------------------------------------------------
+	* @names:  Group Effort
+	* @brief:  Renders the enemy on screen.
+	* @param : none
+	* @return: none
+	*--------------------------------------------------------------------------------------------*/
 void Enemy::onRender( )
 {
 	animation.onTick( );
@@ -104,8 +119,9 @@ void Enemy::onRender( )
 	mainCamera.addToBuffer( &sprite );
 
 	   //Calculate the width of the health bar relative to the enemy's max health
-	float hpBarWidth = 50.0f; // Set the width of the health bar
-	float hpBarCurrentWidth = hpBarWidth * ( float ) stats.health / stats.health;   //Scale width based on current health
+	float hpBarWidth = 50.0f;					// Set the width of the health bar
+	float hpBarCurrentWidth = hpBarWidth *		
+		( float ) stats.health / stats.health;  //Scale width based on current health 
 
 	Vector2 screenPos = Vector2Subtract( _position, mainCamera.getPosition( ) );
 
@@ -125,13 +141,14 @@ void Enemy::onRender( )
 	}
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------
-* takeDamage( )
-* Reese Edens, Kaleb Flowers
-* @brief : Reduces health when damage is taken, accounting for defense.
-* @param int damage : amount of incoming damage to decrement from health
-* @return : none
-----------------------------------------------------------------------------------------------------------------------------------------*/
+	/*---------------------------------------------------------------------------------------------
+	* takeDamage( int damage )
+	* ---------------------------------------------------------------------------------------------
+	* @names:  Reese Edens, Kaleb Flowers
+	* @brief:  Reduces health when damage is taken, accounting for defense.
+	* @param:  damage - amount of incoming damage to decrement from health
+	* @return: none
+	*--------------------------------------------------------------------------------------------*/
 void Enemy::takeDamage( int damage )
 {
 	   //Reduce health by damage amount, and ensures it doesn't go below zero
@@ -154,13 +171,14 @@ void Enemy::takeDamage( int damage )
 	}
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------
-* checkCollision( )
-* @brief : Checks if the player's position is within attack range of the enemy.
-* @param Vector2 playerPos : the player's position
-* @param float attachRange : the enemy's attack range
-* @return bool : Returns true if the player is within the enemy's attack range, false if otherwise
-----------------------------------------------------------------------------------------------------------------------------------------*/
+	/*---------------------------------------------------------------------------------------------
+	* checkCollision( Vector2 playerPos, float attackRange ) const
+	* ---------------------------------------------------------------------------------------------
+	* @brief:  Checks if the player's position is within attack range of the enemy.
+	* @param:  playerPos - the player's position
+	* @param:  attachRange - the enemy's attack range
+	* @return: bool - true if the player is within the enemy's attack range, false if otherwise
+	*--------------------------------------------------------------------------------------------*/
 bool Enemy::checkCollision( Vector2 playerPos, float attackRange ) const
 {
 	float dx = playerPos.x - _position.x;
@@ -171,38 +189,43 @@ bool Enemy::checkCollision( Vector2 playerPos, float attackRange ) const
 	return distance < attackRange;
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------
-* createEnemy( )
-* Kaleb Flowers
-* @brief : Enemy Object creation function defined in ObjectHandler.
-* @param Vector2 position : Initial position of the enemy.
-* @return Enemy* : Pointer to the created Enemy object.
-----------------------------------------------------------------------------------------------------------------------------------------*/
+	/*---------------------------------------------------------------------------------------------
+	* createEnemy( Vector2 position )
+	* ---------------------------------------------------------------------------------------------
+	* @names:  Kaleb Flowers
+	* @brief:  Enemy Object creation function defined in ObjectHandler.
+	* @param:  position : Initial position of the enemy.
+	* @return: Enemy* - Pointer to the created Enemy object.
+	*--------------------------------------------------------------------------------------------*/
 Enemy* ObjectHandler::createEnemy( Vector2 position )
 {
-	Stats enemyStats = { 3, 1, 16, 50 };                              //stats: hp, damage, range, speed
+	Stats enemyStats = { 3, 1, 16, 50 };                          //stats: hp, damage, range, speed
 	Enemy* newEnemy = new Enemy( ++nextId, position, enemyStats );
-	allObjects[ newEnemy->getId( ) ] = newEnemy;                      //Add <id, object*> to the map
+	allObjects[ newEnemy->getId( ) ] = newEnemy;                  //Add <id, object*> to the map
 	this->numberOfObjects++;
 	return newEnemy;
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------
-* attackPlayer( )
-* Kaleb Flowers
-* @brief : Handles enemy behavior when engaging the player.
-* @param Player* player : A pointer to the player object being attacked.
-* @return : none
-----------------------------------------------------------------------------------------------------------------------------------------*/
-
+	/*---------------------------------------------------------------------------------------------
+	* attackPlayer( Player* player )
+	* ---------------------------------------------------------------------------------------------
+	* @names:  Kaleb Flowers
+	* @brief:  Handles enemy behavior when engaging the player.
+	* @param   player - A pointer to the player object being attacked.
+	* @return: none
+	*--------------------------------------------------------------------------------------------*/
 void Enemy::attackPlayer( Player* player )
 {
+		// make sure both are alive
 	if ( player->isDead ) return;
-	if ( stats.health <= 0 ) return;                                // make sure both are alive
+	if ( stats.health <= 0 ) return;                     
 
-	timeSinceLastAttack += GetFrameTime( );                        //cooldown
+		 //cooldown
+	timeSinceLastAttack += GetFrameTime( );             
+	
 	if ( timeSinceLastAttack < attackInterval ) return;
 	timeSinceLastAttack = 0.f;
+
 	   //Distance check
 	if ( checkCollision( player->getPosition( ), stats.attackRange ) )
 	{
@@ -211,9 +234,21 @@ void Enemy::attackPlayer( Player* player )
 	}
 	else
 	{
-		updateDirection( player->getPosition( ) );                 // move towards player
+			// move towards player
+		updateDirection( player->getPosition( ) );                 
 		velocity = Vector2Scale( Vector2Normalize( direction ), stats.speed * GetFrameTime( ) );
 		_position = Vector2Add( _position, velocity );
 
 	}
 }
+
+/*  Changes made during commenting by Evan:
+*
+*	-Edited C-style comments above methods to conform to standards
+*	 as laid out in project commenting documentation
+*
+*	-Added inline comments to #includes
+* 
+*	-General formatting
+*/
+
