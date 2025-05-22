@@ -1,17 +1,18 @@
-/*
-* Worked on by:
-* Adam Aronow
-*/
+/* noeRouge - rectangleSprite.h
+*  Worked on by: Adam Aronow */
 
-#pragma once
+#pragma once	//only include this .h once
 
-#include "raylib.h"
-#include "raymath.h"
-#include "vector"
-#include <iostream>
-#include "baseSprite.h"
+#include <raylib.h>		//Library with animation, rendering, interactive, and sound tools
+#include <raymath.h>	//Library for  Math functions to work with Vector2, Vector3, Matrix
+#include <vector>		//Library for the vector data structure
+#include <iostream>		//Library for input and output streams
+#include "baseSprite.h"	//Class that handles layering of sprites
 
-// To be commented by Evan
+/*-------------------------------------------------------------------------------------------------
+*  The RectangleSprite class creates rectangles and allows for modification of RectangleSprite
+*  characteristics
+*------------------------------------------------------------------------------------------------*/
 class RectangleSprite : public BaseSprite
 {
 	protected:
@@ -20,40 +21,50 @@ class RectangleSprite : public BaseSprite
 	Color color;           // The color of the rectangle
 
 	public:
+		
+		/*-----------------------------------------------------------------------------------------
+		* RectangleSprite( Rectangle rectangle, float layer, Color color = WHITE, 
+		*                  int thickness = -1 )
+		* -----------------------------------------------------------------------------------------
+		* @names:
+		* @brief:  RectangleSprite Constructor
+		* @param:  rectangle - a Rectangle object 
+		* @param:  layer - the layer to set the Rectangle object to
+		* @param:  color - sets rectangle color to WHITE 
+		* @param:  thickness - sets rectangle to solid
+		* @return: none
+		*----------------------------------------------------------------------------------------*/
 	RectangleSprite( Rectangle rectangle, float layer, Color color = WHITE, int thickness = -1 )
 	{
 		update( rectangle, layer, color, thickness );
 	}
-
+		
+		/*-----------------------------------------------------------------------------------------
+		* RectangleSprite( { 0, 0, 1, 1 }, 0 ) { }
+		* -----------------------------------------------------------------------------------------
+		* @names:
+		* @brief:  Overloaded Default Constructor
+		* @param:  none
+		* @return: none
+		*----------------------------------------------------------------------------------------*/
 	RectangleSprite( ) : RectangleSprite( { 0, 0, 1, 1 }, 0 ) { }
 
-	/*-----------------------------------------------
-	* @brief: updates all data members with new values
-	*/
+		//updates all data members with new values
 	void update( Rectangle rectangle, float layer, Color color, int thickness );
 	
-
-	/*-----------------------------------------------
-	* @brief: updates select data members with new values
-	*/
+		//updates select data members with new values
 	void update( Rectangle rectangle, float layer );
 
-	/*---------------------------------------------------
-	* @brief: checks if the sprite is within the camera
-	* @param: Rectangle rect = the bounding rectangle of the camera
-	*/
+		//checks if the sprite is within the camera
 	bool isWithinRect( Rectangle rect );
 
-	/*---------------------------------------------------
-	* @brief: renders the texture to the camera
-	*/
+		//renders the texture to the camera
 	void render( Vector2 cameraPosition );
 
-	/*---------------------------------------------------
-	* @brief: prints all sprite information to the console
-	*/
+		//prints all sprite information to the console
 	void print( );
 
+		//Getters and Setters
 	Rectangle getRectangle( )
 	{
 		return rectangle;
@@ -79,3 +90,13 @@ class RectangleSprite : public BaseSprite
 		this->color = color;
 	}
 };
+
+/*  Changes made during commenting by Evan:
+*
+*	-Added C-style comments above methods to conform to standards
+*	 as laid out in project commenting documentation
+*
+*	-Added inline comments to #includes
+*
+*	-General formatting
+*/

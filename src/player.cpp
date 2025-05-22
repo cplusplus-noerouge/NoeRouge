@@ -1,33 +1,37 @@
-/*---------------------------------------------------------------------------------------------------------------------------------------
-* noeRouge
-* Player class
-* Ben A, Kaleb, Reese, Ethan, Thomas, Adam, Devon
-* Inherits from Character class.
-* Inherits sprite functionality from Sprite class.
-* Inherits character functionality from Character class.
-* Player class represents the player character in the game.
-----------------------------------------------------------------------------------------------------------------------------------------*/
+/* noeRouge - player.cpp
+*  Worked on by: Ben A, Kaleb, Reese, Ethan, Thomas, Adam, Devon */
 
-#include <iostream>
-#include <cmath>
-#include "player.h"
-#include "object.h"
-#include "customCamera.h"
-#include "sprite.h"
-#include "enemy.h"
-#include "audio.h"
-#include "globals.h"
-#include "maphandler.h"
+#include <iostream>			//Library for input and output streams
+#include <cmath>			//Library for functions to compute common mathematical operations
+#include "player.h"			//Class that handles the player movement and functionality
+#include "object.h"			//Class that all game objects inherit from
+#include "customCamera.h"	//Class that handles rendering visual output to the screen
+#include "sprite.h"         //Class that handles sprite objects
+#include "enemy.h"			//Class that represents the enemy characters that populate the map
+#include "audio.h"	        //Class that handles the functions needed to play audio
+#include "globals.h"		//Class that handles global variables
+#include "mapHandler.h"     //Class that handles the map object
 
 extern MapHandler* mapHandler;    //The game's mapHandler object
 extern CustomCamera mainCamera;   //Camera view of the map
 
-/*---------------------------------------------------------------------------------------------------------------------------------------
-* updateDirection( )
-* @brief : Sets the movement direction of the player based on control input. Implements dodge ability.
-* @param : none
-* @return : none
-----------------------------------------------------------------------------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------------------------------
+*  The Player class represents the player character in the game and handles player movement,
+*  rendering, and attacking functionality.
+*
+*  Inherits sprite functionality from Sprite class.
+*  Inherits character functionality from Character class.
+*------------------------------------------------------------------------------------------------*/
+
+	/*---------------------------------------------------------------------------------------------
+	* updateDirection( )
+	* ---------------------------------------------------------------------------------------------
+	* @names:
+	* @brief:  Sets the movement direction of the player based on control input.
+	*          Implements dodge ability.
+	* @param:  none
+	* @return: none
+	*--------------------------------------------------------------------------------------------*/
 void Player::updateDirection( )
 {
 	if ( Controls::moveLeft( ) )
@@ -49,13 +53,14 @@ void Player::updateDirection( )
 	dodge( );
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------
-* onTick( )
-* Reese, Kaleb, Ben A, Devon
-* @brief : Updates the state of the player during a single frame.
-* @param vector<Rectangle> colliders : The collection of collidables to check for character collision.
-* @return : none
-----------------------------------------------------------------------------------------------------------------------------------------*/
+	/*---------------------------------------------------------------------------------------------
+	* onTick( const std::vector<Rectangle> colliders )
+	* ---------------------------------------------------------------------------------------------
+	* @names:  Reese, Kaleb, Ben A, Devon
+	* @brief:  Updates the state of the player during a single frame.
+	* @param:  colliders - The collection of collidables to check for character collision.
+	* @return: none
+	*--------------------------------------------------------------------------------------------*/
 void Player::onTick( const std::vector<Rectangle> colliders )
 {
 	if ( isDead )
@@ -77,27 +82,28 @@ void Player::onTick( const std::vector<Rectangle> colliders )
 	std::vector<Enemy*> enemies = mapHandler->getEnemies( );
 
 	   //**Reese** added player attack, outputs "ATTACKING" to console when space is pressed
-	if ( Controls::attack( ) )    //Player attacks when space is pressed
+	if ( Controls::attack( ) )     //Player attacks when space is pressed
 	{
 		this->attack( enemies );   //Attack with a range of 50 and damage of 10
 	}
-	if ( Controls::defend( ) )    //Player defends when left shift is pressed
+	if ( Controls::defend( ) )     //Player defends when left shift is pressed
 	{
 		this->defend( enemies );   //Defend against enemy attacks
 	}
-	if ( Controls::interact( ) )  //Try to interact with nearest interactable object -Devon
+	if ( Controls::interact( ) )   //Try to interact with nearest interactable object -Devon
 	{
 		interactWithNearest( );
 	}
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------
-* onRender( )
-* Kaleb, Reese, Adam
-* @brief : Renders the player on screen.
-* @param : none
-* @return : none
-----------------------------------------------------------------------------------------------------------------------------------------*/
+	/*---------------------------------------------------------------------------------------------
+	* onRender( )
+	* ---------------------------------------------------------------------------------------------
+	* @names:  Kaleb, Reese, Adam
+	* @brief:  Renders the player on screen.
+	* @param:  none
+	* @return: none
+	*--------------------------------------------------------------------------------------------*/
 void Player::onRender( )
 {
 	mainCamera.setPosition( _position );
@@ -110,8 +116,9 @@ void Player::onRender( )
 	}
 	else
 	{
-		   //Freezing the animation at frame 1 if the player isn't moving
-         //WARNING! This logic will need to be revised when implementing other animations that aren't just for walking.
+			//Freezing the animation at frame 1 if the player isn't moving
+			//WARNING! This logic will need to be revised when implementing other animations 
+			//that aren't just for walking.
 		animation.onTick( );
 		if ( Vector2Equals( direction, { 0, 0 } ) )
 			animation.reset( );
@@ -150,13 +157,14 @@ void Player::onRender( )
 	mainCamera.addToBuffer( &sprite );
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------
-* attack( )
-* Reese Edens
-* @brief : Updates camera position and updates sprite, renders the character on screen.
-* @param vector<Enemy*>& enemies : The collection of enemies to check for collision with.
-* @return : none
-----------------------------------------------------------------------------------------------------------------------------------------*/
+	/*---------------------------------------------------------------------------------------------
+	* attack( std::vector<Enemy*>& enemies )
+	* ---------------------------------------------------------------------------------------------
+	* @names:  Reese Edens
+	* @brief:  Updates camera position and updates sprite, renders the character on screen.
+	* @param:  enemies : The collection of enemies to check for collision with.
+	* @return: none
+	*--------------------------------------------------------------------------------------------*/
 void Player::attack( std::vector<Enemy*>& enemies )
 {
 	if ( Controls::attack( ) )
@@ -176,13 +184,14 @@ void Player::attack( std::vector<Enemy*>& enemies )
 	}
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------
-* defend()
-* Kaleb Flowers
-* @brief : Allows the player to defend against enemy attacks.
-* @param vector<Enemy*>& enemies : The collection of enemies to check for collision with.
-* @return : none
-----------------------------------------------------------------------------------------------------------------------------------------*/
+	/*---------------------------------------------------------------------------------------------
+	* defend( std::vector<Enemy*>& enemies )
+	* ---------------------------------------------------------------------------------------------
+	* @names:  Kaleb Flowers
+	* @brief:  Allows the player to defend against enemy attacks.
+	* @param:  enemies : The collection of enemies to check for collision with.
+	* @return: none
+	*--------------------------------------------------------------------------------------------*/
 void Player::defend( std::vector<Enemy*>& enemies )
 {
 	if ( Controls::defend( ) )
@@ -199,7 +208,6 @@ void Player::defend( std::vector<Enemy*>& enemies )
 				enemy->setDamageBlocked( true );
 			}
 		}
-
 	}
 	else
 	{
@@ -210,13 +218,14 @@ void Player::defend( std::vector<Enemy*>& enemies )
 	}
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------
-* setInvincible()
-* Kaleb Flowers
-* @brief : Sets the invincibility state and resets the timer if invincible.
-* @param bool invincible : True if the player is invincible, false if not.
-* @return : none
-----------------------------------------------------------------------------------------------------------------------------------------*/
+	/*---------------------------------------------------------------------------------------------
+	* setInvincible( bool invincible )
+	* ---------------------------------------------------------------------------------------------
+	* @names:  Kaleb Flowers
+	* @brief:  Sets the invincibility state and resets the timer if invincible.
+	* @param:  invincible - True if the player is invincible, false if not.
+	* @return: none
+	*--------------------------------------------------------------------------------------------*/
 void Player::setInvincible( bool invincible )
 {
 	isInvincible = invincible;
@@ -226,13 +235,14 @@ void Player::setInvincible( bool invincible )
 	}
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------
-* updateInvincibility()
-* Kaleb Flowers
-* @brief : Updates the invincibility timer and disables invincibility when the timer expires.
-* @param : none
-* @return : none
-----------------------------------------------------------------------------------------------------------------------------------------*/
+	/*---------------------------------------------------------------------------------------------
+	* updateInvincibility( )
+	* ---------------------------------------------------------------------------------------------
+	* @names:  Kaleb Flowers
+	* @brief:  Updates the invincibility timer and disables invincibility when the timer expires.
+	* @param:  none
+	* @return: none
+	*--------------------------------------------------------------------------------------------*/
 void Player::updateInvincibility( )
 {
 	if ( isInvincible )
@@ -246,14 +256,15 @@ void Player::updateInvincibility( )
 	}
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------
-* takeDamage( )
-* Ethan Sheffield, Ben Aguilon
-* @brief : Decrements player health based off enemy damage and checks for player death.
-* @param int damage : amount of incoming damage to decrement from health
-* @param bool &playerDefeated : reference to a bool value, if player has been defeated or not.
-* @return : none
-----------------------------------------------------------------------------------------------------------------------------------------*/
+	/*---------------------------------------------------------------------------------------------
+	* takeDamage( int damage )
+	* ---------------------------------------------------------------------------------------------
+	* @names:  Ethan Sheffield, Ben Aguilon
+	* @brief:  Decrements player health based off enemy damage and checks for player death.
+	* @param:  damage - amount of incoming damage to decrement from health
+	* @param:  playerDefeated - reference to a bool value, if player has been defeated or not.
+	* @return: none
+	*--------------------------------------------------------------------------------------------*/
 void Player::takeDamage( int damage )
 {
 	PlaySound( sfx[ "playerDamaged.mp3" ] );
@@ -269,28 +280,28 @@ void Player::takeDamage( int damage )
 	}
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------
-* healHp( )
-* Devon Johnson
-* @brief : Heals the player by hp amount, up until the max hp
-* @param int healAmount : Amount to increase hp by.
-* @return : none
-----------------------------------------------------------------------------------------------------------------------------------------*/
+	/*---------------------------------------------------------------------------------------------
+	* healHp( int healAmount )
+	* ---------------------------------------------------------------------------------------------
+	* @names:  Devon Johnson
+	* @brief:  Heals the player by hp amount, up until the max hp
+	* @param:  healAmount - Amount to increase hp by.
+	* @return: none
+	*--------------------------------------------------------------------------------------------*/
 void Player::healHp( int healAmount )
 {
 	health = std::min( maxHp, health + healAmount );
 	std::cout << "Player healed " << healAmount << " hp";
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------
-* createPlayer( )
-* Ben Aguilon
-* @brief : Object creation function defined in ObjectHandler.
-* @param Vector2 position : Initial position of player.
-* @param Vector2 size : Initial size of player.
-* @param int speed : Initial speed of player.
-* @return Player* : Pointer to the created Player object.
-----------------------------------------------------------------------------------------------------------------------------------------*/
+	/*---------------------------------------------------------------------------------------------
+	* createPlayer( Vector2 position )
+	* ---------------------------------------------------------------------------------------------
+	* @names:  Ben Aguilon
+	* @brief:  Object creation function defined in ObjectHandler.
+	* @param:  position - Initial position of player
+	* @return: Player* - Pointer to the created Player object.
+	*--------------------------------------------------------------------------------------------*/
 class Player* ObjectHandler::createPlayer( Vector2 position )
 {
 	class Player* Player = new class Player( 0, position );   //id for player is always 0
@@ -299,27 +310,29 @@ class Player* ObjectHandler::createPlayer( Vector2 position )
 	return Player;
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------
-* dodge()
-* Thomas Orozco
-* @brief : Increases players speed by 1.4 times for 1 second when left shift is pressed and prevents user from doing it for another 2 seconds
-* @param : none
-* @return : none
-----------------------------------------------------------------------------------------------------------------------------------------*/
+	/*---------------------------------------------------------------------------------------------
+	* dodge( )
+	* ---------------------------------------------------------------------------------------------
+	* @names:  Thomas Orozco
+	* @brief:  Increases players speed by 1.4 times for 1 second when left shift is pressed and
+	*          prevents user from doing it for another 2 seconds
+	* @param:  none
+	* @return: none
+	*--------------------------------------------------------------------------------------------*/
 void Player::dodge( )
 {
 	if ( Controls::dodge( ) )
 	{
 		if ( dodgeCooldown <= 0 )
 		{
-			dodgeCooldown = 3 * GetFPS( );   //Change what dodgeCooldown get set to alter cooldown length, remember it is decrimented each frame.
-		}
+			dodgeCooldown = 3 * GetFPS( );   //Change what dodgeCooldown get set to alter cooldown 
+		}										//length, remember it is decrimented each frame.
 	}
 
-	if ( dodgeCooldown > 2 * GetFPS( ) )   //Change lenght of time dodging happens by altering what dodgeCooldown is compared to, lower is longer.
-	{
-		direction.x = direction.x * 1.4;   //Alter speed of dodging by changing numbers direction is multiplied by, * 1 is base walking speed
-		direction.y = direction.y * 1.4;
+	if ( dodgeCooldown > 2 * GetFPS( ) )   //Change lenght of time dodging happens by altering what
+	{											//dodgeCooldown is compared to, lower is longer.
+		direction.x = direction.x * 1.4;   //Alter speed of dodging by changing numbers direction 
+		direction.y = direction.y * 1.4;		//is multiplied by, * 1 is base walking speed.
 	}
 
 	if ( dodgeCooldown > 0 )
@@ -328,13 +341,14 @@ void Player::dodge( )
 	}
 }
 
-/*---------------------------------------------------------------------------------------------------------------------------------------
-* void interactWithNearest()
-* Devon Johnson
-* @brief : Interacts with the nearest Interactable if there is one in range
-* @param : none
-* @return : none
-----------------------------------------------------------------------------------------------------------------------------------------*/
+	/*---------------------------------------------------------------------------------------------
+	* interactWithNearest( )
+	* ---------------------------------------------------------------------------------------------
+	* @names:  Devon Johnson
+	* @brief:  Interacts with the nearest Interactable if there is one in range
+	* @param:  none
+	* @return: none
+	*--------------------------------------------------------------------------------------------*/
 void Player::interactWithNearest( )
 {
 	Interactable* closestInteractable = NULL;
@@ -358,3 +372,13 @@ void Player::interactWithNearest( )
 		closestInteractable->interact( );
 	}
 }
+
+/*  Changes made during commenting by Evan:
+*
+*	-Edited C-style comments above methods to conform to standards
+*	 as laid out in project commenting documentation
+*
+*	-Added inline comments to #includes
+*
+*	-General formatting
+*/

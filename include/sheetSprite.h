@@ -1,40 +1,82 @@
-/*
-* Worked on by:
-* Adam Aronow
-*/
+/* noeRouge - sheetSprite.h
+*  Worked on by: Adam Aronow */
 
-#pragma once
+#pragma once	//only include this .h once
 
-#include "sprite.h"
-#include "raylib.h"
+#include "sprite.h"     //Class that handles sprite objects
+#include <raylib.h>		//Library with animation, rendering, interactive, and sound tools
 
 extern std::unordered_map<std::string, Texture2D> textureMap;
 
-// To be commented by Evan
+/*-------------------------------------------------------------------------------------------------
+*  The SheetSprite class represents a single "sheet" that has multiple sprites in it
+*------------------------------------------------------------------------------------------------*/
 class SheetSprite : public Sprite
 {
 	public:
-	SheetSprite( std::string texture, Rectangle sourceRect, Vector2 position, float layer, float rotation = 0, float scale = 1, Color tint = WHITE, Vector2 pivotPoint = Vector2 { 0, 0 } )
+
+		/*-----------------------------------------------------------------------------------------
+		* SheetSprite( std::string texture, Rectangle sourceRect, Vector2 position, float layer, 
+		*			   float rotation = 0, float scale = 1, Color tint = WHITE, 
+		*		       Vector2 pivotPoint = Vector2 { 0, 0 } )
+		* -----------------------------------------------------------------------------------------
+		* @names:
+		* @brief:  updates all data members with new values
+		* @param:  texture - the texture to be used for the sprite
+		* @param:  sourceRect - the location of the sprite on the sheet
+		* @param:  position - the sprites position on the screen
+		* @param:  layer - the rendering layer of the sprite
+		* @param:  rotation - rotation of sprite in degrees
+		* @param:  scale - how much the sprite is to be scaled
+		* @param:  tint - the color of the sprite
+		* @param:  pivotPoint - where the sprite is rotated around
+		* @return: none
+		*----------------------------------------------------------------------------------------*/
+	SheetSprite( std::string texture, Rectangle sourceRect, Vector2 position, float layer, 
+				 float rotation = 0, float scale = 1, Color tint = WHITE, 
+				 Vector2 pivotPoint = Vector2 { 0, 0 } )
+	{
+		update( texture, sourceRect, position, layer, rotation, scale, tint, pivotPoint );
+	}
+		/*-----------------------------------------------------------------------------------------
+		* SheetSprite( Texture2D texture, Rectangle sourceRect, Vector2 position, float layer, 
+		*		         float rotation = 0, float scale = 1, Color tint = WHITE, 
+		*		         Vector2 pivotPoint = Vector2 { 0, 0 } )
+		* -----------------------------------------------------------------------------------------
+		* @names:
+		* @brief:  updates all data members with new values
+		* @param:  texture - the texture to be used for the sprite
+		* @param:  sourceRect - the location of the sprite on the sheet
+		* @param:  position - the sprites position on the screen
+		* @param:  layer - the rendering layer of the sprite
+		* @param:  rotation - rotation of sprite in degrees
+		* @param:  scale - how much the sprite is to be scaled
+		* @param:  tint - the color of the sprite
+		* @param:  pivotPoint - where the sprite is rotated around
+		* @return: none
+		*----------------------------------------------------------------------------------------*/
+	SheetSprite( Texture2D texture, Rectangle sourceRect, Vector2 position, float layer, 
+				 float rotation = 0, float scale = 1, Color tint = WHITE, 
+				 Vector2 pivotPoint = Vector2 { 0, 0 } )
 	{
 		update( texture, sourceRect, position, layer, rotation, scale, tint, pivotPoint );
 	}
 
-	SheetSprite( Texture2D texture, Rectangle sourceRect, Vector2 position, float layer, float rotation = 0, float scale = 1, Color tint = WHITE, Vector2 pivotPoint = Vector2 { 0, 0 } )
-	{
-		update( texture, sourceRect, position, layer, rotation, scale, tint, pivotPoint );
-	}
-
+		/*-----------------------------------------------------------------------------------------
+		* SheetSprite( )
+		* -----------------------------------------------------------------------------------------
+		* @names:  
+		* @brief:  Overloaded Default Constructor
+		* @param:  none
+		* @return: none
+		*----------------------------------------------------------------------------------------*/
 	SheetSprite( ) : SheetSprite( "playerWalk1", {16, 0, 16, 16}, { 0, 0 }, 0 ) { }
 
-	/*-----------------------------------------------
-	* @brief: updates all data members with new values
-	*/
-	void update( Texture2D texture, Rectangle sourceRect, Vector2 position, float layer, float rotation, float scale, Color tint, Vector2 pivotPoint );
-	void update( std::string texture, Rectangle sourceRect, Vector2 position, float layer, float rotation, float scale, Color tint, Vector2 pivotPoint );
-
-	/*-----------------------------------------------
-	* @brief: updates select data members with new values
-	*/
+		////updates select data members with new values
+	void update( Texture2D texture, Rectangle sourceRect, Vector2 position, float layer, 
+				 float rotation, float scale, Color tint, Vector2 pivotPoint );
+	void update( std::string texture, Rectangle sourceRect, Vector2 position, float layer, 
+				 float rotation, float scale, Color tint, Vector2 pivotPoint );
 	void update( Vector2 position, float layer ) 
 	{
 		Sprite::update( position, layer );
@@ -42,16 +84,14 @@ class SheetSprite : public Sprite
 	void update( Texture2D texture, Rectangle sourceRect );
 	void update( std::string texture, Rectangle sourceRect );
 
-	/*------------------------------------------------------------------------------------
-	* @brief: updates destinationRect and boundingRect to reflect new values
-	*/
+
+		//updates destinationRect and boundingRect to reflect new values
 	void updateRectangles( );
 
-	/*---------------------------------------------------
-	* @brief: prints all sprite information to the console
-	*/
+		//prints all sprite information to the console
 	void print( );
 
+		//Getters and Setters
 	void setTexture( Texture2D texture )
 	{
 		this->texture = texture;
@@ -74,3 +114,13 @@ class SheetSprite : public Sprite
 		return boundingRect;
 	}
 };
+
+/*  Changes made during commenting by Evan:
+*
+*	-Added C-style comments above methods to conform to standards
+*	 as laid out in project commenting documentation
+*
+*	-Added inline comments to #includes
+*
+*	-General formatting
+*/

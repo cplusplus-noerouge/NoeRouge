@@ -1,29 +1,27 @@
-/*
-NoeRouge main file
-Devon, Reese, others
-*/
-// Includes
-#include <iostream>
-#include <vector>
-#include <cstdlib>
-#include "raylib.h"
+/* noeRouge - main.cpp
+*  Worked on by: Devon, Reese, others */
 
-// Local includes
-#include "character.h"
-#include "player.h"
-#include "object.h"
-#include "mapGen.h"
-#include "textureLoader.h"
-#include "sheetSprite.h"
-#include "customCamera.h"
-#include "screenHandler.h"
-#include "generateTileSprites.h"
-#include "audio.h"
-#include "globals.h"
-#include "maphandler.h"
+#include <iostream>                 //Library for input and output streams
+#include <vector>	                //Library for the vector data structure
+#include <cstdlib>                  //Library with standard general utilities
+#include <raylib.h>	                //Library with animation, rendering, interactive, and sound tools
+
+#include "character.h" 		        //Class that enemy and player classes inherit from
+#include "player.h"		            //Class that handles the player movement and functionality
+#include "object.h"		            //Class that all game objects inherit from
+#include "mapGen.h"		            //Class that creates the dungeon map
+#include "textureLoader.h"      	//Class that loads textures from local directory
+#include "sheetSprite.h"	        //Class that handles sprite sheets
+#include "customCamera.h"	        //Class that handles rendering visual output to the screen
+#include "screenHandler.h"          //Class that handles resolution and frame rate of the camera
+#include "generateTileSprites.h"    //Class that generates sprites for every tile in the map
+#include "audio.h"	                //Class that handles the functions needed to play audio
+#include "globals.h"		        //Class that handles global variables
+#include "mapHandler.h"             //Class that handles the map object
 
 ScreenHandler screenHandler = ScreenHandler( );
-// IMPORTANT! These are different versions of the camera with different zoom levels, uncomment the one you want.
+// IMPORTANT! These are different versions of the camera with different zoom levels, 
+//  uncomment the one you want.
 CustomCamera mainCamera = CustomCamera( Vector2 { 320.0f, 180.0f }, 4.0f );
 //CustomCamera mainCamera = CustomCamera( Vector2 { 640.0f, 360.0f }, 2.0f );
 //CustomCamera mainCamera = CustomCamera( Vector2 { 1280, 720.0f }, 1.0f );
@@ -69,9 +67,11 @@ int main( )
       {
          BeginDrawing( );
          ClearBackground( BLACK );
-         DrawTexturePro(                   // Creates image, as well as places it over hte title screen
+         // Creates image, as well as places it over hte title screen
+         DrawTexturePro(                   
                          textureMap[ "planetTitle" ],
-                         Rectangle { 0, 0, ( float ) textureMap[ "planetTitle" ].width, ( float ) textureMap[ "planetTitle" ].height },
+                         Rectangle { 0, 0, ( float ) textureMap[ "planetTitle" ].width, 
+                                     ( float ) textureMap[ "planetTitle" ].height },
                          Rectangle { 0, 0, 1280, 720 },  // Destination = full window
                          Vector2 { 0, 0 },
                          0.0f,
@@ -79,17 +79,19 @@ int main( )
          );
 
          DrawRectangleRec( startButton, DARKPURPLE );   //drawing button for game start R.E
-         DrawText( "<START>", startButton.x + 40, startButton.y + 5,70, RAYWHITE ); // text, x offset, y offset, text size, color
+         // text, x offset, y offset, text size, color
+         DrawText( "<START>", startButton.x + 40, startButton.y + 5,70, RAYWHITE ); 
 
-         if ( IsMouseButtonPressed( MOUSE_LEFT_BUTTON ) && CheckCollisionPointRec( GetMousePosition( ), startButton ) )
+         if ( IsMouseButtonPressed( MOUSE_LEFT_BUTTON ) 
+              && CheckCollisionPointRec( GetMousePosition( ), startButton ) )
          {
             gameState = GAME;
          }
-
          DrawRectangleRec( creditButton, DARKPURPLE );    //drawing button for credits R.E
          DrawText( "<CREDITS>", creditButton.x+45 , creditButton.y + 5, 20, RAYWHITE );
 
-         if ( IsMouseButtonPressed( MOUSE_LEFT_BUTTON ) && CheckCollisionPointRec( GetMousePosition( ), creditButton ) )
+         if ( IsMouseButtonPressed( MOUSE_LEFT_BUTTON ) 
+              && CheckCollisionPointRec( GetMousePosition( ), creditButton ) )
          {
             std::cout << "Credits button pressed!" << std::endl;
             gameState = CREDITS;
@@ -104,7 +106,8 @@ int main( )
 
             mapHandler = new MapHandler;
 
-            mapHandler->getCurrentFloor( )->getObjHandler( )->createPlayer( mapHandler->getCurrentFloor( )->getLadderDownLocation( ) );
+            mapHandler->getCurrentFloor( )->getObjHandler( )
+                ->createPlayer( mapHandler->getCurrentFloor( )->getLadderDownLocation( ) );
             
 
             gameStart = true;
@@ -150,9 +153,11 @@ int main( )
       {
          BeginDrawing( );
          ClearBackground( BLACK );
-         DrawTexturePro(                   // Creates image, as well as places it over hte title screen
+         // Creates image, as well as places it over the title screen
+         DrawTexturePro(                   
                          textureMap[ "creditImage" ],
-                         Rectangle { 0, 0, ( float ) textureMap[ "creditImage" ].width, ( float ) textureMap[ "creditImage" ].height },
+                         Rectangle { 0, 0, ( float ) textureMap[ "creditImage" ].width, 
+                                     ( float ) textureMap[ "creditImage" ].height },
                          Rectangle { 0, 0, 1280, 720 },  // Destination = full window
                          Vector2 { 0, 0 },
                          0.0f,

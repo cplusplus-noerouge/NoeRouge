@@ -1,80 +1,111 @@
-/*
-* Worked on by:
-* Adam Aronow
-*/
+/* noeRouge - sprite.h
+*  Worked on by: Adam Aronow */
 
-#pragma once
+#pragma once	//only include this .h once
 
-#include "raylib.h"
-#include "raymath.h"
-#include "vector"
-#include <iostream>
-#include "baseSprite.h"
+#include <raylib.h>			//Library with animation, rendering, interactive, and sound tools
+#include <raymath.h>		//Library for  Math functions to work with Vector2, Vector3, Matrix
+#include <vector>			//Library for the vector data structure
+#include <iostream>			//Library for input and output streams
+#include "baseSprite.h"		//Class that handles layering of sprites
 #include "textureLoader.h"
 
 extern std::unordered_map<std::string, Texture2D> textureMap;
 
-// To be commented by Evan
+/*-------------------------------------------------------------------------------------------------
+*  The Sprite class is a base class for all visual objects in the game and has methods
+*  for managing those visual objects
+*------------------------------------------------------------------------------------------------*/
 class Sprite : public BaseSprite
 {
 	protected:
-	Texture2D texture;   // The texture to be rendered to the camera
-	Vector2 position;   // The position in the game world (or position on screen for UI)
-	// The rectangle determining what portion of the texture to be rendered
+	Texture2D texture;         // The texture to be rendered to the camera
+	Vector2 position;		   // The position in the game world (or position on screen for UI)
 	// (this class always uses the whole texture)
-	Rectangle sourceRect;
-	Rectangle destinationRect;   // The rectangle determining where to render the texture to
-	Rectangle boundingRect;   // The actual rough area the texture takes up (can be different to destination)
-	float rotation;   // The rotation of the sprite
-	int scale;   // The scale of the sprite
-	Color tint = WHITE;   // The color the sprite is tinted
-	Vector2 pivotPoint;   // The point the sprite rotates around (relative to its center)
+	Rectangle sourceRect;      // The rectangle determining what portion of the texture to be rendered
+	Rectangle destinationRect; // The rectangle determining where to render the texture to
+	Rectangle boundingRect;    // The actual rough area the texture takes up (can be different to destination)
+	float rotation;			   // The rotation of the sprite
+	int scale;				   // The scale of the sprite
+	Color tint = WHITE;		   // The color the sprite is tinted
+	Vector2 pivotPoint;        // The point the sprite rotates around (relative to its center)
 
 	public:
-	Sprite( std::string texture, Vector2 position, float layer, float rotation = 0, float scale = 1, Color tint = WHITE, Vector2 pivotPoint = Vector2 { 0, 0 } )
+
+		/*-----------------------------------------------------------------------------------------
+		* Sprite( std::string texture, Vector2 position, float layer, float rotation = 0,
+		*	      float scale = 1, Color tint = WHITE, Vector2 pivotPoint = Vector2 { 0, 0 } )
+		* -----------------------------------------------------------------------------------------
+		* @names:
+		* @brief:  updates all data members with new values
+		* @param:  texture - the texture to be used for the sprite
+		* @param:  position - the sprites position on the screen
+		* @param:  layer - the rendering layer of the sprite
+		* @param:  rotation - rotation of sprite in degrees
+		* @param:  scale - how much the sprite is to be scaled
+		* @param:  tint - the color of the sprite
+		* @param:  pivotPoint - where the sprite is rotated around
+		* @return: none
+		*----------------------------------------------------------------------------------------*/
+	Sprite( std::string texture, Vector2 position, float layer, float rotation = 0,
+			float scale = 1, Color tint = WHITE, Vector2 pivotPoint = Vector2 { 0, 0 } )
 	{
 		update( texture, position, layer, rotation, scale, tint, pivotPoint );
 	}
-
-	Sprite( Texture2D texture, Vector2 position, float layer, float rotation = 0, float scale = 1, Color tint = WHITE, Vector2 pivotPoint = Vector2 { 0, 0 } )
+		
+		/*-----------------------------------------------------------------------------------------
+		* prite( Texture2D texture, Vector2 position, float layer, float rotation = 0, 
+		*	     float scale = 1, Color tint = WHITE, Vector2 pivotPoint = Vector2 { 0, 0 } )
+		* -----------------------------------------------------------------------------------------
+		* @names:
+		* @brief:  updates all data members with new values
+		* @param:  texture - the texture to be used for the sprite
+		* @param:  position - the sprites position on the screen
+		* @param:  layer - the rendering layer of the sprite
+		* @param:  rotation - rotation of sprite in degrees
+		* @param:  scale - how much the sprite is to be scaled
+		* @param:  tint - the color of the sprite
+		* @param:  pivotPoint - where the sprite is rotated around
+		* @return: none
+		*----------------------------------------------------------------------------------------*/
+	Sprite( Texture2D texture, Vector2 position, float layer, float rotation = 0, 
+			float scale = 1, Color tint = WHITE, Vector2 pivotPoint = Vector2 { 0, 0 } )
 	{
 		update( texture, position, layer, rotation, scale, tint, pivotPoint );
 	}
-
+		
+		/*-----------------------------------------------------------------------------------------
+		* Sprite( ) : Sprite( "player1", { 0, 0 }, 0 )
+		* -----------------------------------------------------------------------------------------
+		* @names:
+		* @brief:  Overlaoded Default Constructor
+		* @param:  none
+		* @return: none
+		*----------------------------------------------------------------------------------------*/
 	Sprite( ) : Sprite( "player1", { 0, 0 }, 0 ) { }
 
-	/*-----------------------------------------------
-	* @brief: updates all data members with new values
-	*/
-	void update( Texture2D texture, Vector2 position, float layer, float rotation, float scale, Color tint, Vector2 pivotPoint );
-	void update( std::string texture, Vector2 position, float layer, float rotation, float scale, Color tint, Vector2 pivotPoint );
+		//updates all data members with new values
+	void update( Texture2D texture, Vector2 position, float layer, float rotation, 
+				 float scale, Color tint, Vector2 pivotPoint );
+	void update( std::string texture, Vector2 position, float layer, float rotation, 
+				 float scale, Color tint, Vector2 pivotPoint );
 
-	/*-----------------------------------------------
-	* @brief: updates select data members with new values
-	*/
+		//updates select data members with new values
 	void update( Vector2 position, float layer );
 
-	/*------------------------------------------------------------------------------------
-	* @brief: updates sourceRect, destinationRect, and boundingRect to reflect new values
-	*/
+		//updates sourceRect, destinationRect, and boundingRect to reflect new values
 	virtual void updateRectangles( );
 
-	/*---------------------------------------------------
-	* @brief: checks if the sprite is within the camera
-	* @param: Rectangle rect = the bounding rectangle of the camera
-	*/
+		//checks if the sprite is within the camera
 	virtual bool isWithinRect( Rectangle rect );
 
-	/*---------------------------------------------------
-	* @brief: renders the texture to the camera
-	*/
+		//renders the texture to the camera
 	virtual void render( Vector2 cameraPosition );
 
-	/*---------------------------------------------------
-	* @brief: prints all sprite information to the console
-	*/
+		//prints all sprite information to the console
 	void print( );
 
+		//Setters and Getters
 	Texture2D getTexture( )
 	{
 		return texture;
@@ -138,3 +169,13 @@ class Sprite : public BaseSprite
 		updateRectangles( );
 	}
 };
+
+/*  Changes made during commenting by Evan:
+*
+*	-Added C-style comments above methods to conform to standards
+*	 as laid out in project commenting documentation
+*
+*	-Added inline comments to #includes
+*
+*	-General formatting
+*/

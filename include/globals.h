@@ -1,19 +1,25 @@
+/* noeRouge - glaboals.h
+*  Worked on by: ? */
 
-//-- Headerfile to hold global variables.
-#pragma once
-#include <string>
-#include <raylib.h>
+#pragma once	//only include this .h once
+
+#include <string>	//Library for string objects
+#include <raylib.h> //Library with animation, rendering, interactive, and sound tools
+
+/*-------------------------------------------------------------------------------------------------
+*  file to hold global variables.
+*------------------------------------------------------------------------------------------------*/
 
 namespace Settings
 {
-	//-- Audio
+		//-- Audio
 	extern const std::string ASSETS_ALL;
 	extern const std::string ASSETS_MUSIC;
 	extern const std::string ASSETS_SFX;
 	extern const float VOLUME_MUSIC;
 	extern const float VOLUME_SFX;
 
-	//-- Gameplay
+		//-- Gameplay
 	extern const int PLAYER_SPEED;
 	extern const int ENEMY_SPEED;
 	extern const float TILE_SIZE;
@@ -24,7 +30,7 @@ namespace Settings
 
 namespace Controls
 {
-	//-- Movement
+		//-- Movement
 	inline bool moveUp( )
 	{
 		return IsKeyDown( KEY_W );
@@ -42,7 +48,7 @@ namespace Controls
 		return IsKeyDown( KEY_D );
 	}
 
-	//-- Combat
+		//-- Combat
 	inline bool attack( )
 	{
 		return IsKeyPressed( KEY_SPACE );
@@ -56,9 +62,14 @@ namespace Controls
 		return IsKeyDown( KEY_J );
 	}
 
-	//-- Interaction
+		//-- Interaction
 	inline bool interact()
 	{
 		return IsKeyPressed(KEY_E);
 	}
 }
+
+/*  Changes made during commenting by Evan:
+*
+*	-General Formating
+*/
